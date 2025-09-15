@@ -1,0 +1,98 @@
+/* KisanGPT - Farmer Friendly Styles */
+.App {
+  background-color: #f1f8e9;
+  min-height: 100vh;
+  font-family: 'Roboto', 'Arial', sans-serif;
+}
+
+/* Smooth transitions for all elements */
+* {
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4caf50;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2e7d32;
+}
+
+/* Farmer-friendly button styles */
+.farmer-button {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.farmer-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+}
+
+/* Card animations */
+.farmer-card {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.farmer-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile responsive font sizes */
+@media (max-width: 600px) {
+  .App {
+    padding: 8px;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.3rem;
+  }
+}
+
+/* High contrast mode for accessibility */
+@media (prefers-contrast: high) {
+  .App {
+    background-color: #ffffff;
+  }
+  
+  .farmer-button {
+    background: #000000;
+    border: 2px solid #ffffff;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

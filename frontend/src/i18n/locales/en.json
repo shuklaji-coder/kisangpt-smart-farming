@@ -1,0 +1,90 @@
+{
+  "app": {
+    "name": "KisanGPT",
+    "tagline": "Your Smart Farming Assistant"
+  },
+  "navbar": {
+    "dashboard": "Dashboard",
+    "dreamVisualization": "Dream Visualization",
+    "community": "Village Network",
+    "diseaseDetection": "Disease Detection",
+    "cropRecommendation": "Crop Recommendation",
+    "weather": "Weather Forecast",
+    "language": "Language"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "futureVision": "Future Vision Dashboard",
+    "personalizedAdvice": "Personalized Advice Based on Your Past",
+    "totalIncome": "Total Income",
+    "policyReviews": "Policy Reviews",
+    "successPredictions": "Success Predictions",
+    "locationWeather": "Location & Weather",
+    "communityConnections": "Community Connections",
+    "emotionalSupport": "Emotional Support",
+    "farmingTraining": "Farming Training Group",
+    "viewMore": "View More"
+  },
+  "dreamVisualization": {
+    "title": "Dream Visualization Engine",
+    "subtitle": "Success Pathway Visualization",
+    "today": "Today",
+    "next30Days": "Next 30 Days",
+    "oneYearGoal": "1 Year Goal",
+    "todayTask": "Set Income & Move Farm Forward",
+    "next30Task": "Prevent Disease & Apply Technology with Cooperative",
+    "yearGoal": "Set Income & Generate Achieved Happy Prosperity",
+    "motivationalText": "With sustained effort your dreams will become reality!"
+  },
+  "community": {
+    "title": "Village Network",
+    "connectWithFarmers": "Connect with Farmers",
+    "shareExperience": "Share Experience",
+    "askQuestions": "Ask Questions",
+    "farmingTips": "Farming Tips",
+    "marketUpdates": "Market Updates",
+    "governmentSchemes": "Government Schemes"
+  },
+  "diseaseDetection": {
+    "title": "Crop Disease Detection",
+    "uploadImage": "Upload Crop Image",
+    "takePhoto": "Take Photo",
+    "analyzing": "Analyzing...",
+    "result": "Detection Result",
+    "treatment": "Treatment Recommendations",
+    "prevention": "Prevention Tips"
+  },
+  "cropRecommendation": {
+    "title": "Crop Recommendation",
+    "soilType": "Soil Type",
+    "season": "Season",
+    "location": "Location",
+    "getRecommendation": "Get Recommendation",
+    "recommendedCrops": "Recommended Crops",
+    "expectedYield": "Expected Yield",
+    "profitability": "Profitability"
+  },
+  "weather": {
+    "title": "Weather Forecast",
+    "current": "Current Weather",
+    "forecast": "7-Day Forecast",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "rainfall": "Rainfall",
+    "windSpeed": "Wind Speed",
+    "farmingAdvice": "Farming Advice Based on Weather"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "retry": "Retry",
+    "success": "Success",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "close": "Close"
+  }
+}

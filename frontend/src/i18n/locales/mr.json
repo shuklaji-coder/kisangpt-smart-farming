@@ -1,0 +1,90 @@
+{
+  "app": {
+    "name": "किसानGPT",
+    "tagline": "तुमचा स्मार्ट शेती सहाय्यक"
+  },
+  "navbar": {
+    "dashboard": "डॅशबोर्ड",
+    "dreamVisualization": "स्वप्न व्हिज्युअलायझेशन",
+    "community": "गाव नेटवर्क",
+    "diseaseDetection": "रोग ओळख",
+    "cropRecommendation": "पीक सुचवणे",
+    "weather": "हवामान अंदाज",
+    "language": "भाषा"
+  },
+  "dashboard": {
+    "welcome": "स्वागत आहे, {{name}}",
+    "futureVision": "भविष्य व्हिज्न डॅशबोर्ड",
+    "personalizedAdvice": "तुमच्या भूतकाळावर आधारित वैयक्तिक सल्ला",
+    "totalIncome": "एकूण उत्पन्न",
+    "policyReviews": "धोरण पुनरावलोकन",
+    "successPredictions": "यशाचा अंदाज",
+    "locationWeather": "स्थान आणि हवामान",
+    "communityConnections": "सामुदायिक कनेक्शन",
+    "emotionalSupport": "भावनिक आधार",
+    "farmingTraining": "शेती प्रशिक्षण गट",
+    "viewMore": "अधिक पहा"
+  },
+  "dreamVisualization": {
+    "title": "स्वप्न व्हिज्युअलायझेशन इंजिन",
+    "subtitle": "यश मार्गाचे व्हिज्युअलायझेशन",
+    "today": "आज",
+    "next30Days": "पुढील 30 दिवस",
+    "oneYearGoal": "1 वर्षाचे लक्ष्य",
+    "todayTask": "उत्पन्न ठरवा आणि शेत पुढे नेऊन जा",
+    "next30Task": "आजार टाळा आणि सहकारी संस्थेसह तंत्रज्ञान लागू करा",
+    "yearGoal": "उत्पन्न ठरवा आणि आनंदी समृद्धी मिळवा",
+    "motivationalText": "सतत प्रयत्नांनी तुमची स्वप्ने खरी होतील!"
+  },
+  "community": {
+    "title": "गाव नेटवर्क",
+    "connectWithFarmers": "शेतकऱ्यांशी जुळा",
+    "shareExperience": "अनुभव शेअर करा",
+    "askQuestions": "प्रश्न विचारा",
+    "farmingTips": "शेतीची टिप्पस",
+    "marketUpdates": "बाजार अपडेट",
+    "governmentSchemes": "सरकारी योजना"
+  },
+  "diseaseDetection": {
+    "title": "पीक रोग ओळख",
+    "uploadImage": "पिकाचा फोटो अपलोड करा",
+    "takePhoto": "फोटो काढा",
+    "analyzing": "विश्लेषण होत आहे...",
+    "result": "ओळखाचा परिणाम",
+    "treatment": "उपचाराच्या शिफारसी",
+    "prevention": "बचावाचे मार्ग"
+  },
+  "cropRecommendation": {
+    "title": "पीक सुचवणे",
+    "soilType": "मातीचा प्रकार",
+    "season": "हंगाम",
+    "location": "स्थान",
+    "getRecommendation": "सुचवणे मिळवा",
+    "recommendedCrops": "सुचवलेली पिके",
+    "expectedYield": "अपेक्षित उत्पादन",
+    "profitability": "फायदेशीरता"
+  },
+  "weather": {
+    "title": "हवामान अंदाज",
+    "current": "सध्याचे हवामान",
+    "forecast": "7-दिवसीय अंदाज",
+    "temperature": "तापमान",
+    "humidity": "आर्द्रता",
+    "rainfall": "पाऊस",
+    "windSpeed": "वाऱ्याची गती",
+    "farmingAdvice": "हवामानावर आधारित शेतीचा सल्ला"
+  },
+  "common": {
+    "loading": "लोड होत आहे...",
+    "error": "त्रुटी झाली",
+    "retry": "पुन्हा प्रयत्न",
+    "success": "यश",
+    "submit": "सबमिट करा",
+    "cancel": "रद्द करा",
+    "save": "सेव्ह करा",
+    "edit": "संपादित करा",
+    "delete": "हटवा",
+    "view": "पहा",
+    "close": "बंद करा"
+  }
+}

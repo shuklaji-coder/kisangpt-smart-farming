@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: kisan-gpt-mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: kisangpt123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./data/mongo-init:/docker-entrypoint-initdb.d
+    networks:
+      - kisan-network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: kisan-gpt-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - kisan-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kisan-gpt-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=mongodb://admin:kisangpt123@mongodb:27017/kisan_gpt?authSource=admin
+      - MONGODB_DATABASE=kisan_gpt
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=False
+      - LOG_LEVEL=INFO
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-jwt-secret-key}
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - backend_uploads:/app/uploads
+      - backend_logs:/app/logs
+      - backend_cache:/app/cache
+    depends_on:
+      - mongodb
+    networks:
+      - kisan-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Frontend (React)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kisan-gpt-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api/v1
+      - REACT_APP_APP_NAME=Kisan GPT
+    depends_on:
+      - backend
+    networks:
+      - kisan-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx Reverse Proxy (Production)
+  nginx:
+    image: nginx:alpine
+    container_name: kisan-gpt-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deployment/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./deployment/nginx/ssl:/etc/nginx/ssl
+      - frontend_build:/var/www/html
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - kisan-network
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_uploads:
+    driver: local
+  backend_logs:
+    driver: local
+  backend_cache:
+    driver: local
+  frontend_build:
+    driver: local
+
+networks:
+  kisan-network:
+    driver: bridge

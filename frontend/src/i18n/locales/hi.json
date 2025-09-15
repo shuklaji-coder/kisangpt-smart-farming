@@ -1,0 +1,90 @@
+{
+  "app": {
+    "name": "किसानGPT",
+    "tagline": "आपका स्मार्ट खेती सहायक"
+  },
+  "navbar": {
+    "dashboard": "डैशबोर्ड",
+    "dreamVisualization": "सपनों का विज़ुअलाइज़ेशन",
+    "community": "गाँव नेटवर्क",
+    "diseaseDetection": "रोग पहचान",
+    "cropRecommendation": "फसल सुझाव",
+    "weather": "मौसम पूर्वानुमान",
+    "language": "भाषा"
+  },
+  "dashboard": {
+    "welcome": "स्वागत है, {{name}}",
+    "futureVision": "भविष्य विज़न डैशबोर्ड",
+    "personalizedAdvice": "आपके अतीत के आधार पर व्यक्तिगत सलाह",
+    "totalIncome": "कुल आय",
+    "policyReviews": "नीति समीक्षा",
+    "successPredictions": "सफलता का पूर्वानुमान",
+    "locationWeather": "स्थान और मौसम",
+    "communityConnections": "सामुदायिक कनेक्शन",
+    "emotionalSupport": "भावनात्मक सहारा",
+    "farmingTraining": "खेती प्रशिक्षण समूह",
+    "viewMore": "और देखें"
+  },
+  "dreamVisualization": {
+    "title": "सपना विज़ुअलाइज़ेशन इंजन",
+    "subtitle": "सफलता पथ का विज़ुअलाइज़ेशन",
+    "today": "आज",
+    "next30Days": "अगले 30 दिन",
+    "oneYearGoal": "1 साल का लक्ष्य",
+    "todayTask": "आय निर्धारित करें और खेत को आगे बढ़ाएं",
+    "next30Task": "बीमारी को रोकें और सहकारी के साथ तकनीक लागू करें",
+    "yearGoal": "आय निर्धारित करें और खुश समृद्धि प्राप्त करें",
+    "motivationalText": "निरंतर प्रयास से आपके सपने हकीकत बन जाएंगे!"
+  },
+  "community": {
+    "title": "गाँव नेटवर्क",
+    "connectWithFarmers": "किसानों से जुड़ें",
+    "shareExperience": "अनुभव साझा करें",
+    "askQuestions": "सवाल पूछें",
+    "farmingTips": "खेती के टिप्स",
+    "marketUpdates": "बाज़ार अपडेट",
+    "governmentSchemes": "सरकारी योजनाएं"
+  },
+  "diseaseDetection": {
+    "title": "फसल रोग पहचान",
+    "uploadImage": "फसल की तस्वीर अपलोड करें",
+    "takePhoto": "तस्वीर लें",
+    "analyzing": "विश्लेषण हो रहा है...",
+    "result": "पहचान का परिणाम",
+    "treatment": "उपचार की सिफारिशें",
+    "prevention": "बचाव के तरीके"
+  },
+  "cropRecommendation": {
+    "title": "फसल सुझाव",
+    "soilType": "मिट्टी का प्रकार",
+    "season": "मौसम",
+    "location": "स्थान",
+    "getRecommendation": "सुझाव प्राप्त करें",
+    "recommendedCrops": "सुझाई गई फसलें",
+    "expectedYield": "अपेक्षित उत्पादन",
+    "profitability": "लाभदायकता"
+  },
+  "weather": {
+    "title": "मौसम पूर्वानुमान",
+    "current": "वर्तमान मौसम",
+    "forecast": "7-दिन का पूर्वानुमान",
+    "temperature": "तापमान",
+    "humidity": "नमी",
+    "rainfall": "वर्षा",
+    "windSpeed": "हवा की गति",
+    "farmingAdvice": "मौसम के आधार पर खेती की सलाह"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि हुई",
+    "retry": "पुनः प्रयास",
+    "success": "सफलता",
+    "submit": "जमा करें",
+    "cancel": "रद्द करें",
+    "save": "सेव करें",
+    "edit": "संपादित करें",
+    "delete": "हटाएं",
+    "view": "देखें",
+    "close": "बंद करें"
+  }
+}
