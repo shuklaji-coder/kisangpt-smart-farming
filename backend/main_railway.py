@@ -67,6 +67,79 @@ async def test_endpoint():
         "status": "success"
     }
 
+# Mock Authentication Endpoints
+@app.post("/api/auth/login")
+async def login(request: dict = {}):
+    """Mock login endpoint"""
+    email = request.get('email', '')
+    password = request.get('password', '')
+    
+    # Simple mock validation
+    if email and password:
+        return {
+            "success": True,
+            "message": "Login successful",
+            "token": "mock-jwt-token-12345",
+            "user": {
+                "id": "user123",
+                "name": "Test User",
+                "email": email,
+                "role": "farmer"
+            }
+        }
+    else:
+        return {
+            "success": False,
+            "message": "Invalid credentials"
+        }
+
+@app.post("/api/auth/register")
+async def register(request: dict = {}):
+    """Mock registration endpoint"""
+    name = request.get('name', '')
+    email = request.get('email', '')
+    password = request.get('password', '')
+    
+    if name and email and password:
+        return {
+            "success": True,
+            "message": "Registration successful",
+            "token": "mock-jwt-token-12345",
+            "user": {
+                "id": "user123",
+                "name": name,
+                "email": email,
+                "role": "farmer"
+            }
+        }
+    else:
+        return {
+            "success": False,
+            "message": "Missing required fields"
+        }
+
+@app.get("/api/auth/me")
+async def get_current_user():
+    """Mock current user endpoint"""
+    return {
+        "success": True,
+        "user": {
+            "id": "user123",
+            "name": "Test User",
+            "email": "test@example.com",
+            "role": "farmer"
+        }
+    }
+
+@app.get("/api/health")
+async def api_health():
+    """API health endpoint (different from root health)"""
+    return {
+        "status": "healthy",
+        "service": "api",
+        "version": settings.APP_VERSION
+    }
+
 # Simple crop recommendation (mock data for now)
 @app.post("/api/v1/crop/recommend")
 async def recommend_crops(request: dict = {}):
