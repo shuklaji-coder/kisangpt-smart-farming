@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kisangpt-backend
+    env: python
+    region: singapore
+    plan: free
+    buildCommand: pip install --no-cache-dir -r requirements-render.txt
+    startCommand: uvicorn main_render:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: ENVIRONMENT
+        value: production
