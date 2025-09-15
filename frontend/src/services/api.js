@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Base API configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://kisangpt-backendddddddd-production.up.railway.app';
+// Base API configuration - Updated for Render.com deployment
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://kisangpt-backend.onrender.com';
 
 // Create axios instance
 const api = axios.create({
@@ -65,8 +65,15 @@ export const authAPI = {
   login: async (credentials) => {
     try {
       console.log('🚀 API Base URL:', API_BASE_URL);
-      console.log('🚀 Login request:', credentials);
+      console.log('🚀 Full request URL:', API_BASE_URL + '/api/auth/login');
+      console.log('🚀 Login request data:', credentials);
+      console.log('🚀 Request headers:', api.defaults.headers);
+      
       const response = await api.post('/api/auth/login', credentials);
+      
+      console.log('✅ Login response:', response);
+      console.log('✅ Response status:', response.status);
+      console.log('✅ Response data:', response.data);
       
       if (response.data.success) {
         // Store token and user data
@@ -76,10 +83,30 @@ export const authAPI = {
       
       return response.data;
     } catch (error) {
-      console.error('❌ Login error:', error);
-      console.error('❌ Error response:', error.response);
-      console.error('❌ Error message:', error.message);
-      throw error.response?.data || { success: false, message: 'Network error' };
+      console.error('❌ Login error details:');
+      console.error('  - Error object:', error);
+      console.error('  - Error name:', error.name);
+      console.error('  - Error message:', error.message);
+      console.error('  - Error code:', error.code);
+      console.error('  - Request URL:', error.config?.url);
+      console.error('  - Request method:', error.config?.method);
+      console.error('  - Request data:', error.config?.data);
+      console.error('  - Response status:', error.response?.status);
+      console.error('  - Response statusText:', error.response?.statusText);
+      console.error('  - Response data:', error.response?.data);
+      console.error('  - Response headers:', error.response?.headers);
+      
+      // Determine error type for better user feedback
+      let errorMessage = 'Network error';
+      if (error.code === 'ERR_NETWORK') {
+        errorMessage = 'Unable to connect to server. Please check your internet connection.';
+      } else if (error.response?.status === 404) {
+        errorMessage = 'Login endpoint not found. Backend service may be down.';
+      } else if (error.response?.status >= 500) {
+        errorMessage = 'Server error. Please try again later.';
+      }
+      
+      throw error.response?.data || { success: false, message: errorMessage };
     }
   },
 
