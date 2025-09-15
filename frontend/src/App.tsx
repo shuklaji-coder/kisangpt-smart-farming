@@ -18,6 +18,7 @@ import SatelliteFieldView from './components/SatelliteFieldView';
 import ARPlantVisualization from './components/ARPlantVisualization';
 import RainAlertSettings from './components/RainAlertSettings';
 import AuthPage from './components/AuthPage';
+import TestPage from './components/TestPage';
 import { authAPI } from './services/api';
 
 // Farmer-friendly theme with green agricultural colors
@@ -125,7 +126,7 @@ const AppContent = () => {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Changed to false to skip loading
   const [user, setUser] = useState(null);
   
   useEffect(() => {

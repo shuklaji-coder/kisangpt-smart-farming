@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base API configuration - Updated for Render.com deployment
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://kisangpt-backend.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://kisangpt-smart-farming.onrender.com';
 
 // Create axios instance
 const api = axios.create({
