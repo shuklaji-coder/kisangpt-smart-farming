@@ -64,6 +64,8 @@ export const authAPI = {
   // Login user
   login: async (credentials) => {
     try {
+      console.log('🚀 API Base URL:', API_BASE_URL);
+      console.log('🚀 Login request:', credentials);
       const response = await api.post('/api/auth/login', credentials);
       
       if (response.data.success) {
@@ -74,6 +76,9 @@ export const authAPI = {
       
       return response.data;
     } catch (error) {
+      console.error('❌ Login error:', error);
+      console.error('❌ Error response:', error.response);
+      console.error('❌ Error message:', error.message);
       throw error.response?.data || { success: false, message: 'Network error' };
     }
   },
