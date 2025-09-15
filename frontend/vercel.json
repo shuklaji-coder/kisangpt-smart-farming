@@ -1,9 +1,15 @@
 {
   "name": "kisangpt-frontend",
-  "buildCommand": "npm run build",
+  "buildCommand": "CI=false npm run build",
   "outputDirectory": "build",
-  "installCommand": "npm install --legacy-peer-deps",
+  "installCommand": "npm install --legacy-peer-deps && npm install typescript@4.9.5 --legacy-peer-deps",
   "framework": "create-react-app",
+  "env": {
+    "REACT_APP_API_URL": "https://kisangpt-smart-farming.onrender.com",
+    "REACT_APP_OPENWEATHER_API_KEY": "f0ee189e8fc575d580eec8764caee056",
+    "REACT_APP_DEBUG": "false",
+    "NODE_ENV": "production"
+  },
   "rewrites": [
     {
       "source": "/((?!api/.*).*)",
