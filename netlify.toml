@@ -1,0 +1,17 @@
+[build]
+  base = "frontend"
+  publish = "frontend/build"
+  command = "CI=false npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  REACT_APP_API_URL = "http://localhost:8000"
+  REACT_APP_WEATHER_API_KEY = "demo-key"
