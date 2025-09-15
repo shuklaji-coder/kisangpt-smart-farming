@@ -61,7 +61,7 @@ httpx==0.25.2
 loguru==0.7.2
 
 # CORS and Security
-python-cors==1.7.0
+# CORS is handled by FastAPI's built-in middleware
 
 # Image Processing (for satellite data)
 Pillow==10.1.0
