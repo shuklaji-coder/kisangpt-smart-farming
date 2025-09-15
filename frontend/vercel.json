@@ -1,36 +1,19 @@
 {
   "name": "kisangpt-frontend",
-  "version": 2,
-  "builds": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "framework": "create-react-app",
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "buildCommand": "npm run build"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "source": "/((?!api/.*).*)",
+      "destination": "/index.html"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/api/(.*)",
+      "destination": "https://kisangpt-smart-farming.onrender.com/api/$1"
     }
   ],
-  "env": {
-    "REACT_APP_API_URL": "https://kisangpt-smart-farming.onrender.com",
-    "REACT_APP_OPENWEATHER_API_KEY": "f0ee189e8fc575d580eec8764caee056",
-    "REACT_APP_DEBUG": "false",
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "app/api/**/*.js": {
-      "runtime": "@vercel/node"
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -48,12 +31,6 @@
           "value": "1; mode=block"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://kisangpt-smart-farming.onrender.com/api/$1"
     }
   ]
 }
