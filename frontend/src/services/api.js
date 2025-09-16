@@ -3,10 +3,10 @@ import axios from 'axios';
 // Base API configuration - Updated for Render.com deployment
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://kisangpt-smart-farming.onrender.com';
 
-// Create axios instance
+// Create axios instance with shorter timeout for faster fallback
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 5000, // Reduced timeout for quicker fallback to demo mode
   headers: {
     'Content-Type': 'application/json',
   },
