@@ -38,6 +38,11 @@ import {
   FilterHdr,
   WbSunny,
   Opacity as OpacityIcon,
+  Mic,
+  MicOff,
+  PlayArrow,
+  Pause,
+  Animation,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -68,11 +73,69 @@ interface ARSession {
   lighting_condition: 'good' | 'dim' | 'bright';
 }
 
+// Mock plant data - moved outside component to avoid dependency issues
+const mockPlants: PlantModel[] = [
+  {
+    id: 'wheat',
+    name: 'Wheat (गेहूं)',
+    category: 'crop',
+    growth_stages: ['Seed', 'Germination', 'Tillering', 'Jointing', 'Heading', 'Maturity'],
+    current_stage: 3,
+    water_level: 75,
+    health: 85,
+    diseases: [],
+    nutrients: { nitrogen: 80, phosphorus: 70, potassium: 85 },
+    icon: '🌾',
+    color: '#d4a574'
+  },
+  {
+    id: 'rice',
+    name: 'Rice (चावल)',
+    category: 'crop',
+    growth_stages: ['Seed', 'Germination', 'Seedling', 'Tillering', 'Flowering', 'Ripening'],
+    current_stage: 2,
+    water_level: 90,
+    health: 92,
+    diseases: [],
+    nutrients: { nitrogen: 85, phosphorus: 75, potassium: 80 },
+    icon: '🌾',
+    color: '#8bc34a'
+  },
+  {
+    id: 'tomato',
+    name: 'Tomato (टमाटर)',
+    category: 'vegetable',
+    growth_stages: ['Seed', 'Germination', 'Seedling', 'Flowering', 'Fruiting', 'Ripening'],
+    current_stage: 4,
+    water_level: 65,
+    health: 78,
+    diseases: ['Leaf curl'],
+    nutrients: { nitrogen: 70, phosphorus: 85, potassium: 90 },
+    icon: '🍅',
+    color: '#f44336'
+  },
+  {
+    id: 'corn',
+    name: 'Corn (मक्का)',
+    category: 'crop',
+    growth_stages: ['Seed', 'Emergence', 'V6 Stage', 'Tasseling', 'Silking', 'Maturity'],
+    current_stage: 3,
+    water_level: 80,
+    health: 88,
+    diseases: [],
+    nutrients: { nitrogen: 90, phosphorus: 80, potassium: 75 },
+    icon: '🌽',
+    color: '#ffeb3b'
+  }
+];
+
 const ARPlantVisualization: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isARActive, setIsARActive] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isVRActive, setIsVRActive] = useState(false);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [selectedPlant, setSelectedPlant] = useState<string>('wheat');
@@ -86,70 +149,41 @@ const ARPlantVisualization: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showInfo, setShowInfo] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [plantScale, setPlantScale] = useState(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [plantRotation, setPlantRotation] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [cameraFacing, setCameraFacing] = useState<'user' | 'environment'>('environment');
-
-  // Mock plant data
-  const mockPlants: PlantModel[] = [
-    {
-      id: 'wheat',
-      name: 'Wheat (गेहूं)',
-      category: 'crop',
-      growth_stages: ['Seed', 'Germination', 'Tillering', 'Jointing', 'Heading', 'Maturity'],
-      current_stage: 3,
-      water_level: 75,
-      health: 85,
-      diseases: [],
-      nutrients: { nitrogen: 80, phosphorus: 70, potassium: 85 },
-      icon: '🌾',
-      color: '#d4a574'
-    },
-    {
-      id: 'rice',
-      name: 'Rice (चावल)',
-      category: 'crop',
-      growth_stages: ['Seed', 'Germination', 'Seedling', 'Tillering', 'Flowering', 'Ripening'],
-      current_stage: 2,
-      water_level: 90,
-      health: 92,
-      diseases: [],
-      nutrients: { nitrogen: 85, phosphorus: 75, potassium: 80 },
-      icon: '🌾',
-      color: '#8bc34a'
-    },
-    {
-      id: 'tomato',
-      name: 'Tomato (टमाटर)',
-      category: 'vegetable',
-      growth_stages: ['Seed', 'Germination', 'Seedling', 'Flowering', 'Fruiting', 'Ripening'],
-      current_stage: 4,
-      water_level: 65,
-      health: 78,
-      diseases: ['Leaf curl'],
-      nutrients: { nitrogen: 70, phosphorus: 85, potassium: 90 },
-      icon: '🍅',
-      color: '#f44336'
-    },
-    {
-      id: 'corn',
-      name: 'Corn (मक्का)',
-      category: 'crop',
-      growth_stages: ['Seed', 'Emergence', 'V6 Stage', 'Tasseling', 'Silking', 'Maturity'],
-      current_stage: 3,
-      water_level: 80,
-      health: 88,
-      diseases: [],
-      nutrients: { nitrogen: 90, phosphorus: 80, potassium: 75 },
-      icon: '🌽',
-      color: '#ffeb3b'
-    }
-  ];
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
+  const [lastTap, setLastTap] = useState(0);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const [isAnimatingGrowth, setIsAnimatingGrowth] = useState(false);
+  const [animationSpeed, setAnimationSpeed] = useState(1000); // milliseconds per stage
+  const [windStrength, setWindStrength] = useState(2); // 1-5 scale
+  const [isRaining, setIsRaining] = useState(false);
+  const [season, setSeason] = useState<'spring' | 'summer' | 'autumn' | 'winter'>('summer');
+  const [showParticleEffects, setShowParticleEffects] = useState(true);
 
   useEffect(() => {
     setPlantModels(mockPlants);
+    
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    // Check voice recognition support
+    setVoiceSupported('webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const startARSession = async () => {
@@ -322,6 +356,22 @@ const ARPlantVisualization: React.FC = () => {
   };
 
   const getCurrentPlant = () => {
+    if (plantModels.length === 0) {
+      // Return a safe default plant when data is loading
+      return {
+        id: 'wheat',
+        name: 'Wheat (गेहूं)',
+        category: 'crop' as const,
+        growth_stages: ['Seed', 'Germination', 'Tillering', 'Jointing', 'Heading', 'Maturity'],
+        current_stage: 3,
+        water_level: 75,
+        health: 85,
+        diseases: [],
+        nutrients: { nitrogen: 80, phosphorus: 70, potassium: 85 },
+        icon: '🌾',
+        color: '#d4a574'
+      };
+    }
     return plantModels.find(p => p.id === selectedPlant) || plantModels[0];
   };
 
@@ -335,6 +385,569 @@ const ARPlantVisualization: React.FC = () => {
     if (value >= 80) return '#4caf50';
     if (value >= 60) return '#ff9800';
     return '#f44336';
+  };
+
+  const renderRealistic3DPlant = (plant: PlantModel) => {
+    const healthFactor = plant.health / 100;
+    const growthStage = plant.current_stage;
+    const maxStages = plant.growth_stages.length - 1;
+    const growthFactor = growthStage / maxStages;
+
+    // Dynamic animation based on wind strength and season
+    const swayDuration = `${Math.max(1, 5 - windStrength)}s`;
+    const swayAngle = 2 + windStrength; // degrees
+    const brightnessBoost = season === 'spring' ? 0.15 : season === 'winter' ? -0.1 : 0;
+    const saturationBoost = season === 'autumn' ? 0.2 : 0;
+    
+    const baseProps = {
+      style: {
+        filter: `brightness(${0.7 + healthFactor * 0.3 + brightnessBoost}) saturate(${healthFactor + saturationBoost})`,
+        animation: `sway ${swayDuration} ease-in-out infinite, grow 2.5s ease-in-out infinite alternate`,
+        transformStyle: 'preserve-3d',
+      }
+    };
+
+    // Different plant types with realistic 3D SVG representations
+    switch (plant.id) {
+      case 'wheat':
+        return (
+          <Box
+            sx={{
+              width: `${80 + growthFactor * 60}px`,
+              height: `${100 + growthFactor * 80}px`,
+              transform: 'rotateX(15deg)',
+              transformStyle: 'preserve-3d',
+              position: 'relative',
+              '@keyframes sway': {
+                '0%': { transform: `rotateX(15deg) rotateZ(-${swayAngle / 2}deg) translateY(${windStrength * 0.5}px)` },
+                '25%': { transform: `rotateX(15deg) rotateZ(${swayAngle}deg) translateY(-${windStrength * 0.3}px)` },
+                '50%': { transform: `rotateX(15deg) rotateZ(-${swayAngle * 0.7}deg) translateY(${windStrength * 0.8}px)` },
+                '75%': { transform: `rotateX(15deg) rotateZ(${swayAngle * 0.5}deg) translateY(-${windStrength * 0.4}px)` },
+                '100%': { transform: `rotateX(15deg) rotateZ(-${swayAngle / 2}deg) translateY(${windStrength * 0.5}px)` },
+              },
+              '@keyframes grow': {
+                '0%': { transform: 'scale(0.98) rotateY(-1deg)' },
+                '50%': { transform: 'scale(1.02) rotateY(1deg)' },
+                '100%': { transform: 'scale(1) rotateY(0deg)' },
+              },
+              '@keyframes leafRustle': {
+                '0%, 100%': { transform: 'rotateZ(0deg) scale(1)' },
+                '25%': { transform: 'rotateZ(1deg) scale(1.02)' },
+                '75%': { transform: 'rotateZ(-1deg) scale(0.98)' },
+              },
+              '@keyframes particleFloat': {
+                '0%': { transform: 'translateY(0px) opacity(1)' },
+                '100%': { transform: 'translateY(-30px) opacity(0)' },
+              },
+            }}
+            {...baseProps}
+          >
+            <svg width="100%" height="100%" viewBox="0 0 140 180">
+              <defs>
+                {/* Gradient for seasonal color changes */}
+                <linearGradient id={`wheatGradient-${season}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor={season === 'autumn' ? '#D4A574' : season === 'spring' ? '#90EE90' : '#7CB342'} />
+                  <stop offset="100%" stopColor={season === 'autumn' ? '#8B4513' : season === 'winter' ? '#8FBC8F' : '#558B2F'} />
+                </linearGradient>
+                
+                {/* Wind particle effects */}
+                {showParticleEffects && Array.from({ length: windStrength + 2 }).map((_, p) => (
+                  <circle key={p} r="1" fill="rgba(255,255,255,0.6)">
+                    <animateMotion
+                      dur={`${2 + Math.random()}s`}
+                      repeatCount="indefinite"
+                      path={`M${20 + p * 15},${60 + p * 10} Q${50 + p * 20},${40 + p * 15} ${100 + p * 10},${20 + p * 8}`}
+                    />
+                    <animate attributeName="opacity" values="0;0.8;0" dur={`${1 + Math.random()}s`} repeatCount="indefinite" />
+                  </circle>
+                ))}
+              </defs>
+              
+              {/* Animated Wheat stalks */}
+              {Array.from({ length: 5 + Math.floor(growthFactor * 3) }).map((_, i) => {
+                const stalkDelay = i * 0.2;
+                const stalkSwayAngle = (windStrength * (1 + i * 0.3)) % 8;
+                
+                return (
+                  <g key={i} style={{
+                    animation: `leafRustle ${swayDuration} ease-in-out infinite`,
+                    animationDelay: `${stalkDelay}s`,
+                    transformOrigin: `${60 + i * 8 - 16}px 160px`
+                  }}>
+                    {/* Main Stem with wind bending */}
+                    <path
+                      d={`M${60 + i * 8 - 16} 160 Q${58 + i * 8 - 16 + stalkSwayAngle} ${140 - growthFactor * 30} ${55 + i * 8 - 16 + stalkSwayAngle * 1.5} ${80 - growthFactor * 20}`}
+                      stroke={`url(#wheatGradient-${season})`}
+                      strokeWidth={`${2.5 + growthFactor}`}
+                      fill="none"
+                      strokeLinecap="round"
+                    />
+                    
+                    {/* Individual leaves with rustle animation */}
+                    {Array.from({ length: 3 + Math.floor(growthFactor * 2) }).map((_, leafIdx) => (
+                      <path
+                        key={leafIdx}
+                        d={`M${55 + i * 8 - 16} ${150 - leafIdx * 25} Q${65 + i * 8 - 16 + (leafIdx % 2 ? 8 : -8)} ${145 - leafIdx * 25} ${70 + i * 8 - 16 + (leafIdx % 2 ? 12 : -12)} ${140 - leafIdx * 25}`}
+                        stroke={`hsl(${100 + healthFactor * 30}, 65%, ${45 + healthFactor * 15}%)`}
+                        strokeWidth="2"
+                        fill="none"
+                        strokeLinecap="round"
+                        style={{
+                          animation: `leafRustle ${swayDuration} ease-in-out infinite`,
+                          animationDelay: `${stalkDelay + leafIdx * 0.1}s`,
+                          transformOrigin: `${55 + i * 8 - 16}px ${150 - leafIdx * 25}px`
+                        }}
+                      />
+                    ))}
+                    
+                    {/* Wheat grains with blooming animation */}
+                    {growthStage >= 3 && Array.from({ length: 6 + Math.floor(growthFactor * 4) }).map((_, j) => {
+                      const grainSize = 1.5 + growthFactor * 1.5;
+                      const bloomDelay = j * 0.05;
+                      
+                      return (
+                        <g key={j}>
+                          <ellipse
+                            cx={55 + i * 8 - 16 + (j % 2 ? 2 : -2)}
+                            cy={85 - growthFactor * 20 + j * 2.5}
+                            rx={grainSize}
+                            ry={grainSize * 2}
+                            fill={`hsl(${35 + growthFactor * 25 + (season === 'autumn' ? 15 : 0)}, 75%, ${55 + healthFactor * 20}%)`}
+                            transform={`rotate(${j % 2 ? 15 : -15} ${55 + i * 8 - 16} ${85 - growthFactor * 20 + j * 2.5})`}
+                            style={{
+                              animation: `grow ${swayDuration} ease-in-out infinite, leafRustle ${swayDuration} ease-in-out infinite`,
+                              animationDelay: `${bloomDelay}s`,
+                              transformOrigin: 'center'
+                            }}
+                          />
+                          
+                          {/* Grain shine effect */}
+                          <ellipse
+                            cx={55 + i * 8 - 16 + (j % 2 ? 2 : -2)}
+                            cy={85 - growthFactor * 20 + j * 2.5}
+                            rx={grainSize * 0.3}
+                            ry={grainSize}
+                            fill="rgba(255,255,255,0.4)"
+                            transform={`rotate(${j % 2 ? 15 : -15} ${55 + i * 8 - 16} ${85 - growthFactor * 20 + j * 2.5})`}
+                            style={{
+                              animation: `grow ${swayDuration} ease-in-out infinite`,
+                              animationDelay: `${bloomDelay + 0.2}s`
+                            }}
+                          />
+                        </g>
+                      );
+                    })}
+                    
+                    {/* Floating pollen particles */}
+                    {showParticleEffects && growthStage >= 4 && windStrength > 2 && (
+                      <circle
+                        cx={55 + i * 8 - 16}
+                        cy={80 - growthFactor * 20}
+                        r="0.8"
+                        fill={`hsl(${50 + Math.random() * 20}, 80%, 70%)`}
+                        opacity="0.7"
+                        style={{
+                          animation: `particleFloat 3s ease-out infinite`,
+                          animationDelay: `${Math.random() * 2}s`
+                        }}
+                      />
+                    )}
+                  </g>
+                );
+              })}
+              
+              {/* Base/Soil with seasonal variation */}
+              <ellipse 
+                cx="70" 
+                cy="165" 
+                rx="50" 
+                ry="8" 
+                fill={season === 'winter' ? '#A0A0A0' : season === 'spring' ? '#4A4A4A' : '#8B4513'} 
+                opacity={season === 'winter' ? '0.8' : '0.6'} 
+              />
+              
+              {/* Rain drops effect */}
+              {isRaining && showParticleEffects && Array.from({ length: 8 }).map((_, r) => (
+                <line
+                  key={r}
+                  x1={10 + r * 15}
+                  y1="0"
+                  x2={8 + r * 15}
+                  y2="10"
+                  stroke="rgba(135,206,235,0.6)"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    type="translate"
+                    values={`0,-20; 0,180`}
+                    dur="1s"
+                    repeatCount="indefinite"
+                    begin={`${r * 0.1}s`}
+                  />
+                  <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin={`${r * 0.1}s`} />
+                </line>
+              ))}
+            </svg>
+          </Box>
+        );
+
+      case 'rice':
+        return (
+          <Box
+            sx={{
+              width: `${90 + growthFactor * 50}px`,
+              height: `${120 + growthFactor * 60}px`,
+              transform: 'rotateX(10deg)',
+              transformStyle: 'preserve-3d',
+              '@keyframes sway': {
+                '0%, 100%': { transform: 'rotateX(10deg) rotateZ(0deg)' },
+                '50%': { transform: 'rotateX(10deg) rotateZ(-2deg)' },
+              },
+              '@keyframes grow': {
+                '0%': { transform: 'rotateX(10deg) scale(0.98)' },
+                '100%': { transform: 'rotateX(10deg) scale(1.02)' },
+              },
+            }}
+            {...baseProps}
+          >
+            <svg width="100%" height="100%" viewBox="0 0 140 180">
+              {/* Rice stalks - more slender */}
+              {Array.from({ length: 6 + Math.floor(growthFactor * 4) }).map((_, i) => (
+                <g key={i}>
+                  {/* Stem */}
+                  <path
+                    d={`M${55 + i * 6 - 15} 160 Q${53 + i * 6 - 15} ${130 - growthFactor * 25} ${50 + i * 6 - 15} ${70 - growthFactor * 15}`}
+                    stroke={`hsl(${90 + healthFactor * 30}, 65%, ${35 + healthFactor * 25}%)`}
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  {/* Rice grains - drooping */}
+                  {growthStage >= 4 && (
+                    <path
+                      d={`M${50 + i * 6 - 15} ${70 - growthFactor * 15} Q${45 + i * 6 - 15} ${75 - growthFactor * 15} ${48 + i * 6 - 15} ${85 - growthFactor * 15}`}
+                      stroke={`hsl(${45 + growthFactor * 15}, 80%, ${55 + healthFactor * 20}%)`}
+                      strokeWidth="6"
+                      fill="none"
+                      strokeLinecap="round"
+                    />
+                  )}
+                </g>
+              ))}
+              {/* Water reflection effect */}
+              <ellipse cx="70" cy="165" rx="45" ry="6" fill="url(#waterGradient)" opacity="0.4" />
+              <defs>
+                <linearGradient id="waterGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#4FC3F7" stopOpacity="0.3" />
+                  <stop offset="50%" stopColor="#29B6F6" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#03A9F4" stopOpacity="0.3" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </Box>
+        );
+
+      case 'tomato':
+        return (
+          <Box
+            sx={{
+              width: `${100 + growthFactor * 40}px`,
+              height: `${80 + growthFactor * 70}px`,
+              transform: 'rotateX(20deg)',
+              transformStyle: 'preserve-3d',
+              '@keyframes sway': {
+                '0%, 100%': { transform: 'rotateX(20deg) rotateZ(0deg)' },
+                '50%': { transform: 'rotateX(20deg) rotateZ(2deg)' },
+              },
+              '@keyframes grow': {
+                '0%': { transform: 'rotateX(20deg) scale(0.96)' },
+                '100%': { transform: 'rotateX(20deg) scale(1.04)' },
+              },
+            }}
+            {...baseProps}
+          >
+            <svg width="100%" height="100%" viewBox="0 0 140 150">
+              {/* Main stem */}
+              <path
+                d="M70 130 Q72 100 70 70 Q68 40 70 20"
+                stroke={`hsl(${120 + healthFactor * 20}, 50%, ${30 + healthFactor * 20}%)`}
+                strokeWidth="4"
+                fill="none"
+              />
+              
+              {/* Branches and leaves */}
+              {Array.from({ length: 4 + Math.floor(growthFactor * 3) }).map((_, i) => (
+                <g key={i}>
+                  {/* Branch */}
+                  <path
+                    d={`M70 ${120 - i * 25} Q${85 + (i % 2 ? 10 : -10)} ${115 - i * 25} ${95 + (i % 2 ? 15 : -15)} ${110 - i * 25}`}
+                    stroke={`hsl(${120 + healthFactor * 20}, 45%, ${35 + healthFactor * 15}%)`}
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  {/* Leaves */}
+                  <ellipse
+                    cx={95 + (i % 2 ? 15 : -15)}
+                    cy={110 - i * 25}
+                    rx="12"
+                    ry="8"
+                    fill={`hsl(${120 + healthFactor * 30}, 60%, ${40 + healthFactor * 20}%)`}
+                    transform={`rotate(${i % 2 ? 30 : -30} ${95 + (i % 2 ? 15 : -15)} ${110 - i * 25})`}
+                  />
+                  {/* Tomatoes (if fruiting stage) */}
+                  {growthStage >= 4 && i < 3 && (
+                    <circle
+                      cx={90 + (i % 2 ? 10 : -10)}
+                      cy={115 - i * 25}
+                      r={`${6 + growthFactor * 3}`}
+                      fill={growthStage >= 5 ? `hsl(${5 + healthFactor * 15}, 80%, ${50 + healthFactor * 20}%)` : `hsl(${90 + healthFactor * 20}, 60%, ${45 + healthFactor * 15}%)`}
+                    />
+                  )}
+                </g>
+              ))}
+              {/* Soil */}
+              <ellipse cx="70" cy="135" rx="40" ry="6" fill="#8B4513" opacity="0.7" />
+            </svg>
+          </Box>
+        );
+
+      case 'corn':
+        return (
+          <Box
+            sx={{
+              width: `${70 + growthFactor * 50}px`,
+              height: `${130 + growthFactor * 70}px`,
+              transform: 'rotateX(12deg)',
+              transformStyle: 'preserve-3d',
+              '@keyframes sway': {
+                '0%, 100%': { transform: 'rotateX(12deg) rotateZ(0deg)' },
+                '50%': { transform: 'rotateX(12deg) rotateZ(-3deg)' },
+              },
+              '@keyframes grow': {
+                '0%': { transform: 'rotateX(12deg) scale(0.94)' },
+                '100%': { transform: 'rotateX(12deg) scale(1.06)' },
+              },
+            }}
+            {...baseProps}
+          >
+            <svg width="100%" height="100%" viewBox="0 0 120 200">
+              {/* Main stalk */}
+              <path
+                d="M60 180 Q62 130 60 80 Q58 40 60 20"
+                stroke={`hsl(${80 + healthFactor * 25}, 55%, ${35 + healthFactor * 20}%)`}
+                strokeWidth="6"
+                fill="none"
+              />
+              
+              {/* Corn leaves */}
+              {Array.from({ length: 6 + Math.floor(growthFactor * 2) }).map((_, i) => (
+                <path
+                  key={i}
+                  d={`M60 ${160 - i * 20} Q${80 + (i % 2 ? 20 : -20)} ${150 - i * 20} ${90 + (i % 2 ? 25 : -25)} ${140 - i * 20}`}
+                  stroke={`hsl(${100 + healthFactor * 30}, 65%, ${40 + healthFactor * 20}%)`}
+                  strokeWidth="8"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+              ))}
+              
+              {/* Corn cob */}
+              {growthStage >= 4 && (
+                <g>
+                  <ellipse
+                    cx="75"
+                    cy={`${90 - growthFactor * 10}`}
+                    rx="8"
+                    ry={`${15 + growthFactor * 10}`}
+                    fill={`hsl(${50 + growthFactor * 20}, 70%, ${60 + healthFactor * 15}%)`}
+                    transform="rotate(-20 75 90)"
+                  />
+                  {/* Corn silk */}
+                  {Array.from({ length: 8 }).map((_, j) => (
+                    <path
+                      key={j}
+                      d={`M${72 + j} ${75 - growthFactor * 10} Q${70 + j} ${65 - growthFactor * 10} ${68 + j} ${60 - growthFactor * 10}`}
+                      stroke={`hsl(${30 + healthFactor * 10}, 60%, ${70 + healthFactor * 10}%)`}
+                      strokeWidth="1"
+                      fill="none"
+                    />
+                  ))}
+                </g>
+              )}
+              
+              {/* Soil */}
+              <ellipse cx="60" cy="185" rx="35" ry="5" fill="#8B4513" opacity="0.8" />
+            </svg>
+          </Box>
+        );
+
+      default:
+        return (
+          <Box {...baseProps}>
+            <Typography sx={{ fontSize: '80px', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
+              {plant.icon}
+            </Typography>
+          </Box>
+        );
+    }
+  };
+
+  // Touch gesture handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY });
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!e.changedTouches[0]) return;
+    
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+    
+    // Swipe gestures
+    if (Math.abs(deltaX) > 50) {
+      if (deltaX > 0) {
+        // Swipe right - rotate right
+        setPlantRotation(prev => prev + 45);
+      } else {
+        // Swipe left - rotate left
+        setPlantRotation(prev => prev - 45);
+      }
+    }
+    
+    if (Math.abs(deltaY) > 50) {
+      if (deltaY < 0) {
+        // Swipe up - zoom in
+        setPlantScale(prev => Math.min(prev + 0.3, 3));
+      } else {
+        // Swipe down - zoom out
+        setPlantScale(prev => Math.max(prev - 0.3, 0.5));
+      }
+    }
+    
+    // Double tap to reset
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTap;
+    if (tapLength < 500 && tapLength > 0) {
+      // Double tap detected - reset plant
+      setPlantScale(1);
+      setPlantRotation(0);
+    }
+    setLastTap(currentTime);
+  };
+
+  // Voice command handler
+  const startVoiceCommand = () => {
+    if (!voiceSupported) {
+      setError('Voice commands not supported in this browser');
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    setIsListening(true);
+
+    recognition.onresult = (event: any) => {
+      const command = event.results[0][0].transcript.toLowerCase();
+      console.log('Voice command:', command);
+      
+      // Process voice commands
+      if (command.includes('wheat') || command.includes('गेहूं')) {
+        setSelectedPlant('wheat');
+      } else if (command.includes('rice') || command.includes('चावल')) {
+        setSelectedPlant('rice');
+      } else if (command.includes('tomato') || command.includes('टमाटर')) {
+        setSelectedPlant('tomato');
+      } else if (command.includes('corn') || command.includes('मक्का')) {
+        setSelectedPlant('corn');
+      } else if (command.includes('zoom in') || command.includes('बड़ा करो')) {
+        setPlantScale(prev => Math.min(prev + 0.5, 3));
+      } else if (command.includes('zoom out') || command.includes('छोटा करो')) {
+        setPlantScale(prev => Math.max(prev - 0.5, 0.5));
+      } else if (command.includes('rotate') || command.includes('घुमाओ')) {
+        setPlantRotation(prev => prev + 90);
+      } else if (command.includes('reset') || command.includes('रीसेट')) {
+        setPlantScale(1);
+        setPlantRotation(0);
+      } else if (command.includes('start camera') || command.includes('कैमरा चालू')) {
+        startARSession();
+      } else if (command.includes('stop camera') || command.includes('कैमरा बंद')) {
+        stopARSession();
+      } else if (command.includes('wind') || command.includes('हवा')) {
+        if (command.includes('high') || command.includes('तेज')) {
+          setWindStrength(5);
+        } else if (command.includes('low') || command.includes('धीमी')) {
+          setWindStrength(1);
+        } else if (command.includes('medium') || command.includes('मध्यम')) {
+          setWindStrength(3);
+        }
+      } else if (command.includes('rain') || command.includes('बारिश')) {
+        if (command.includes('start') || command.includes('शुरू')) {
+          setIsRaining(true);
+        } else if (command.includes('stop') || command.includes('बंद')) {
+          setIsRaining(false);
+        } else {
+          setIsRaining(!isRaining);
+        }
+      } else if (command.includes('spring') || command.includes('बसंत')) {
+        setSeason('spring');
+      } else if (command.includes('summer') || command.includes('गर्मी')) {
+        setSeason('summer');
+      } else if (command.includes('autumn') || command.includes('fall') || command.includes('पतझड़')) {
+        setSeason('autumn');
+      } else if (command.includes('winter') || command.includes('सर्दी')) {
+        setSeason('winter');
+      } else if (command.includes('particles') || command.includes('effects') || command.includes('प्रभाव')) {
+        setShowParticleEffects(!showParticleEffects);
+      } else if (command.includes('animate growth') || command.includes('वृद्धि दिखाओ')) {
+        animateGrowth();
+      } else {
+        setError(`Voice command "${command}" not recognized. Try: "show wheat", "zoom in", "start rain", "high wind", etc.`);
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Voice recognition error:', event.error);
+      setError(`Voice recognition error: ${event.error}`);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
+  // Growth animation
+  const animateGrowth = async () => {
+    if (isAnimatingGrowth) return;
+    
+    setIsAnimatingGrowth(true);
+    const plant = getCurrentPlant();
+    const maxStages = plant.growth_stages.length - 1;
+    
+    // Start from stage 0 and animate to current stage
+    for (let stage = 0; stage <= plant.current_stage; stage++) {
+      setPlantModels(prev => prev.map(p => 
+        p.id === selectedPlant 
+          ? { ...p, current_stage: stage }
+          : p
+      ));
+      
+      if (stage < plant.current_stage) {
+        await new Promise(resolve => setTimeout(resolve, animationSpeed));
+      }
+    }
+    
+    setIsAnimatingGrowth(false);
   };
 
   return (
@@ -373,15 +986,133 @@ const ARPlantVisualization: React.FC = () => {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      {/* Mobile Quick Access Panel */}
+      {isMobile && (
+        <Card elevation={2} sx={{ mb: 2, borderRadius: 3 }}>
+          <CardContent sx={{ py: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                🎤 Voice: "{isListening ? 'Listening...' : 'Say "show wheat" or "zoom in"'}"
+              </Typography>
+              {voiceSupported && (
+                <Button
+                  size="small"
+                  variant={isListening ? 'contained' : 'outlined'}
+                  onClick={startVoiceCommand}
+                  disabled={isListening}
+                  startIcon={isListening ? <MicOff /> : <Mic />}
+                  sx={{
+                    bgcolor: isListening ? '#ff5722' : 'transparent',
+                    minWidth: 'auto',
+                  }}
+                >
+                  {isListening ? 'Stop' : 'Voice'}
+                </Button>
+              )}
+            </Box>
+            
+            <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap' }}>
+              {mockPlants.slice(0, 4).map((plant) => (
+                <Chip
+                  key={plant.id}
+                  icon={<Typography sx={{ fontSize: '16px' }}>{plant.icon}</Typography>}
+                  label={plant.name.split(' ')[0]}
+                  onClick={() => setSelectedPlant(plant.id)}
+                  variant={selectedPlant === plant.id ? 'filled' : 'outlined'}
+                  size="small"
+                  color={selectedPlant === plant.id ? 'primary' : 'default'}
+                />
+              ))}
+            </Box>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2, justifyContent: 'space-between' }}>
+              <Typography variant="caption" color="text.secondary">
+                Current: {getCurrentPlant().growth_stages[getCurrentPlant().current_stage]}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={animateGrowth}
+                  disabled={isAnimatingGrowth}
+                  startIcon={<Animation />}
+                >
+                  {isAnimatingGrowth ? 'Playing' : 'Animate'}
+                </Button>
+              </Box>
+            </Box>
+            
+            {/* Mobile 3D Controls */}
+            <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid rgba(0,0,0,0.1)' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                <Typography variant="caption" color="text.secondary">
+                  🌬️ Wind: Level {windStrength}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                  {[1,2,3,4,5].map(level => (
+                    <Button
+                      key={level}
+                      size="small"
+                      variant={windStrength === level ? 'contained' : 'outlined'}
+                      onClick={() => setWindStrength(level)}
+                      sx={{ minWidth: '24px', height: '24px', p: 0 }}
+                    >
+                      {level}
+                    </Button>
+                  ))}
+                </Box>
+              </Box>
+              
+              <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                <Button
+                  size="small"
+                  variant={isRaining ? 'contained' : 'outlined'}
+                  onClick={() => setIsRaining(!isRaining)}
+                  sx={{ minWidth: 'auto', bgcolor: isRaining ? '#2196F3' : 'transparent' }}
+                >
+                  {isRaining ? '🌧️' : '☁️'}
+                </Button>
+                
+                {['🌸', '☀️', '🍂', '❄️'].map((emoji, idx) => {
+                  const seasons = ['spring', 'summer', 'autumn', 'winter'];
+                  return (
+                    <Button
+                      key={seasons[idx]}
+                      size="small"
+                      variant={season === seasons[idx] ? 'contained' : 'outlined'}
+                      onClick={() => setSeason(seasons[idx] as any)}
+                      sx={{ minWidth: 'auto' }}
+                    >
+                      {emoji}
+                    </Button>
+                  );
+                })}
+                
+                <Button
+                  size="small"
+                  variant={showParticleEffects ? 'contained' : 'outlined'}
+                  onClick={() => setShowParticleEffects(!showParticleEffects)}
+                  sx={{ minWidth: 'auto' }}
+                >
+                  ✨
+                </Button>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+      )}
+
+      <Grid container spacing={{ xs: 1, md: 3 }}>
         {/* AR Camera View */}
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} lg={8} md={7}>
           <Card elevation={3} sx={{ borderRadius: 3, mb: 3 }}>
             <CardContent sx={{ p: 0, position: 'relative' }}>
               <Box
                 id="ar-container"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
                 sx={{
-                  height: isFullscreen ? '100vh' : '500px',
+                  height: isFullscreen ? '100vh' : { xs: '350px', md: '500px' },
                   backgroundColor: '#000',
                   borderRadius: isFullscreen ? 0 : 3,
                   overflow: 'hidden',
@@ -389,6 +1120,11 @@ const ARPlantVisualization: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  cursor: isMobile ? 'default' : 'grab',
+                  userSelect: 'none',
+                  '&:active': {
+                    cursor: isMobile ? 'default' : 'grabbing',
+                  },
                 }}
               >
                 {/* Camera Video or Demo Mode */}
@@ -405,19 +1141,42 @@ const ARPlantVisualization: React.FC = () => {
                     }}
                   />
                 ) : isARActive ? (
-                  {/* Demo Mode - Simulated AR background */}
+                  // Demo Mode - Simulated AR background with realistic environment
                   <Box
                     sx={{
                       width: '100%',
                       height: '100%',
                       background: `
-                        linear-gradient(45deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.1) 100%),
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>')
+                        linear-gradient(180deg, 
+                          #87CEEB 0%, 
+                          #98FB98 30%, 
+                          #90EE90 60%, 
+                          #8FBC8F 80%, 
+                          #6B8E23 100%
+                        ),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="grass" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M5 10 Q3 5 5 0" stroke="%2334A853" stroke-width="0.5" fill="none" opacity="0.3"/><path d="M2 10 Q4 6 2 2" stroke="%2316A34A" stroke-width="0.3" fill="none" opacity="0.2"/><path d="M8 10 Q6 4 8 1" stroke="%2322C55E" stroke-width="0.4" fill="none" opacity="0.25"/></pattern></defs><rect width="100" height="100" fill="url(%23grass)"/></svg>')
                       `,
                       position: 'relative',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      overflow: 'hidden',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'url("data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'><circle cx=\'20\' cy=\'20\' r=\'1\' fill=\'%23ffffff\' opacity=\'0.6\'><animate attributeName=\'opacity\' values=\'0.6;0.1;0.6\' dur=\'3s\' repeatCount=\'indefinite\'/></circle><circle cx=\'60\' cy=\'80\' r=\'0.8\' fill=\'%23ffffff\' opacity=\'0.4\'><animate attributeName=\'opacity\' values=\'0.4;0.1;0.4\' dur=\'4s\' repeatCount=\'indefinite\'/></circle><circle cx=\'140\' cy=\'40\' r=\'1.2\' fill=\'%23ffffff\' opacity=\'0.5\'><animate attributeName=\'opacity\' values=\'0.5;0.2;0.5\' dur=\'2.5s\' repeatCount=\'indefinite\'/></circle><circle cx=\'180\' cy=\'120\' r=\'0.9\' fill=\'%23ffffff\' opacity=\'0.3\'><animate attributeName=\'opacity\' values=\'0.3;0.1;0.3\' dur=\'3.5s\' repeatCount=\'indefinite\'/></circle></svg>")',
+                        animation: 'float 6s ease-in-out infinite',
+                        pointerEvents: 'none',
+                      },
+                      '@keyframes float': {
+                        '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                        '33%': { transform: 'translateY(-5px) rotate(1deg)' },
+                        '66%': { transform: 'translateY(-3px) rotate(-1deg)' },
+                      },
                     }}
                   >
                     {/* Demo Mode Notice */}
@@ -490,13 +1249,14 @@ const ARPlantVisualization: React.FC = () => {
                     <Box
                       sx={{
                         position: 'absolute',
-                        top: 20,
-                        left: 20,
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        top: isMobile ? 10 : 20,
+                        left: isMobile ? 10 : 20,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         color: 'white',
-                        p: 2,
+                        p: isMobile ? 1.5 : 2,
                         borderRadius: 2,
-                        maxWidth: '300px',
+                        maxWidth: isMobile ? '200px' : '300px',
+                        fontSize: isMobile ? '0.8rem' : '1rem',
                       }}
                     >
                       <Typography variant="h6" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
@@ -567,7 +1327,7 @@ const ARPlantVisualization: React.FC = () => {
                       </Typography>
                     </Box>
 
-                    {/* Virtual Plant (Mock 3D representation) */}
+                    {/* Virtual Plant (Realistic 3D SVG representation) */}
                     <Box
                       sx={{
                         position: 'absolute',
@@ -575,22 +1335,52 @@ const ARPlantVisualization: React.FC = () => {
                         left: '50%',
                         transform: `translate(-50%, 0) scale(${plantScale}) rotate(${plantRotation}deg)`,
                         transition: 'all 0.3s ease',
+                        perspective: '1000px',
                       }}
                     >
-                      <Typography
+                      {/* Render Realistic 3D Plant */}
+                      {renderRealistic3DPlant(getCurrentPlant())}
+                      
+                      {/* Plant Shadow */}
+                      <Box
                         sx={{
-                          fontSize: '120px',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                          animation: 'float 3s ease-in-out infinite',
-                          '@keyframes float': {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                          },
+                          position: 'absolute',
+                          bottom: -10,
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: '120px',
+                          height: '20px',
+                          background: 'radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%)',
+                          borderRadius: '50%',
+                        }}
+                      />
+                    </Box>
+
+                    {/* Mobile Gesture Helper */}
+                    {isMobile && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          bottom: 80,
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          backgroundColor: 'rgba(255, 193, 7, 0.9)',
+                          color: '#000',
+                          px: 2,
+                          py: 1,
+                          borderRadius: 2,
+                          textAlign: 'center',
+                          maxWidth: '280px',
                         }}
                       >
-                        {getCurrentPlant().icon}
-                      </Typography>
-                    </Box>
+                        <Typography variant="caption" sx={{ fontWeight: 'bold', display: 'block' }}>
+                          👆 Touch Gestures:
+                        </Typography>
+                        <Typography variant="caption" sx={{ fontSize: '10px' }}>
+                          Swipe up/down: Zoom • Swipe left/right: Rotate • Double tap: Reset
+                        </Typography>
+                      </Box>
+                    )}
 
                     {/* AR Controls */}
                     <Box
@@ -600,51 +1390,81 @@ const ARPlantVisualization: React.FC = () => {
                         left: '50%',
                         transform: 'translateX(-50%)',
                         display: 'flex',
-                        gap: 1,
+                        gap: isMobile ? 0.5 : 1,
                         backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                        p: 1,
+                        p: isMobile ? 0.5 : 1,
                         borderRadius: 3,
+                        flexWrap: isMobile ? 'wrap' : 'nowrap',
+                        maxWidth: isMobile ? '320px' : 'auto',
+                        justifyContent: 'center',
                       }}
                     >
-                      <Tooltip title="Zoom In">
-                        <IconButton
-                          size="small"
-                          onClick={() => setPlantScale(prev => Math.min(prev + 0.2, 3))}
-                          sx={{ color: 'white' }}
-                        >
-                          <ZoomIn />
-                        </IconButton>
-                      </Tooltip>
+                      {/* Voice Command Button */}
+                      {voiceSupported && (
+                        <Tooltip title={isListening ? "Listening..." : "Voice Commands"}>
+                          <IconButton
+                            size={isMobile ? "medium" : "small"}
+                            onClick={startVoiceCommand}
+                            disabled={isListening}
+                            sx={{
+                              color: isListening ? '#ff5722' : 'white',
+                              animation: isListening ? 'pulse 1.5s infinite' : 'none',
+                              '@keyframes pulse': {
+                                '0%': { opacity: 1 },
+                                '50%': { opacity: 0.5 },
+                                '100%': { opacity: 1 },
+                              },
+                            }}
+                          >
+                            {isListening ? <MicOff /> : <Mic />}
+                          </IconButton>
+                        </Tooltip>
+                      )}
 
-                      <Tooltip title="Zoom Out">
-                        <IconButton
-                          size="small"
-                          onClick={() => setPlantScale(prev => Math.max(prev - 0.2, 0.5))}
-                          sx={{ color: 'white' }}
-                        >
-                          <ZoomOut />
-                        </IconButton>
-                      </Tooltip>
+                      {/* Desktop Only - Zoom Controls */}
+                      {!isMobile && (
+                        <>
+                          <Tooltip title="Zoom In">
+                            <IconButton
+                              size="small"
+                              onClick={() => setPlantScale(prev => Math.min(prev + 0.2, 3))}
+                              sx={{ color: 'white' }}
+                            >
+                              <ZoomIn />
+                            </IconButton>
+                          </Tooltip>
 
-                      <Tooltip title="Rotate Left">
-                        <IconButton
-                          size="small"
-                          onClick={() => setPlantRotation(prev => prev - 45)}
-                          sx={{ color: 'white' }}
-                        >
-                          <RotateLeft />
-                        </IconButton>
-                      </Tooltip>
+                          <Tooltip title="Zoom Out">
+                            <IconButton
+                              size="small"
+                              onClick={() => setPlantScale(prev => Math.max(prev - 0.2, 0.5))}
+                              sx={{ color: 'white' }}
+                            >
+                              <ZoomOut />
+                            </IconButton>
+                          </Tooltip>
 
-                      <Tooltip title="Rotate Right">
-                        <IconButton
-                          size="small"
-                          onClick={() => setPlantRotation(prev => prev + 45)}
-                          sx={{ color: 'white' }}
-                        >
-                          <RotateRight />
-                        </IconButton>
-                      </Tooltip>
+                          <Tooltip title="Rotate Left">
+                            <IconButton
+                              size="small"
+                              onClick={() => setPlantRotation(prev => prev - 45)}
+                              sx={{ color: 'white' }}
+                            >
+                              <RotateLeft />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip title="Rotate Right">
+                            <IconButton
+                              size="small"
+                              onClick={() => setPlantRotation(prev => prev + 45)}
+                              sx={{ color: 'white' }}
+                            >
+                              <RotateRight />
+                            </IconButton>
+                          </Tooltip>
+                        </>
+                      )}
 
                       <Tooltip title="Switch Camera">
                         <IconButton
@@ -694,7 +1514,7 @@ const ARPlantVisualization: React.FC = () => {
         </Grid>
 
         {/* Plant Selection & Controls */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} lg={4} md={5}>
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -724,6 +1544,203 @@ const ARPlantVisualization: React.FC = () => {
                     ))}
                   </Select>
                 </FormControl>
+
+                {/* Growth Stage Simulation */}
+                <Box sx={{ mt: 3 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    🚀 Growth Simulation
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        const plant = getCurrentPlant();
+                        const newStage = Math.max(0, plant.current_stage - 1);
+                        setPlantModels(prev => prev.map(p => 
+                          p.id === selectedPlant 
+                            ? { ...p, current_stage: newStage }
+                            : p
+                        ));
+                      }}
+                      disabled={getCurrentPlant().current_stage <= 0}
+                    >
+                      ⏪ Earlier
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        const plant = getCurrentPlant();
+                        const newStage = Math.min(plant.growth_stages.length - 1, plant.current_stage + 1);
+                        setPlantModels(prev => prev.map(p => 
+                          p.id === selectedPlant 
+                            ? { ...p, current_stage: newStage }
+                            : p
+                        ));
+                      }}
+                      disabled={getCurrentPlant().current_stage >= getCurrentPlant().growth_stages.length - 1}
+                    >
+                      Later ⏩
+                    </Button>
+                  </Box>
+                  
+                  {/* Growth Animation Controls */}
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      🎥 Time-lapse Animation
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={animateGrowth}
+                        disabled={isAnimatingGrowth}
+                        startIcon={isAnimatingGrowth ? <Pause /> : <PlayArrow />}
+                        sx={{ bgcolor: '#4caf50' }}
+                      >
+                        {isAnimatingGrowth ? 'Playing...' : 'Play Growth'}
+                      </Button>
+                      <Tooltip title="Animation Speed">
+                        <IconButton size="small">
+                          <Animation />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <Slider
+                      value={animationSpeed}
+                      onChange={(_, value) => setAnimationSpeed(value as number)}
+                      min={200}
+                      max={2000}
+                      step={200}
+                      size="small"
+                      disabled={isAnimatingGrowth}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={(value) => `${value}ms`}
+                    />
+                  </Box>
+                </Box>
+
+                {/* 3D Animation Controls */}
+                <Box sx={{ mt: 3 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
+                    🍃 3D Plant Animations
+                  </Typography>
+                  
+                  {/* Wind Strength */}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      🌬️ Wind Strength: Level {windStrength}
+                    </Typography>
+                    <Slider
+                      value={windStrength}
+                      onChange={(_, value) => setWindStrength(value as number)}
+                      min={1}
+                      max={5}
+                      step={1}
+                      size="small"
+                      marks
+                      valueLabelDisplay="auto"
+                      sx={{ color: '#4caf50' }}
+                    />
+                  </Box>
+                  
+                  {/* Season Selection */}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      🌳 Season Effects
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {['spring', 'summer', 'autumn', 'winter'].map((seasonOption) => (
+                        <Button
+                          key={seasonOption}
+                          size="small"
+                          variant={season === seasonOption ? 'contained' : 'outlined'}
+                          onClick={() => setSeason(seasonOption as any)}
+                          sx={{
+                            minWidth: 'auto',
+                            bgcolor: season === seasonOption ? {
+                              spring: '#8BC34A',
+                              summer: '#FF9800', 
+                              autumn: '#FF5722',
+                              winter: '#2196F3'
+                            }[seasonOption] : 'transparent'
+                          }}
+                        >
+                          {{
+                            spring: '🌸',
+                            summer: '☀️', 
+                            autumn: '🍂',
+                            winter: '❄️'
+                          }[seasonOption]}
+                        </Button>
+                      ))}
+                    </Box>
+                  </Box>
+                  
+                  {/* Weather Effects */}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      🌧️ Weather Effects
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button
+                        size="small"
+                        variant={isRaining ? 'contained' : 'outlined'}
+                        onClick={() => setIsRaining(!isRaining)}
+                        startIcon={isRaining ? '🌧️' : '☁️'}
+                        sx={{ bgcolor: isRaining ? '#2196F3' : 'transparent' }}
+                      >
+                        {isRaining ? 'Stop Rain' : 'Start Rain'}
+                      </Button>
+                      <Button
+                        size="small"
+                        variant={showParticleEffects ? 'contained' : 'outlined'}
+                        onClick={() => setShowParticleEffects(!showParticleEffects)}
+                        startIcon={'✨'}
+                        sx={{ bgcolor: showParticleEffects ? '#FF9800' : 'transparent' }}
+                      >
+                        Particles
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Environmental Simulation */}
+                <Box sx={{ mt: 3 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
+                    🌦️ Environmental Conditions
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                    <Button
+                      size="small"
+                      variant={arSession.lighting_condition === 'good' ? 'contained' : 'outlined'}
+                      onClick={() => setArSession(prev => ({ ...prev, lighting_condition: 'good' }))}
+                      startIcon={<WbSunny />}
+                    >
+                      Sunny
+                    </Button>
+                    <Button
+                      size="small"
+                      variant={arSession.lighting_condition === 'dim' ? 'contained' : 'outlined'}
+                      onClick={() => setArSession(prev => ({ ...prev, lighting_condition: 'dim' }))}
+                      startIcon={<FilterHdr />}
+                    >
+                      Cloudy
+                    </Button>
+                    <Button
+                      size="small"
+                      variant={arSession.lighting_condition === 'bright' ? 'contained' : 'outlined'}
+                      onClick={() => setArSession(prev => ({ ...prev, lighting_condition: 'bright' }))}
+                      startIcon={<WbSunny />}
+                    >
+                      Bright
+                    </Button>
+                  </Box>
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                    Different lighting affects plant growth and AR tracking quality
+                  </Typography>
+                </Box>
 
                 {/* Current Plant Info */}
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
