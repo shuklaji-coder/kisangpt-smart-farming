@@ -157,21 +157,36 @@ const ARPlantVisualization: React.FC = () => {
       setLoading(true);
       setError('');
 
-      // Request camera permission
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: cameraFacing,
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        },
-        audio: false
-      });
+      // Check if camera is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera not supported in this browser');
+      }
+
+      // Request camera permission with fallback
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: cameraFacing,
+            width: { ideal: 1280, min: 640 },
+            height: { ideal: 720, min: 480 }
+          },
+          audio: false
+        });
+      } catch (cameraError) {
+        console.warn('Specific camera settings failed, trying basic settings:', cameraError);
+        // Fallback to basic camera settings
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        });
+      }
 
       setCameraStream(stream);
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        videoRef.current.play();
+        await videoRef.current.play();
       }
 
       setArSession(prev => ({
@@ -193,9 +208,31 @@ const ARPlantVisualization: React.FC = () => {
         }));
       }, 2000);
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error starting AR session:', err);
-      setError('Camera access denied or not available. Please allow camera permission and try again.');
+      let errorMessage = 'AR session could not start. ';
+      
+      if (err.name === 'NotAllowedError') {
+        errorMessage += 'Camera permission denied. Please allow camera access and try again.';
+      } else if (err.name === 'NotFoundError') {
+        errorMessage += 'No camera found on this device.';
+      } else if (err.name === 'NotSupportedError') {
+        errorMessage += 'Camera not supported in this browser.';
+      } else {
+        errorMessage += 'Please check camera permissions and try again.';
+      }
+      
+      setError(errorMessage);
+      
+      // Enable demo mode when camera fails
+      setIsARActive(true);
+      setArSession(prev => ({
+        ...prev,
+        active: true,
+        camera_access: false,
+        detected_surfaces: 2,
+        lighting_condition: 'good'
+      }));
     } finally {
       setLoading(false);
     }
@@ -354,19 +391,56 @@ const ARPlantVisualization: React.FC = () => {
                   justifyContent: 'center',
                 }}
               >
-                {/* Camera Video */}
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: isARActive ? 'block' : 'none',
-                  }}
-                />
+                {/* Camera Video or Demo Mode */}
+                {arSession.camera_access ? (
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                ) : isARActive ? (
+                  {/* Demo Mode - Simulated AR background */}
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      background: `
+                        linear-gradient(45deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.1) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>')
+                      `,
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {/* Demo Mode Notice */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 10,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: 'rgba(255, 193, 7, 0.9)',
+                        color: '#000',
+                        px: 2,
+                        py: 1,
+                        borderRadius: 2,
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                        📹 Demo Mode - Camera Not Available
+                      </Typography>
+                    </Box>
+                  </Box>
+                ) : null}
 
                 {/* Canvas for screenshots */}
                 <canvas

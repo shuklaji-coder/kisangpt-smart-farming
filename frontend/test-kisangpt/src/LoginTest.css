@@ -1,0 +1,220 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.success-card {
+  background: linear-gradient(135deg, #fff 0%, #f8fff8 100%);
+  border: 2px solid #4CAF50;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-header h1 {
+  color: #2E7D32;
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+}
+
+.login-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.demo-info {
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #2196f3;
+}
+
+.demo-info h3 {
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+}
+
+.demo-info ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.demo-info li {
+  font-family: 'Courier New', monospace;
+  margin-bottom: 0.25rem;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #ef5350;
+  font-weight: 500;
+}
+
+.login-form {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+  background: #4CAF50;
+  color: white;
+  width: 100%;
+  padding: 1rem;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-demo {
+  background: #2196f3;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.btn-demo:hover {
+  background: #1976d2;
+}
+
+.btn-secondary {
+  background: #666;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #555;
+}
+
+.test-status {
+  background: #f0f8f0;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #4CAF50;
+}
+
+.test-status h3 {
+  color: #2E7D32;
+  margin-bottom: 0.5rem;
+}
+
+.test-status p {
+  margin: 0.25rem 0;
+  font-weight: 500;
+}
+
+.user-info {
+  background: #f8fff8;
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+  border: 1px solid #4CAF50;
+}
+
+.user-info p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.features-list {
+  margin-top: 2rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px solid #4CAF50;
+}
+
+.features-list h3 {
+  color: #2E7D32;
+  margin-bottom: 1rem;
+}
+
+.features-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features-list li {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    padding: 1.5rem;
+    margin: 10px;
+  }
+  
+  .login-header h1 {
+    font-size: 2rem;
+  }
+}
