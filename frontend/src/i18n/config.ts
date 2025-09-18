@@ -1,7 +1,10 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+// @ts-ignore
 import en from './locales/en.json';
+// @ts-ignore
 import hi from './locales/hi.json';
+// @ts-ignore
 import mr from './locales/mr.json';
 
 const resources = {
