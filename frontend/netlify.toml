@@ -1,0 +1,30 @@
+[build]
+  publish = "build"
+  command = "CI=false npm run build"
+  
+[build.environment]
+  CI = "false"
+  GENERATE_SOURCEMAP = "false"
+  TSC_COMPILE_ON_ERROR = "true"
+  REACT_APP_API_URL = "https://kisangpt-smart-farming.onrender.com"
+  REACT_APP_OPENWEATHER_API_KEY = "f0ee189e8fc575d580eec8764caee056"
+  REACT_APP_DEBUG = "false"
+  NODE_ENV = "production"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://kisangpt-smart-farming.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"

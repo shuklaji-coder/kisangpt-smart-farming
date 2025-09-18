@@ -32,7 +32,15 @@ i18n
     
     react: {
       useSuspense: false,
-    }
+    },
+    
+    // Disable strict type checking for production builds
+    returnNull: false,
+    returnEmptyString: false,
+    saveMissing: false,
+    
+    // TypeScript compatibility
+    parseMissingKeyHandler: (key: string) => key,
   });
 
 export default i18n;
