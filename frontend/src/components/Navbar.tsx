@@ -162,7 +162,7 @@ const Navbar: React.FC = () => {
                 fontSize: '0.9rem',
               }}
             >
-              आपके खेत का समार्ट साथी
+              {t('app.tagline')}
             </Typography>
           </Box>
         </Box>
@@ -205,7 +205,7 @@ const Navbar: React.FC = () => {
                   <Person sx={{ fontSize: 20 }} />
                 </Avatar>
               }
-              label={`🙏 ${user.name || 'किसान जी'}`}
+              label={`🙏 ${user.name || t('navbar.farmerJi')}`}
               onClick={handleUserMenuClick}
               sx={{
                 ml: 2,
@@ -248,11 +248,11 @@ const Navbar: React.FC = () => {
             >
               <MenuItem onClick={handleUserMenuClose}>
                 <Person sx={{ mr: 2 }} />
-                प्रोफाइल
+                {t('navbar.profile')}
               </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <Logout sx={{ mr: 2 }} />
-                लॉग आउट
+                {t('navbar.logout')}
               </MenuItem>
             </Menu>
           </>
@@ -272,7 +272,7 @@ const Navbar: React.FC = () => {
               },
             }}
           >
-            लॉगिन
+            {t('navbar.login')}
           </Button>
         )}
 

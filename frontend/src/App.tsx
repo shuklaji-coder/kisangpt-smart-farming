@@ -19,6 +19,7 @@ import ARPlantVisualization from './components/ARPlantVisualization';
 import RainAlertSettings from './components/RainAlertSettings';
 import AuthPage from './components/AuthPage';
 import TestPage from './components/TestPage';
+import Footer from './components/Footer';
 import { authAPI } from './services/api';
 
 // Farmer-friendly theme with green agricultural colors
@@ -118,6 +119,8 @@ const AppContent = () => {
           <Route path="/rain-alerts" element={<RainAlertSettings />} />
         </Routes>
       </Container>
+      {/* Footer with Developer Credits */}
+      <Footer />
       {/* Floating Chatbot - Available on all pages except login */}
       <FloatingChatbot />
     </>

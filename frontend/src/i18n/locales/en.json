@@ -10,7 +10,14 @@
     "diseaseDetection": "Disease Detection",
     "cropRecommendation": "Crop Recommendation",
     "weather": "Weather Forecast",
-    "language": "Language"
+    "language": "Language",
+    "aiChat": "AI Chat",
+    "satellite": "Satellite View",
+    "arView": "AR Plants",
+    "farmerJi": "Farmer Ji",
+    "profile": "Profile",
+    "logout": "Logout",
+    "login": "Login"
   },
   "dashboard": {
     "welcome": "Welcome, {{name}}",
@@ -73,6 +80,12 @@
     "rainfall": "Rainfall",
     "windSpeed": "Wind Speed",
     "farmingAdvice": "Farming Advice Based on Weather"
+  },
+  "footer": {
+    "developedWith": "Developed with",
+    "by": "by",
+    "fullStackDeveloper": "Full-Stack Developer",
+    "copyright": "© 2024 KisanGPT Smart Farming • Made with ❤️ for Indian Farmers 🇮🇳"
   },
   "common": {
     "loading": "Loading...",
