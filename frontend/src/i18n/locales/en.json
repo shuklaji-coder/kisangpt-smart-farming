@@ -17,7 +17,8 @@
     "farmerJi": "Farmer Ji",
     "profile": "Profile",
     "logout": "Logout",
-    "login": "Login"
+    "login": "Login",
+    "rainAlerts": "🌧️ Rain Alerts"
   },
   "dashboard": {
     "welcome": "Welcome, {{name}}",
@@ -45,6 +46,7 @@
   },
   "community": {
     "title": "Village Network",
+    "subtitle": "Community of Farmers - Learn, Share and Grow Together",
     "connectWithFarmers": "Connect with Farmers",
     "shareExperience": "Share Experience",
     "askQuestions": "Ask Questions",

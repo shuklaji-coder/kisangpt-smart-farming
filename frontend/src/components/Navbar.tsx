@@ -118,10 +118,10 @@ const Navbar: React.FC = () => {
     { path: '/disease-detection', label: t('navbar.diseaseDetection'), icon: <BugReport /> },
     { path: '/crop-recommendation', label: t('navbar.cropRecommendation'), icon: <Grass /> },
     { path: '/weather', label: t('navbar.weather'), icon: <CloudQueue /> },
-    { path: '/ai-chat', label: t('navbar.aiChat', '🤖 AI Chat'), icon: <SmartToy /> },
-    { path: '/satellite-view', label: t('navbar.satellite', '🛰️ Satellite'), icon: <Satellite /> },
-    { path: '/ar-visualization', label: t('navbar.arView', '🌱 AR Plants'), icon: <ViewInAr /> },
-    { path: '/rain-alerts', label: '🌧️ Rain Alerts', icon: <Notifications /> },
+    { path: '/ai-chat', label: t('navbar.aiChat'), icon: <SmartToy /> },
+    { path: '/satellite-view', label: t('navbar.satellite'), icon: <Satellite /> },
+    { path: '/ar-visualization', label: t('navbar.arView'), icon: <ViewInAr /> },
+    { path: '/rain-alerts', label: t('navbar.rainAlerts'), icon: <Notifications /> },
   ];
 
   return (

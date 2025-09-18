@@ -261,10 +261,10 @@ const CommunityNetwork: React.FC = () => {
         >
           <Group sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            👥 {t('community.title', 'Community Network')}
+            👥 {t('community.title')}
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
-            {t('community.subtitle', 'किसानों का समुदाय - सीखें, साझा करें और एक साथ बढ़ें')}
+            {t('community.subtitle')}
           </Typography>
         </Paper>
       </motion.div>
