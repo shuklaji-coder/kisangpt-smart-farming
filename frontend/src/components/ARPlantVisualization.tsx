@@ -403,7 +403,7 @@ const ARPlantVisualization: React.FC = () => {
       style: {
         filter: `brightness(${0.7 + healthFactor * 0.3 + brightnessBoost}) saturate(${healthFactor + saturationBoost})`,
         animation: `sway ${swayDuration} ease-in-out infinite, grow 2.5s ease-in-out infinite alternate`,
-        transformStyle: 'preserve-3d',
+        transformStyle: 'preserve-3d' as 'preserve-3d',
       }
     };
 
@@ -416,7 +416,7 @@ const ARPlantVisualization: React.FC = () => {
               width: `${80 + growthFactor * 60}px`,
               height: `${100 + growthFactor * 80}px`,
               transform: 'rotateX(15deg)',
-              transformStyle: 'preserve-3d',
+              transformStyle: 'preserve-3d' as 'preserve-3d',
               position: 'relative',
               '@keyframes sway': {
                 '0%': { transform: `rotateX(15deg) rotateZ(-${swayAngle / 2}deg) translateY(${windStrength * 0.5}px)` },
@@ -600,7 +600,7 @@ const ARPlantVisualization: React.FC = () => {
               width: `${90 + growthFactor * 50}px`,
               height: `${120 + growthFactor * 60}px`,
               transform: 'rotateX(10deg)',
-              transformStyle: 'preserve-3d',
+              transformStyle: 'preserve-3d' as 'preserve-3d',
               '@keyframes sway': {
                 '0%, 100%': { transform: 'rotateX(10deg) rotateZ(0deg)' },
                 '50%': { transform: 'rotateX(10deg) rotateZ(-2deg)' },
@@ -655,7 +655,7 @@ const ARPlantVisualization: React.FC = () => {
               width: `${100 + growthFactor * 40}px`,
               height: `${80 + growthFactor * 70}px`,
               transform: 'rotateX(20deg)',
-              transformStyle: 'preserve-3d',
+              transformStyle: 'preserve-3d' as 'preserve-3d',
               '@keyframes sway': {
                 '0%, 100%': { transform: 'rotateX(20deg) rotateZ(0deg)' },
                 '50%': { transform: 'rotateX(20deg) rotateZ(2deg)' },
@@ -719,7 +719,7 @@ const ARPlantVisualization: React.FC = () => {
               width: `${70 + growthFactor * 50}px`,
               height: `${130 + growthFactor * 70}px`,
               transform: 'rotateX(12deg)',
-              transformStyle: 'preserve-3d',
+              transformStyle: 'preserve-3d' as 'preserve-3d',
               '@keyframes sway': {
                 '0%, 100%': { transform: 'rotateX(12deg) rotateZ(0deg)' },
                 '50%': { transform: 'rotateX(12deg) rotateZ(-3deg)' },
