@@ -179,7 +179,6 @@ const Navbar: React.FC = () => {
             >
               KisanGPT
             </Typography>
-            </Typography>
           </Box>
         </Box>
 
