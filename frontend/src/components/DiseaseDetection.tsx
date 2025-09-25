@@ -39,6 +39,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { diseaseDetectionService } from '../services/diseaseDetectionService';
 
 interface DiseaseInfo {
   name: string;
@@ -48,6 +49,11 @@ interface DiseaseInfo {
   treatments: string[];
   prevention: string[];
   economic_impact: string;
+  healthScore?: number;
+  recommendations?: string[];
+  urgentActions?: string[];
+  imageQuality?: 'excellent' | 'good' | 'poor';
+  plantPart?: string;
 }
 
 const DiseaseDetection: React.FC = () => {
@@ -77,32 +83,66 @@ const DiseaseDetection: React.FC = () => {
     if (!selectedImage) return;
 
     setLoading(true);
-    const formData = new FormData();
-    formData.append('image', selectedImage);
-    formData.append('crop_type', cropType);
-    formData.append('location', location);
-
+    
     try {
-      // Backend API call for image analysis
-      const response = await axios.post('http://localhost:8000/api/disease/analyze-image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setDiseaseResult(response.data);
+      // Use AI disease detection service
+      const healthAnalysis = await diseaseDetectionService.detectDisease(selectedImage);
+      
+      // Convert AI analysis to component format
+      if (healthAnalysis.diseases.length > 0) {
+        const primaryDisease = healthAnalysis.diseases[0];
+        const diseaseInfo: DiseaseInfo = {
+          name: `${primaryDisease.name} (${primaryDisease.hindiName})`,
+          severity: primaryDisease.severity === 'severe' ? 'High' : 
+                   primaryDisease.severity === 'moderate' ? 'Medium' : 'Low',
+          confidence: primaryDisease.confidence / 100,
+          symptoms: primaryDisease.symptoms,
+          treatments: [
+            ...primaryDisease.organicTreatments.slice(0, 3),
+            ...primaryDisease.chemicalTreatments.slice(0, 2)
+          ],
+          prevention: primaryDisease.preventions || [
+            'नियमित निगरानी करें',
+            'प्रतिरोधी किस्मों का उपयोग करें'
+          ],
+          economic_impact: `संभावित नुकसान: ${primaryDisease.economicImpact.yieldLoss}% उत्पादन कमी | इलाज की लागत: ₹${primaryDisease.economicImpact.treatmentCost}`,
+          healthScore: healthAnalysis.overallHealth,
+          recommendations: healthAnalysis.recommendations,
+          urgentActions: healthAnalysis.urgentActions,
+          imageQuality: healthAnalysis.imageMetadata.quality,
+          plantPart: healthAnalysis.imageMetadata.plantPart
+        };
+        
+        setDiseaseResult(diseaseInfo);
+      } else {
+        // Healthy crop detected
+        setDiseaseResult({
+          name: 'स्वस्थ फसल (Healthy Crop)',
+          severity: 'None',
+          confidence: healthAnalysis.overallHealth / 100,
+          symptoms: ['कोई बीमारी के लक्षण नहीं मिले'],
+          treatments: ['कोई इलाज की जरूरत नहीं'],
+          prevention: healthAnalysis.recommendations,
+          economic_impact: 'कोई आर्थिक नुकसान नहीं',
+          healthScore: healthAnalysis.overallHealth,
+          imageQuality: healthAnalysis.imageMetadata.quality
+        });
+      }
+      
       setOpenDialog(true);
+
     } catch (error) {
-      console.error('Error analyzing image:', error);
-      // Mock response for demo
+      console.error('AI Disease Detection Error:', error);
+      
+      // Enhanced fallback response
       setDiseaseResult({
-        name: 'Leaf Rust',
-        severity: 'Medium',
-        confidence: 0.85,
-        symptoms: ['Orange-brown pustules on leaves', 'Yellowing of leaf margins', 'Reduced plant vigor'],
-        treatments: ['Apply fungicide spray', 'Improve air circulation', 'Remove affected leaves'],
-        prevention: ['Use resistant varieties', 'Proper spacing', 'Regular monitoring'],
-        economic_impact: 'Potential yield loss: 15-25%'
+        name: 'विश्लेषण असफल (Analysis Failed)',
+        severity: 'Unknown',
+        confidence: 0.5,
+        symptoms: ['इमेज की गुणवत्ता बेहतर करके फिर कोशिश करें'],
+        treatments: ['अच्छी रोशनी में फोटो लें', 'पत्तियों को पास से दिखाएं'],
+        prevention: ['नियमित मानिटरिंग करें'],
+        economic_impact: 'विश्लेषण असफल'
       });
       setOpenDialog(true);
     } finally {

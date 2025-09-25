@@ -31,6 +31,7 @@ import {
   AccountCircle,
   Logout,
   Person,
+  AccountBalance,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -62,6 +63,8 @@ const Navbar: React.FC = () => {
 
   const languages = [
     { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
+    { code: 'pa', name: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
+    { code: 'bn', name: 'বাংলা', flag: '🇮🇳' },
     { code: 'mr', name: 'मराठी', flag: '🇮🇳' },
     { code: 'en', name: 'English', flag: '🇬🇧' },
   ];
@@ -113,10 +116,13 @@ const Navbar: React.FC = () => {
 
   const navigationItems = [
     { path: '/', label: t('navbar.dashboard'), icon: <Dashboard /> },
+    { path: '/enhanced-crop-recommendation', label: t('navbar.satelliteAnalysis'), icon: <Satellite /> },
+    { path: '/government-subsidy', label: t('navbar.governmentSchemes'), icon: <AccountBalance /> },
+    { path: '/disease-detection', label: t('navbar.diseaseDetection'), icon: <BugReport /> },
+    { path: '/market-analysis', label: t('navbar.marketAnalysis'), icon: <SmartToy /> },
+    { path: '/crop-recommendation', label: t('navbar.cropRecommendation'), icon: <Grass /> },
     { path: '/dream-visualization', label: t('navbar.dreamVisualization'), icon: <Visibility /> },
     { path: '/community', label: t('navbar.community'), icon: <Group /> },
-    { path: '/disease-detection', label: t('navbar.diseaseDetection'), icon: <BugReport /> },
-    { path: '/crop-recommendation', label: t('navbar.cropRecommendation'), icon: <Grass /> },
     { path: '/weather', label: t('navbar.weather'), icon: <CloudQueue /> },
     { path: '/ai-chat', label: t('navbar.aiChat'), icon: <SmartToy /> },
     { path: '/satellite-view', label: t('navbar.satellite'), icon: <Satellite /> },
@@ -170,7 +176,7 @@ const Navbar: React.FC = () => {
         {/* Desktop Navigation */}
         {!isMobile && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {navigationItems.slice(0, 4).map((item) => (
+            {navigationItems.slice(0, 6).map((item) => (
               <Button
                 key={item.path}
                 color="inherit"

@@ -18,7 +18,10 @@
     "profile": "प्रोफाइल",
     "logout": "लॉग आउट",
     "login": "लॉगिन",
-    "rainAlerts": "🌧️ पावस अलर्ट"
+    "rainAlerts": "🌧️ पाऊस अलर्ट",
+    "satelliteAnalysis": "🛰️ सॅटेलाइट पिक विश्लेषण",
+    "governmentSchemes": "🏦 सरकारी योजना",
+    "marketAnalysis": "📊 बाजार विश्लेषण"
   },
   "dashboard": {
     "welcome": "स्वागत आहे, {{name}}",

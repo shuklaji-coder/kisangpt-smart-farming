@@ -10,8 +10,10 @@ import DreamVisualization from './components/DreamVisualization';
 import CommunityNetwork from './components/CommunityNetwork';
 import DiseaseDetection from './components/DiseaseDetection';
 import CropRecommendation from './components/CropRecommendation';
+import EnhancedCropRecommendation from './components/EnhancedCropRecommendation';
 import WeatherForecast from './components/WeatherForecast';
 import MarketAnalysis from './components/MarketAnalysis';
+import GovernmentSubsidy from './components/GovernmentSubsidy';
 import AIChatbot from './components/AIChatbot';
 import FloatingChatbot from './components/FloatingChatbot';
 import SatelliteFieldView from './components/SatelliteFieldView';
@@ -111,6 +113,8 @@ const AppContent = () => {
           <Route path="/community" element={<CommunityNetwork />} />
           <Route path="/disease-detection" element={<DiseaseDetection />} />
           <Route path="/crop-recommendation" element={<CropRecommendation />} />
+          <Route path="/enhanced-crop-recommendation" element={<EnhancedCropRecommendation />} />
+          <Route path="/government-subsidy" element={<GovernmentSubsidy />} />
           <Route path="/weather" element={<WeatherForecast />} />
           <Route path="/market-analysis" element={<MarketAnalysis />} />
           <Route path="/ai-chat" element={<AIChatbot />} />

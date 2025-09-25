@@ -1,0 +1,108 @@
+{
+  "app": {
+    "name": "কিষাণGPT",
+    "tagline": "আপনার স্মার্ট কৃষি সহায়ক"
+  },
+  "navbar": {
+    "dashboard": "ড্যাশবোর্ড",
+    "dreamVisualization": "স্বপ্ন ভিজুয়ালাইজেশন",
+    "community": "গ্রাম নেটওয়ার্ক",
+    "diseaseDetection": "রোগ সনাক্তকরণ",
+    "cropRecommendation": "ফসল সুপারিশ",
+    "weather": "আবহাওয়ার পূর্বাভাস",
+    "language": "ভাষা",
+    "aiChat": "এআই চ্যাট",
+    "satellite": "স্যাটেলাইট ভিউ",
+    "arView": "এআর গাছপালা",
+    "farmerJi": "কিষাণ জি",
+    "profile": "প্রোফাইল",
+    "logout": "লগ আউট",
+    "login": "লগইন",
+    "rainAlerts": "🌧️ বৃষ্টি সতর্কতা",
+    "satelliteAnalysis": "🛰️ স্যাটেলাইট ফসল বিশ্লেষণ",
+    "governmentSchemes": "🏦 সরকারি প্রকল্প",
+    "marketAnalysis": "📊 বাজার বিশ্লেষণ"
+  },
+  "dashboard": {
+    "welcome": "স্বাগতম, {{name}}",
+    "futureVision": "ভবিষ্যত দর্শন ড্যাশবোর্ড",
+    "personalizedAdvice": "আপনার অতীতের উপর ভিত্তি করে ব্যক্তিগত পরামর্শ",
+    "totalIncome": "মোট আয়",
+    "policyReviews": "নীতি পর্যালোচনা",
+    "successPredictions": "সাফল্যের পূর্বাভাস",
+    "locationWeather": "অবস্থান এবং আবহাওয়া",
+    "communityConnections": "সম্প্রদায়িক সংযোগ",
+    "emotionalSupport": "আবেগীয় সহায়তা",
+    "farmingTraining": "কৃষি প্রশিক্ষণ গ্রুপ",
+    "viewMore": "আরও দেখুন"
+  },
+  "dreamVisualization": {
+    "title": "স্বপ্ন ভিজুয়ালাইজেশন ইঞ্জিন",
+    "subtitle": "সাফল্যের পথ ভিজুয়ালাইজেশন",
+    "today": "আজ",
+    "next30Days": "পরবর্তী ৩০ দিন",
+    "oneYearGoal": "১ বছরের লক্ষ্য",
+    "todayTask": "আয় নির্ধারণ করুন এবং খামার এগিয়ে নিন",
+    "next30Task": "রোগ প্রতিরোধ করুন এবং সমবায়ের সাথে প্রযুক্তি প্রয়োগ করুন",
+    "yearGoal": "আয় নির্ধারণ করুন এবং খুশি সমৃদ্ধি অর্জন করুন",
+    "motivationalText": "অবিরাম প্রচেষ্টায় আপনার স্বপ্ন বাস্তব হবে!"
+  },
+  "community": {
+    "title": "গ্রাম নেটওয়ার্ক",
+    "subtitle": "কৃষকদের সম্প্রদায় - শিখুন, ভাগ করুন এবং একসাথে বৃদ্ধি করুন",
+    "connectWithFarmers": "কৃষকদের সাথে যুক্ত হোন",
+    "shareExperience": "অভিজ্ঞতা ভাগ করুন",
+    "askQuestions": "প্রশ্ন জিজ্ঞাসা করুন",
+    "farmingTips": "কৃষি টিপস",
+    "marketUpdates": "বাজার আপডেট",
+    "governmentSchemes": "সরকারি প্রকল্প"
+  },
+  "diseaseDetection": {
+    "title": "ফসল রোগ সনাক্তকরণ",
+    "uploadImage": "ফসলের ছবি আপলোড করুন",
+    "takePhoto": "ছবি তুলুন",
+    "analyzing": "বিশ্লেষণ করা হচ্ছে...",
+    "result": "সনাক্তকরণ ফলাফল",
+    "treatment": "চিকিৎসার সুপারিশ",
+    "prevention": "প্রতিরোধের উপায়"
+  },
+  "cropRecommendation": {
+    "title": "ফসল সুপারিশ",
+    "soilType": "মাটির ধরণ",
+    "season": "মৌসুম",
+    "location": "অবস্থান",
+    "getRecommendation": "সুপারিশ পান",
+    "recommendedCrops": "সুপারিশকৃত ফসল",
+    "expectedYield": "প্রত্যাশিত ফলন",
+    "profitability": "লাভজনকতা"
+  },
+  "weather": {
+    "title": "আবহাওয়ার পূর্বাভাস",
+    "current": "বর্তমান আবহাওয়া",
+    "forecast": "৭-দিনের পূর্বাভাস",
+    "temperature": "তাপমাত্রা",
+    "humidity": "আর্দ্রতা",
+    "rainfall": "বৃষ্টিপাত",
+    "windSpeed": "বাতাসের গতি",
+    "farmingAdvice": "আবহাওয়ার ভিত্তিতে কৃষি পরামর্শ"
+  },
+  "footer": {
+    "developedWith": "তৈরি করা হয়েছে",
+    "by": "দ্বারা",
+    "fullStackDeveloper": "ফুল-স্ট্যাক ডেভেলপার",
+    "copyright": "© 2024 কিষাণGPT স্মার্ট ফার্মিং • ভারতীয় কৃষকদের জন্য ❤️ দিয়ে তৈরি 🇮🇳"
+  },
+  "common": {
+    "loading": "লোড হচ্ছে...",
+    "error": "ত্রুটি ঘটেছে",
+    "retry": "পুনরায় চেষ্টা",
+    "success": "সফলতা",
+    "submit": "জমা দিন",
+    "cancel": "বাতিল",
+    "save": "সেভ করুন",
+    "edit": "সম্পাদনা",
+    "delete": "মুছে ফেলুন",
+    "view": "দেখুন",
+    "close": "বন্ধ"
+  }
+}

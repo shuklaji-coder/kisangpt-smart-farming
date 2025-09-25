@@ -6,6 +6,10 @@ import en from './locales/en.json';
 import hi from './locales/hi.json';
 // @ts-ignore
 import mr from './locales/mr.json';
+// @ts-ignore
+import pa from './locales/pa.json';
+// @ts-ignore
+import bn from './locales/bn.json';
 
 const resources = {
   en: {
@@ -16,6 +20,12 @@ const resources = {
   },
   mr: {
     translation: mr
+  },
+  pa: {
+    translation: pa
+  },
+  bn: {
+    translation: bn
   }
 };
 

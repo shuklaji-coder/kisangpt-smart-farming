@@ -18,7 +18,10 @@
     "profile": "Profile",
     "logout": "Logout",
     "login": "Login",
-    "rainAlerts": "🌧️ Rain Alerts"
+    "rainAlerts": "🌧️ Rain Alerts",
+    "satelliteAnalysis": "🛰️ Satellite Crop Analysis",
+    "governmentSchemes": "🏦 Government Schemes",
+    "marketAnalysis": "📊 Market Analysis"
   },
   "dashboard": {
     "welcome": "Welcome, {{name}}",
@@ -101,5 +104,44 @@
     "delete": "Delete",
     "view": "View",
     "close": "Close"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "futureVision": "Future Vision Dashboard",
+    "personalizedAdvice": "Personalized Advice Based on Your Past",
+    "totalIncome": "Total Income",
+    "policyReviews": "Policy Reviews",
+    "successPredictions": "Success Predictions",
+    "locationWeather": "Location & Weather",
+    "communityConnections": "Community Connections",
+    "emotionalSupport": "Emotional Support",
+    "farmingTraining": "Farming Training Group",
+    "viewMore": "View More",
+    "soilHealth": "Soil Health",
+    "aiInsights": "AI Insights",
+    "todaysAdvice": "Today's Farming Advice",
+    "farmingNews": "Latest Farming News",
+    "quickActions": "Quick Actions",
+    "weatherAdvice": {
+      "default": "🌿 Today's tip: Inspect your fields between 6-8 AM and check plant water needs.",
+      "rain": "🌧️ Rain expected today! Check crop drainage, apply light fertilizer spray and avoid pesticides.",
+      "hot": "🌡️ Very hot today! Don't work in fields during 12-4 PM. Cover plants with shade net and give more water.",
+      "cold": "❄️ Very cold today! Protect crops from frost. Good weather for radish, potato, cabbage.",
+      "humid": "💧 High humidity today! Risk of fungal diseases. Spray zinc or copper on plants.",
+      "windy": "🌬️ Strong winds today! Support tall plants and avoid spraying fertilizers.",
+      "perfect": "☀️ Perfect weather today! Ideal for farming work. You can do new sowing, fertilizing or harvesting.",
+      "suitable": "🌿 Weather is suitable for farming today. Do daily care, water checking and soil testing."
+    },
+    "farmingNewsItems": {
+      "msp": "🌾 Government announces new MSP for farmers - Wheat ₹2,275/quintal",
+      "pmkisan": "🚜 PM-KISAN 15th installment released - 11 crore farmers receive ₹2000",
+      "weather": "☔ Weather dept warning: Heavy rain expected next 3 days",
+      "prices": "💰 Today's market rates: Tomato ₹25/kg, Onion ₹18/kg, Potato ₹20/kg",
+      "drone": "🌱 New technology: 50% subsidy on drone spraying - Applications open",
+      "app": "📱 KisanGPT app reaches 1 crore downloads - Strong farmer support",
+      "pest": "🐛 Warning: Stem borer pest increasing in Rabi crops - Spray immediately",
+      "award": "🏆 Organic Farming Award 2024: Punjab farmer Ram Singh wins first prize",
+      "water": "💧 Water conservation scheme: Up to 80% subsidy on drip irrigation"
+    }
   }
 }

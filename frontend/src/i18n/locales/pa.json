@@ -1,0 +1,108 @@
+{
+  "app": {
+    "name": "ਕਿਸਾਨGPT",
+    "tagline": "ਤੁਹਾਡਾ ਸਮਾਰਟ ਖੇਤੀ ਸਹਾਇਕ"
+  },
+  "navbar": {
+    "dashboard": "ਡੈਸ਼ਬੋਰਡ",
+    "dreamVisualization": "ਸਪਨੇ ਵਿਜ਼ੂਅਲਾਈਜ਼ੇਸ਼ਨ",
+    "community": "ਪਿੰਡ ਨੈਟਵਰਕ",
+    "diseaseDetection": "ਬਿਮਾਰੀ ਦੀ ਪਛਾਣ",
+    "cropRecommendation": "ਫਸਲ ਸਿਫਾਰਸ਼",
+    "weather": "ਮੌਸਮ ਪੂਰਵਾਨੁਮਾਨ",
+    "language": "ਭਾਸ਼ਾ",
+    "aiChat": "AI ਚੈਟ",
+    "satellite": "ਸੈਟੇਲਾਈਟ ਵਿਊ",
+    "arView": "AR ਪੌਧੇ",
+    "farmerJi": "ਕਿਸਾਨ ਜੀ",
+    "profile": "ਪ੍ਰੋਫਾਈਲ",
+    "logout": "ਲੌਗ ਆਊਟ",
+    "login": "ਲੌਗਿਨ",
+    "rainAlerts": "🌧️ ਬਰਸਾਤ ਅਲਰਟ",
+    "satelliteAnalysis": "🛰️ ਸੈਟੇਲਾਈਟ ਨਾਲ ਫਸਲ ਵਿਸ਼ਲੇਸ਼ਣ",
+    "governmentSchemes": "🏦 ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ",
+    "marketAnalysis": "📊 ਮੰਡੀ ਵਿਸ਼ਲੇਸ਼ਣ"
+  },
+  "dashboard": {
+    "welcome": "ਸੁਆਗਤ ਹੈ, {{name}}",
+    "futureVision": "ਭਵਿੱਖ ਵਿਜ਼ਨ ਡੈਸ਼ਬੋਰਡ",
+    "personalizedAdvice": "ਤੁਹਾਡੇ ਅਤੀਤ ਦੇ ਆਧਾਰ 'ਤੇ ਨਿੱਜੀ ਸਲਾਹ",
+    "totalIncome": "ਕੁੱਲ ਆਮਦਨ",
+    "policyReviews": "ਨੀਤੀ ਸਮੀਖਿਆ",
+    "successPredictions": "ਸਫਲਤਾ ਦਾ ਪੂਰਵਾਨੁਮਾਨ",
+    "locationWeather": "ਸਥਿਤੀ ਅਤੇ ਮੌਸਮ",
+    "communityConnections": "ਭਾਈਚਾਰਕ ਕਨੈਕਸ਼ਨ",
+    "emotionalSupport": "ਭਾਵਨਾਤਮਕ ਸਹਾਇਤਾ",
+    "farmingTraining": "ਖੇਤੀ ਸਿਖਲਾਈ ਗਰੁੱਪ",
+    "viewMore": "ਹੋਰ ਵੇਖੋ"
+  },
+  "dreamVisualization": {
+    "title": "ਸਪਨੇ ਵਿਜ਼ੂਅਲਾਈਜ਼ੇਸ਼ਨ ਇੰਜਨ",
+    "subtitle": "ਸਫਲਤਾ ਮਾਰਗ ਵਿਜ਼ੂਅਲਾਈਜ਼ੇਸ਼ਨ",
+    "today": "ਅੱਜ",
+    "next30Days": "ਅਗਲੇ 30 ਦਿਨ",
+    "oneYearGoal": "1 ਸਾਲ ਦਾ ਟੀਚਾ",
+    "todayTask": "ਆਮਦਨ ਤੈਅ ਕਰੋ ਅਤੇ ਖੇਤ ਨੂੰ ਅੱਗੇ ਵਧਾਓ",
+    "next30Task": "ਬਿਮਾਰੀ ਰੋਕੋ ਅਤੇ ਸਹਿਕਾਰੀ ਨਾਲ ਤਕਨੀਕ ਲਾਗੂ ਕਰੋ",
+    "yearGoal": "ਆਮਦਨ ਤੈਅ ਕਰੋ ਅਤੇ ਖੁਸ਼ ਸਮ੍ਰਿਧੀ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "motivationalText": "ਲਗਾਤਾਰ ਕੋਸ਼ਿਸ਼ ਨਾਲ ਤੁਹਾਡੇ ਸਪਨੇ ਸੱਚ ਹੋ ਜਾਣਗੇ!"
+  },
+  "community": {
+    "title": "ਪਿੰਡ ਨੈਟਵਰਕ",
+    "subtitle": "ਕਿਸਾਨਾਂ ਦਾ ਭਾਈਚਾਰਾ - ਸਿੱਖੋ, ਸਾਂਝਾ ਕਰੋ ਅਤੇ ਇਕੱਠੇ ਵਧੋ",
+    "connectWithFarmers": "ਕਿਸਾਨਾਂ ਨਾਲ ਜੁੜੋ",
+    "shareExperience": "ਤਜਰਬਾ ਸਾਂਝਾ ਕਰੋ",
+    "askQuestions": "ਸਵਾਲ ਪੁੱਛੋ",
+    "farmingTips": "ਖੇਤੀ ਦੇ ਟਿਪਸ",
+    "marketUpdates": "ਮੰਡੀ ਅਪਡੇਟ",
+    "governmentSchemes": "ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ"
+  },
+  "diseaseDetection": {
+    "title": "ਫਸਲ ਬਿਮਾਰੀ ਪਛਾਣ",
+    "uploadImage": "ਫਸਲ ਦੀ ਤਸਵੀਰ ਅਪਲੋਡ ਕਰੋ",
+    "takePhoto": "ਫੋਟੋ ਖਿੱਚੋ",
+    "analyzing": "ਵਿਸ਼ਲੇਸ਼ਣ ਹੋ ਰਿਹਾ ਹੈ...",
+    "result": "ਪਛਾਣ ਦਾ ਨਤੀਜਾ",
+    "treatment": "ਇਲਾਜ ਦੀਆਂ ਸਿਫਾਰਸ਼ਾਂ",
+    "prevention": "ਬਚਾਅ ਦੇ ਤਰੀਕੇ"
+  },
+  "cropRecommendation": {
+    "title": "ਫਸਲ ਸਿਫਾਰਸ਼",
+    "soilType": "ਮਿੱਟੀ ਦੀ ਕਿਸਮ",
+    "season": "ਮੌਸਮ",
+    "location": "ਸਥਾਨ",
+    "getRecommendation": "ਸਿਫਾਰਸ਼ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "recommendedCrops": "ਸਿਫਾਰਸ਼ ਕੀਤੀਆਂ ਫਸਲਾਂ",
+    "expectedYield": "ਅਨੁਮਾਨਿਤ ਪੈਦਾਵਾਰ",
+    "profitability": "ਲਾਭਕਾਰੀ"
+  },
+  "weather": {
+    "title": "ਮੌਸਮ ਪੂਰਵਾਨੁਮਾਨ",
+    "current": "ਮੌਜੂਦਾ ਮੌਸਮ",
+    "forecast": "7-ਦਿਨਾਂ ਦਾ ਪੂਰਵਾਨੁਮਾਨ",
+    "temperature": "ਤਾਪਮਾਨ",
+    "humidity": "ਨਮੀ",
+    "rainfall": "ਬਰਸਾਤ",
+    "windSpeed": "ਹਵਾ ਦੀ ਰਫਤਾਰ",
+    "farmingAdvice": "ਮੌਸਮ ਦੇ ਆਧਾਰ 'ਤੇ ਖੇਤੀ ਦੀ ਸਲਾਹ"
+  },
+  "footer": {
+    "developedWith": "ਬਣਾਇਆ ਗਿਆ ਹੈ",
+    "by": "ਦੁਆਰਾ",
+    "fullStackDeveloper": "ਫੁੱਲ-ਸਟੈਕ ਡਿਵੈਲਪਰ",
+    "copyright": "© 2024 ਕਿਸਾਨGPT ਸਮਾਰਟ ਫਾਰਮਿੰਗ • ਭਾਰਤੀ ਕਿਸਾਨਾਂ ਲਈ ❤️ ਨਾਲ ਬਣਾਇਆ 🇮🇳"
+  },
+  "common": {
+    "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "error": "ਗਲਤੀ ਹੋਈ",
+    "retry": "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼",
+    "success": "ਸਫਲਤਾ",
+    "submit": "ਜਮ੍ਹਾ ਕਰੋ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "save": "ਸੇਵ ਕਰੋ",
+    "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
+    "delete": "ਮਿਟਾਓ",
+    "view": "ਵੇਖੋ",
+    "close": "ਬੰਦ ਕਰੋ"
+  }
+}

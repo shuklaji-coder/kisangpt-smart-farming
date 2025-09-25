@@ -13,6 +13,7 @@ import {
   useTheme,
   IconButton,
   Fab,
+  Alert,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -32,12 +33,18 @@ import {
   ViewInAr,
   BugReport,
   Notifications,
+  LocalFlorist,
+  AccountBalance,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ttsService } from '../services/ttsService';
 import axios from 'axios';
+import { cropRecommendationEngine } from '../services/cropRecommendationEngine';
+import { satelliteService } from '../services/satelliteService';
+import { marketPriceService } from '../services/marketPriceService';
+import { diseaseDetectionService } from '../services/diseaseDetectionService';
 
 // Custom Marquee component since MUI doesn't have one
 const ScrollingTicker = ({ children, speed = 50 }: { children: React.ReactNode, speed?: number }) => {
@@ -78,6 +85,13 @@ const Dashboard: React.FC = () => {
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
   const [newsTickerPaused, setNewsTickerPaused] = useState(false);
+  // AI Services Data
+  const [cropRecommendations, setCropRecommendations] = useState<any[]>([]);
+  const [satelliteData, setSatelliteData] = useState<any>(null);
+  const [marketPrices, setMarketPrices] = useState<any>(null);
+  const [soilHealth, setSoilHealth] = useState<number>(85);
+  const [aiInsights, setAiInsights] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   // Get user data from localStorage
   useEffect(() => {
@@ -106,7 +120,90 @@ const Dashboard: React.FC = () => {
   // Get user location and weather data
   useEffect(() => {
     getCurrentLocation();
+    fetchAIServicesData();
   }, []);
+
+  // Fetch AI services data
+  const fetchAIServicesData = async () => {
+    setLoading(true);
+    try {
+      // Mock user location for demo - in production, use real GPS
+      const userLocation = { lat: 28.6139, lng: 77.2090 };
+      
+      // Fetch satellite data for soil analysis
+      const satData = await satelliteService.getSatelliteAnalysis({
+        latitude: userLocation.lat,
+        longitude: userLocation.lng
+      });
+      setSatelliteData(satData);
+      setSoilHealth(satData.analysis.soil_fertility_index);
+      
+      // Get market prices for common crops
+      const prices = await marketPriceService.getDashboardPrices(['wheat', 'rice', 'cotton'], userLocation);
+      setMarketPrices(prices);
+      
+      // Get crop recommendations based on soil and weather
+      const soilData = {
+        ph: satData.soil_properties.ph,
+        moisture: satData.soil_properties.moisture,
+        nitrogen: satData.soil_properties.nitrogen,
+        phosphorus: satData.soil_properties.phosphorus,
+        potassium: satData.soil_properties.potassium,
+        organic_matter: satData.soil_properties.organic_matter,
+        temperature: satData.soil_properties.temperature
+      };
+      
+      const weatherDataForAI = {
+        temperature: weatherData?.main?.temp || 28,
+        humidity: weatherData?.main?.humidity || 65,
+        rainfall: 85,
+        windSpeed: weatherData?.wind?.speed || 3.5,
+        forecast: []
+      };
+      
+      const farmerProfile = {
+        farmSize: 2.5,
+        experience: 5,
+        budget: 100000,
+        location: {
+          latitude: userLocation.lat,
+          longitude: userLocation.lng,
+          district: 'Delhi',
+          state: 'Delhi'
+        },
+        previousCrops: ['wheat', 'rice'],
+        soilType: 'loamy' as const
+      };
+      
+      const recommendations = await cropRecommendationEngine.getRecommendations(
+        soilData,
+        weatherDataForAI,
+        [],
+        farmerProfile
+      );
+      setCropRecommendations(recommendations.slice(0, 3));
+      
+      // Generate AI insights
+      const insights = [
+        `🌿 मिट्टी की गुणवत्ता ${satData.analysis.soil_fertility_index}% है - ${satData.analysis.soil_fertility_index > 80 ? 'उत्कृष्ट' : 'सुधार की आवश्यकता'}`,
+        `🛰️ NDVI Index: ${satData.vegetation_indices.ndvi.toFixed(2)} - फसल स्वास्थ्य ${satData.vegetation_indices.ndvi > 0.7 ? 'बहुत अच्छा' : 'सामान्य'}`,
+        `💧 जल तनाव स्तर: ${satData.analysis.water_stress_level === 'low' ? 'कम - अच्छी स्थिति' : 'सावधानी बरतें'}`,
+        `📈 सबसे लाभदायक फसल: ${recommendations[0]?.hindiName} (${recommendations[0]?.expectedProfit ? Math.round(recommendations[0].expectedProfit).toLocaleString() : 'N/A'} लाभ)`
+      ];
+      setAiInsights(insights);
+      
+    } catch (error) {
+      console.error('AI Services data fetch error:', error);
+      // Set fallback data
+      setAiInsights([
+        '🌿 AI सेवाएं लोड हो रही हैं...',
+        '🛰️ सैटेलाइट डेटा प्राप्त कर रहे हैं...',
+        '💰 बाजार की कीमतें अपडेट हो रही हैं...'
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -382,37 +479,35 @@ const Dashboard: React.FC = () => {
     {
       // @ts-ignore
       title: t('dashboard.totalIncome'),
-      value: '₹45,000',
+      value: cropRecommendations.length > 0 ? `₹${Math.round(cropRecommendations[0]?.expectedProfit || 45000).toLocaleString()}` : '₹45,000',
       change: '+12%',
       icon: <TrendingUp />,
       color: '#4caf50',
-      description: 'इस महीने की कुल आय'
+      description: 'अनुमानित लाभ (AI आधारित)'
     },
     {
-      // @ts-ignore
-      title: t('dashboard.policyReviews'),
-      value: '8',
-      change: 'New',
-      icon: <Policy />,
+      title: 'मिट्टी स्वास्थ्य',
+      value: `${soilHealth}%`,
+      change: satelliteData?.analysis?.soil_fertility_index > 80 ? 'Excellent' : 'Good',
+      icon: <Agriculture />,
       color: '#2196f3',
-      description: 'नई सरकारी योजनाएं'
+      description: 'सैटेलाइट डेटा से'
     },
     {
-      // @ts-ignore
-      title: t('dashboard.successPredictions'),
-      value: '85%',
-      change: '+5%',
-      icon: <AutoGraph />,
+      title: 'फसल स्वास्थ्य',
+      value: satelliteData ? `${satelliteData.analysis.crop_health_score}%` : '85%',
+      change: satelliteData?.vegetation_indices?.ndvi > 0.7 ? '+Excellent' : '+Good',
+      icon: <LocalFlorist />,
       color: '#ff9800',
-      description: 'फसल सफलता दर'
+      description: 'NDVI आधारित विश्लेषण'
     },
     {
-      title: 'Weather Score',
-      value: '92/100',
-      change: 'Excellent',
-      icon: <LocationOn />,
+      title: 'मार्केट ट्रेंड',
+      value: marketPrices?.wheat ? `₹${marketPrices.wheat.currentPrice}` : '₹2,150',
+      change: marketPrices?.wheat?.trend === 'up' ? `+${marketPrices.wheat.changePercent}%` : 'Stable',
+      icon: <Assessment />,
       color: '#9c27b0',
-      description: 'आज का मौसम स्कोर'
+      description: 'गेहूं का रेट/क्विंटल'
     },
   ];
 
@@ -480,6 +575,14 @@ const Dashboard: React.FC = () => {
       color: '#9c27b0',
       path: '/ar-visualization',
       badge: 'VR',
+    },
+    {
+      title: '🏦 सरकारी योजनाएं',
+      description: 'किसानों के लिए सब्सिडी और वित्तीय सहायता',
+      icon: <AccountBalance />,
+      color: '#1976d2',
+      path: '/government-subsidy',
+      badge: 'Money',
     },
     {
       title: '🌧️ रेन अलर्ट',
@@ -912,6 +1015,154 @@ const Dashboard: React.FC = () => {
               </Box>
             </Grid>
           </Grid>
+        </Paper>
+      </motion.div>
+
+      {/* AI Insights Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        <Paper
+          elevation={6}
+          sx={{
+            p: 4,
+            mb: 4,
+            borderRadius: 4,
+            background: 'linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 50%, #e0f2f0 100%)',
+            border: '2px solid rgba(76, 175, 80, 0.2)',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '4px',
+              background: 'linear-gradient(90deg, #4caf50, #81c784, #a5d6a7)',
+            },
+          }}
+        >
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#2e7d32', mb: 3, display: 'flex', alignItems: 'center' }}>
+            🤖 AI कृषि सहायक के सुझाव
+          </Typography>
+          
+          {loading ? (
+            <Box sx={{ textAlign: 'center', py: 3 }}>
+              <Typography variant="body1" sx={{ color: '#4caf50', mb: 2 }}>
+                AI विश्लेषण हो रहा है... कृपया प्रतीक्षा करें
+              </Typography>
+              {[0, 1, 2].map((index) => (
+                <LinearProgress 
+                  key={index}
+                  sx={{ 
+                    mb: 1, 
+                    height: 6, 
+                    borderRadius: 3,
+                    '& .MuiLinearProgress-bar': {
+                      backgroundColor: '#4caf50'
+                    }
+                  }} 
+                />
+              ))}
+            </Box>
+          ) : (
+            <Grid container spacing={2}>
+              {aiInsights.map((insight, index) => (
+                <Grid item xs={12} md={6} key={index}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.2 }}
+                  >
+                    <Alert 
+                      severity="info" 
+                      sx={{ 
+                        background: 'rgba(255, 255, 255, 0.8)',
+                        border: '1px solid rgba(76, 175, 80, 0.3)',
+                        borderRadius: 2,
+                        '& .MuiAlert-icon': {
+                          color: '#4caf50'
+                        }
+                      }}
+                    >
+                      <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                        {insight}
+                      </Typography>
+                    </Alert>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+          
+          {/* Crop Recommendations Preview */}
+          {cropRecommendations.length > 0 && (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#2e7d32', mb: 2 }}>
+                🌾 सुझाई गई फसलें (AI आधारित)
+              </Typography>
+              <Grid container spacing={2}>
+                {cropRecommendations.slice(0, 3).map((crop, index) => (
+                  <Grid item xs={12} md={4} key={index}>
+                    <Card 
+                      sx={{ 
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        border: `2px solid ${crop.suitabilityScore > 80 ? '#4caf50' : '#ffc107'}`,
+                        borderRadius: 2
+                      }}
+                    >
+                      <CardContent sx={{ p: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+                          {crop.hindiName}
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                          <Chip 
+                            label={`${crop.suitabilityScore}% उपयुक्त`}
+                            color={crop.suitabilityScore > 80 ? 'success' : 'warning'}
+                            size="small"
+                          />
+                          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                            ₹{Math.round(crop.expectedProfit).toLocaleString()} लाभ
+                          </Typography>
+                        </Box>
+                        <LinearProgress
+                          variant="determinate"
+                          value={crop.suitabilityScore}
+                          sx={{
+                            height: 6,
+                            borderRadius: 3,
+                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            '& .MuiLinearProgress-bar': {
+                              backgroundColor: crop.suitabilityScore > 80 ? '#4caf50' : '#ffc107',
+                              borderRadius: 3
+                            }
+                          }}
+                        />
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+              <Button
+                variant="outlined"
+                onClick={() => navigate('/crop-recommendation')}
+                sx={{ 
+                  mt: 2, 
+                  color: '#4caf50', 
+                  borderColor: '#4caf50',
+                  '&:hover': {
+                    backgroundColor: '#4caf50',
+                    color: 'white'
+                  }
+                }}
+              >
+                सभी सुझाव देखें →
+              </Button>
+            </Box>
+          )}
         </Paper>
       </motion.div>
 
