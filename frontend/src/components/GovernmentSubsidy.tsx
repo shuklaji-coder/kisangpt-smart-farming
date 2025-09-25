@@ -1,7 +1,7 @@
 // Government Subsidy & Schemes Component for Farmers
 // Comprehensive listing of Indian agricultural schemes and subsidies
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -25,7 +25,9 @@ import {
   MenuItem,
   InputAdornment,
   IconButton,
-  Tooltip
+  Tooltip,
+  Checkbox,
+  FormControlLabel
 } from '@mui/material';
 import {
   AccountBalance,
@@ -45,7 +47,9 @@ import {
   LocalAtm,
   Savings,
   TrendingUp,
-  Security
+  Security,
+  Star,
+  StarBorder
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -93,6 +97,26 @@ const GovernmentSubsidy: React.FC = () => {
   });
   const [userLocation, setUserLocation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  // User profile for quick eligibility scoring
+  const [profile, setProfile] = useState({
+    farmSize: 2,
+    isOwner: true,
+    isSCST: false,
+    age: 30
+  });
+
+  // Favorites
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('fav_schemes') || '[]'); } catch { return []; }
+  });
+  const toggleFav = (id: string) => {
+    const set = new Set(favorites);
+    set.has(id) ? set.delete(id) : set.add(id);
+    const arr = Array.from(set);
+    setFavorites(arr);
+    try { localStorage.setItem('fav_schemes', JSON.stringify(arr)); } catch {}
+  };
 
   // Government schemes database
   const governmentSchemes: GovernmentScheme[] = [
@@ -380,6 +404,17 @@ const GovernmentSubsidy: React.FC = () => {
     setLoading(false);
   };
 
+  const scoreEligibility = (scheme: GovernmentScheme) => {
+    let score = 0;
+    const txt = (scheme.eligibility.join(' ') + ' ' + scheme.targetGroup.join(' ')).toLowerCase();
+    if (profile.farmSize <= 2 && (txt.includes('small') || txt.includes('marginal'))) score += 2;
+    if (profile.isOwner && (txt.includes('land') || txt.includes('landholding'))) score += 1;
+    if (profile.isSCST && (txt.includes('sc/st') || txt.includes('sc/st') || txt.includes('sc') || txt.includes('st'))) score += 2;
+    if (scheme.category === 'loan' && profile.age >= 18) score += 1;
+    if (scheme.category === 'equipment') score += 1;
+    return Math.min(5, score);
+  };
+
   const filterSchemes = () => {
     let filtered = schemes;
 
@@ -472,7 +507,7 @@ const GovernmentSubsidy: React.FC = () => {
         </Paper>
       </motion.div>
 
-      {/* Search and Filters */}
+      {/* Search, Filters & Profile */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} md={6}>
           <TextField
@@ -505,6 +540,17 @@ const GovernmentSubsidy: React.FC = () => {
             <MenuItem value="equipment">Equipment (यंत्र)</MenuItem>
             <MenuItem value="marketing">Marketing (विपणन)</MenuItem>
           </TextField>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Paper elevation={1} sx={{ p:2, borderRadius:2 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight:700, mb:1 }}>👤 Your Profile (Eligibility)</Typography>
+            <Grid container spacing={1}>
+              <Grid item xs={6}><TextField size="small" type="number" label="Farm Size (ha)" value={profile.farmSize} onChange={(e)=>setProfile({ ...profile, farmSize:+e.target.value })} fullWidth /></Grid>
+              <Grid item xs={6}><TextField size="small" type="number" label="Age" value={profile.age} onChange={(e)=>setProfile({ ...profile, age:+e.target.value })} fullWidth /></Grid>
+              <Grid item xs={6}><FormControlLabel control={<Checkbox checked={profile.isOwner} onChange={(e)=>setProfile({ ...profile, isOwner:e.target.checked })} />} label="Land Owner" /></Grid>
+              <Grid item xs={6}><FormControlLabel control={<Checkbox checked={profile.isSCST} onChange={(e)=>setProfile({ ...profile, isSCST:e.target.checked })} />} label="SC/ST" /></Grid>
+            </Grid>
+          </Paper>
         </Grid>
       </Grid>
 
@@ -586,12 +632,22 @@ const GovernmentSubsidy: React.FC = () => {
                     </Box>
                   </Box>
 
-                  {/* Subsidy Amount */}
-                  <Alert severity="success" sx={{ mb: 2, borderRadius: 2 }}>
-                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                      💰 {scheme.subsidy}
-                    </Typography>
-                  </Alert>
+                  {/* Subsidy Amount + Score + Favorite */}
+                  <Box sx={{ display:'flex', alignItems:'center', gap:1, mb:1 }}>
+                    <Alert severity="success" sx={{ flex:1, borderRadius: 2 }}>
+                      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                        💰 {scheme.subsidy}
+                      </Typography>
+                    </Alert>
+                    <Tooltip title={favorites.includes(scheme.id) ? 'Remove Favorite' : 'Add Favorite'}>
+                      <IconButton onClick={()=>toggleFav(scheme.id)}>
+                        {favorites.includes(scheme.id) ? <Star color="warning" /> : <StarBorder />}
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Typography variant="caption" color="text.secondary" sx={{ display:'block', mb:2 }}>
+                    Eligibility score: {scoreEligibility(scheme)}/5
+                  </Typography>
 
                   {/* Key Benefits */}
                   <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>

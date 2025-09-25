@@ -101,10 +101,7 @@ const Footer: React.FC = () => {
             borderTop: '1px solid rgba(255,255,255,0.1)'
           }}
         >
-          <Typography variant="body2" sx={{ opacity: 0.8, fontSize: '0.85rem' }}>
-            {t('footer.copyright')}
-          </Typography>
-          
+          <Box />
           <Link 
             href="https://github.com/shuklaji-coder/kisangpt-smart-farming" 
             target="_blank"

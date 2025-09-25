@@ -103,7 +103,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
 
     // Basic validation
     if (!formData.email || !formData.password) {
-      setError('कृपया सभी फील्ड भरें / Please fill all fields');
+      setError(t('auth.errors.fillAllFields'));
       setLoading(false);
       return;
     }
@@ -111,7 +111,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('कृपया वैध ईमेल पता दर्ज करें / Please enter a valid email address');
+      setError(t('auth.errors.invalidEmail'));
       setLoading(false);
       return;
     }
@@ -137,7 +137,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           onLogin(response.user || { email: formData.email, password: formData.password });
         }
       } else {
-        setError(response?.message || 'लॉगिन में समस्या / Login failed');
+        setError(response?.message || t('auth.errors.loginFailed'));
       }
     } catch (err: any) {
       console.warn('API call failed, using demo mode:', err.message);
@@ -178,7 +178,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           onLogin({ email: formData.email, password: formData.password });
         }
       } else {
-        setError('गलत ईमेल या पासवर्ड / Invalid email or password\n\nDemo Users:\n• farmer@example.com / farmer123\n• test@example.com / test123\n• demo@kisangpt.com / demo123');
+        setError(t('auth.errors.invalidCredentialsWithDemo'));
       }
     } finally {
       setLoading(false);
@@ -288,7 +288,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
               🌾 KisanGPT
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              आपकी खेती का डिजिटल साथी
+              {t('app.tagline')}
             </Typography>
           </Box>
 
@@ -308,8 +308,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
 
           {/* Demo Credentials Info */}
           <Alert severity="info" sx={{ mb: 2, borderRadius: 2 }}>
-            <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
-              📝 Demo Login Credentials:
+              <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+              📝 {t('auth.demoCredentials')}
             </Typography>
             <Typography variant="body2" component="div" sx={{ mb: 1 }}>
               • <strong>farmer@example.com</strong> / farmer123<br/>
@@ -327,9 +327,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 }));
               }}
               sx={{ mr: 1, mt: 1 }}
-            >
-              Fill Demo 🚀
-            </Button>
+              >
+                {t('auth.fillDemo')}
+              </Button>
           </Alert>
 
           {/* Login Form */}
@@ -341,7 +341,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
             >
               <TextField
                 fullWidth
-                label="ईमेल / Email"
+                label={t('auth.email')}
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange('email')}
@@ -375,7 +375,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
             >
               <TextField
                 fullWidth
-                label="पासवर्ड / Password"
+                label={t('auth.password')}
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleInputChange('password')}
@@ -426,14 +426,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                       sx={{ color: '#4CAF50' }}
                     />
                   }
-                  label={<Typography variant="body2">याद रखें</Typography>}
+                  label={<Typography variant="body2">{t('auth.rememberMe')}</Typography>}
                 />
                 <Link
                   href="#"
                   variant="body2"
                   sx={{ color: '#4CAF50', textDecoration: 'none' }}
                 >
-                  पासवर्ड भूल गए?
+                  {t('auth.forgotPassword')}
                 </Link>
               </Box>
             </motion.div>
@@ -462,7 +462,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                   },
                 }}
               >
-                {loading ? 'लॉग इन हो रहे हैं...' : 'लॉग इन करें / Login'}
+                {loading ? t('auth.loggingIn') : t('auth.login')}
               </Button>
             </motion.div>
           </Box>
@@ -524,7 +524,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           >
             <Box sx={{ textAlign: 'center', mt: 3 }}>
               <Typography variant="body2" color="text.secondary">
-                नया उपयोगकर्ता हैं?{' '}
+                {t('auth.newHere')} {' '}
                 <Link
                   href="#"
                   onClick={(e) => {
@@ -540,7 +540,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                     },
                   }}
                 >
-                  साइन अप करें
+                  {t('auth.signUp')}
                 </Link>
               </Typography>
             </Box>

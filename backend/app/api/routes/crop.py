@@ -6,6 +6,8 @@ Handles ML-based crop recommendations using soil, weather, and historical data
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 from loguru import logger
+import httpx
+from app.core.config import settings
 
 from app.models.schemas import (
     CropRecommendationRequest, 
@@ -15,11 +17,13 @@ from app.models.schemas import (
     CropSeason
 )
 from app.services.crop_service import CropRecommendationService
+from app.services.enhanced.satellite_data_service import SatelliteDataService
 
 router = APIRouter()
 
 # Initialize service
 crop_service = CropRecommendationService()
+ndvi_service = SatelliteDataService()
 
 
 @router.post("/crop/recommend", response_model=CropRecommendationResponse)
@@ -148,6 +152,141 @@ async def get_suitable_crops(
     except Exception as e:
         logger.error(f"Error fetching suitable crops: {e}")
         raise HTTPException(status_code=500, detail="Error fetching suitable crops")
+
+
+from typing import Dict, Any
+
+@router.get("/crop/recommend-advanced", response_model=Dict[str, Any])
+async def recommend_crops_advanced(lat: float, lng: float):
+    """
+    Advanced recommendation using satellite soil proxies + live weather on user location.
+    """
+    try:
+        # 1) Soil proxies via SoilGrids (reuse our soil route logic inline)
+        async with httpx.AsyncClient() as client:
+            soil_resp = await client.post(
+                f"{settings.HOST if False else ''}",
+            )
+        # Direct SoilGrids call
+        SOIL_URL = "https://rest.isric.org/soilgrids/v2.0/properties/query"
+        async with httpx.AsyncClient() as client:
+            params = {"lat": lat, "lon": lng, "depth": "0-5cm", "value": "mean"}
+            props = {}
+            for p in ["phh2o", "soc", "nitrogen", "clay", "sand", "silt"]:
+                r = await client.get(SOIL_URL, params={**params, "property": p}, timeout=6.0)
+                if r.status_code == 200:
+                    props[p] = (r.json().get("properties", {}).get(p) or {}).get("mean")
+            ph = round((props.get("phh2o") or 65) / 10, 2)
+            clay = (props.get("clay") or 25)
+            sand = (props.get("sand") or 45)
+            silt = (props.get("silt") or 30)
+        
+        # 2) Simple soil-type classification
+        def classify_soil(clay_v: float, sand_v: float, silt_v: float) -> str:
+            if clay_v >= 35:  # heavy clay/black soils
+                return SoilType.BLACK_SOIL.value
+            if sand_v >= 60:
+                return SoilType.ALLUVIAL.value
+            # heuristic default to red or laterite based on sand/silt balance
+            return SoilType.RED_SOIL.value
+        soil_type = classify_soil(clay, sand, silt)
+
+        # 3) Reverse geocode district via Nominatim (best-effort)
+        district_name = "pune"
+        try:
+            async with httpx.AsyncClient(headers={"User-Agent": "KisanGPT/1.0"}) as client:
+                gr = await client.get(
+                    "https://nominatim.openstreetmap.org/reverse",
+                    params={"format": "jsonv2", "lat": lat, "lon": lng, "zoom": 10, "addressdetails": 1},
+                    timeout=6.0,
+                )
+                if gr.status_code == 200:
+                    addr = gr.json().get("address", {})
+                    district_name = addr.get("district") or addr.get("county") or addr.get("state_district") or district_name
+                    district_name = str(district_name).lower()
+        except Exception:
+            pass
+
+        # 4) Weather from OpenWeatherMap (current)
+        weather_data = None
+        if settings.OPENWEATHER_API_KEY:
+            try:
+                async with httpx.AsyncClient() as client:
+                    wr = await client.get(
+                        "https://api.openweathermap.org/data/2.5/weather",
+                        params={"lat": lat, "lon": lng, "appid": settings.OPENWEATHER_API_KEY, "units": "metric"},
+                        timeout=6.0,
+                    )
+                    if wr.status_code == 200:
+                        wd = wr.json()
+                        weather_data = {
+                            "temperature": wd.get("main", {}).get("temp"),
+                            "humidity": wd.get("main", {}).get("humidity"),
+                            "rainfall": (wd.get("rain", {}) or {}).get("1h", 0) or (wd.get("rain", {}) or {}).get("3h", 0) or 0,
+                            "windSpeed": wd.get("wind", {}).get("speed", 0)
+                        }
+            except Exception:
+                weather_data = None
+        
+        # 4) NDVI using satellite service (simulated/real)
+        ndvi_value = 0.5
+        try:
+            ndvi_data = await ndvi_service.calculate_ndvi_analysis(lat, lng)
+            ndvi_value = float(ndvi_data.get("current_indices", {}).get("ndvi", {}).get("value", 0.5))
+        except Exception:
+            ndvi_value = 0.5
+
+        # 5) Determine season automatically
+        season = crop_service._determine_season()
+
+        # 6) Call ML recommender (district best-effort)
+        recs = await crop_service.recommend_crops(
+            district=district_name,
+            soil_type=soil_type,
+            season=season,
+            weather_data=weather_data
+        )
+
+        # 7) Re-rank with NDVI & pH adjustments (lightweight fusion)
+        def boost(prob: float, ndvi: float, ph_val: float) -> float:
+            ndvi_factor = 0.9 + 0.2 * max(0, min(1, ndvi))  # 0.9..1.1
+            ph_factor = 1.0 if 6.0 <= ph_val <= 7.8 else 0.9
+            return min(0.97, max(0.05, prob * ndvi_factor * ph_factor))
+
+        enriched = []
+        for r in recs:
+            p = boost(r.get("success_probability", 0.6), ndvi_value, ph)
+            r["success_probability"] = p
+            r["reason"] = (
+                f"NDVI {ndvi_value:.2f}, pH {ph}; soil {soil_type}, {season}. "
+                + r.get("reason", "")
+            )
+            enriched.append(r)
+        
+        # Sort by boosted probability
+        enriched.sort(key=lambda x: x.get("success_probability", 0), reverse=True)
+
+        response_items = [
+            {
+                "crop": r["crop"],
+                "success_probability": float(r.get("success_probability", 0.6)),
+                "reason": r.get("reason", f"Soil pH {ph}, soil type {soil_type}, season {season}, NDVI {ndvi_value:.2f}"),
+                "recommended_practices": r.get("recommended_practices", ["Balanced NPK", "Timely irrigation"])
+            } for r in enriched[:3]
+        ]
+        
+        context = {
+            "ndvi": ndvi_value,
+            "ph": ph,
+            "soil_type": soil_type,
+            "season": season,
+            "district": district_name,
+            "weather": weather_data or {}
+        }
+        return {"status": "success", "recommendations": response_items, "context": context}
+    except Exception as e:
+        logger.error(f"Advanced recommendation error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate advanced recommendations")
 
 
 @router.post("/crop/yield-prediction")

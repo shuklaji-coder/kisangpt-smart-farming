@@ -12,6 +12,7 @@ import {
   useTheme,
   Avatar,
   Chip,
+  Container,
 } from '@mui/material';
 import {
   Agriculture,
@@ -34,18 +35,20 @@ import {
   AccountBalance,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { authAPI } from '../services/api';
 
 const Navbar: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   const [languageAnchorEl, setLanguageAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMenuAnchorEl, setMobileMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [modulesMenuAnchorEl, setModulesMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [user, setUser] = useState<any>(null);
 
   // Get user data from localStorage
@@ -69,6 +72,8 @@ const Navbar: React.FC = () => {
     { code: 'en', name: 'English', flag: '🇬🇧' },
   ];
 
+  const currentLang = languages.find(l => l.code === i18n.language) || languages[languages.length - 1];
+
   const handleLanguageClick = (event: React.MouseEvent<HTMLElement>) => {
     setLanguageAnchorEl(event.currentTarget);
   };
@@ -78,6 +83,9 @@ const Navbar: React.FC = () => {
   };
 
   const handleLanguageChange = (languageCode: string) => {
+    try {
+      localStorage.setItem('appLanguage', languageCode);
+    } catch {}
     i18n.changeLanguage(languageCode);
     handleLanguageClose();
   };
@@ -88,6 +96,14 @@ const Navbar: React.FC = () => {
 
   const handleMobileMenuClose = () => {
     setMobileMenuAnchorEl(null);
+  };
+
+  const handleModulesMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setModulesMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleModulesMenuClose = () => {
+    setModulesMenuAnchorEl(null);
   };
 
   const handleNavigation = (path: string) => {
@@ -116,84 +132,94 @@ const Navbar: React.FC = () => {
 
   const navigationItems = [
     { path: '/', label: t('navbar.dashboard'), icon: <Dashboard /> },
+    { path: '/market-analysis', label: t('navbar.marketAnalysis'), icon: <SmartToy /> },
+    { path: '/weather', label: t('navbar.weather'), icon: <CloudQueue /> },
+    { path: '/ai-chat', label: t('navbar.aiChat'), icon: <SmartToy /> },
+    // Secondary modules
+    { path: '/loans', label: t('navbar.loans', 'Loans'), icon: <AccountBalance /> },
     { path: '/enhanced-crop-recommendation', label: t('navbar.satelliteAnalysis'), icon: <Satellite /> },
     { path: '/government-subsidy', label: t('navbar.governmentSchemes'), icon: <AccountBalance /> },
     { path: '/disease-detection', label: t('navbar.diseaseDetection'), icon: <BugReport /> },
-    { path: '/market-analysis', label: t('navbar.marketAnalysis'), icon: <SmartToy /> },
     { path: '/crop-recommendation', label: t('navbar.cropRecommendation'), icon: <Grass /> },
     { path: '/dream-visualization', label: t('navbar.dreamVisualization'), icon: <Visibility /> },
     { path: '/community', label: t('navbar.community'), icon: <Group /> },
-    { path: '/weather', label: t('navbar.weather'), icon: <CloudQueue /> },
-    { path: '/ai-chat', label: t('navbar.aiChat'), icon: <SmartToy /> },
     { path: '/satellite-view', label: t('navbar.satellite'), icon: <Satellite /> },
     { path: '/ar-visualization', label: t('navbar.arView'), icon: <ViewInAr /> },
     { path: '/rain-alerts', label: t('navbar.rainAlerts'), icon: <Notifications /> },
   ];
 
+  const primaryNavPaths = ['/', '/market-analysis', '/weather', '/ai-chat'];
+  const primaryNav = navigationItems.filter(item => primaryNavPaths.includes(item.path));
+  const secondaryNav = navigationItems.filter(item => !primaryNavPaths.includes(item.path));
+
   return (
     <AppBar position="sticky" sx={{ 
-      background: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 25%, #4caf50 75%, #81c784 100%)',
-      boxShadow: '0 4px 20px rgba(46, 125, 50, 0.3)',
-      backdropFilter: 'blur(10px)',
+      backgroundColor: '#2e7d32',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
     }}>
-      <Toolbar>
-        {/* Logo and App Name */}
-        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-          <Agriculture sx={{ 
-            fontSize: 40, 
-            mr: 2, 
-            color: '#fff',
-            filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
-          }} />
+      <Toolbar disableGutters>
+        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center' }}>
+          {/* Logo and App Name */}
+<Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Agriculture sx={{ 
+              fontSize: 32, 
+              mr: 1.25, 
+              color: '#fff'
+            }} />
           <Box>
             <Typography
-              variant="h5"
+              variant="h6"
               component="div"
               sx={{
-                fontWeight: 'bold',
+                fontWeight: 800,
                 color: '#fff',
-                fontSize: { xs: '1.3rem', md: '1.8rem' },
-                textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-                letterSpacing: '0.5px',
+                letterSpacing: '0.3px'
               }}
             >
-              🌾 KisanGPT
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'rgba(255, 255, 255, 0.9)',
-                display: { xs: 'none', sm: 'block' },
-                fontStyle: 'italic',
-                fontSize: '0.9rem',
-              }}
-            >
-              {t('app.tagline')}
+              KisanGPT
             </Typography>
           </Box>
         </Box>
 
         {/* Desktop Navigation */}
-        {!isMobile && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {navigationItems.slice(0, 6).map((item) => (
-              <Button
-                key={item.path}
-                color="inherit"
-                startIcon={item.icon}
-                onClick={() => handleNavigation(item.path)}
-                sx={{
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
+{!isMobile && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 2 }}>
+            {primaryNav.map((item) => {
+              const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+              return (
+                <Button
+                  key={item.path}
+                  color="inherit"
+                  startIcon={item.icon}
+                  onClick={() => handleNavigation(item.path)}
+                  sx={{
+                    color: '#ffffff',
+                    opacity: isActive ? 1 : 0.9,
+                    borderRadius: 2,
+                    px: 1.25,
+                    textTransform: 'none',
+                    borderBottom: isActive ? '2px solid #fff' : '2px solid transparent',
+                    '&:hover': { opacity: 1 }
+                  }}
+                >
+                  {item.label}
+                </Button>
+              );
+            })}
+            {/* More menu */}
+            <Button
+              color="inherit"
+              onClick={handleModulesMenuClick}
+              startIcon={<Dashboard />}
+              sx={{ color: '#ffffff', opacity: 0.9, textTransform: 'none', '&:hover': { opacity: 1 } }}
+            >
+              {t('navbar.modules', 'More')}
+            </Button>
           </Box>
         )}
+
+        {/* Spacer to push user controls to the right */}
+        <Box sx={{ flexGrow: 1 }} />
 
         {/* User Profile or Login */}
         {user ? (
@@ -218,19 +244,19 @@ const Navbar: React.FC = () => {
                 pl: 1,
                 pr: 2,
                 py: 0.5,
-                color: '#fff',
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
+                color: '#ffeb3b',
+                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                border: '2px solid rgba(255, 235, 59, 0.6)',
                 borderRadius: 5,
                 backdropFilter: 'blur(10px)',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
                 '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                  border: '2px solid rgba(255, 255, 255, 0.5)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                  border: '2px solid rgba(255, 235, 59, 0.85)',
                   transform: 'scale(1.05)',
                 },
                 '& .MuiChip-label': {
-                  color: '#fff',
+                  color: '#ffeb3b',
                   fontWeight: 'bold',
                   fontSize: '0.95rem',
                   textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
@@ -283,13 +309,9 @@ const Navbar: React.FC = () => {
         )}
 
         {/* Language Selector */}
-        <IconButton
-          color="inherit"
-          onClick={handleLanguageClick}
-          sx={{ ml: 1 }}
-        >
-          <Language />
-        </IconButton>
+        <Button color="inherit" onClick={handleLanguageClick} startIcon={<Language />} sx={{ ml: 1, textTransform: 'none', opacity: 0.9, '&:hover': { opacity: 1 } }}>
+          {currentLang.name}
+        </Button>
 
         {/* Mobile Menu Button */}
         {isMobile && (
@@ -338,6 +360,23 @@ const Navbar: React.FC = () => {
             </MenuItem>
           ))}
         </Menu>
+
+        {/* More Menu (simple list) */}
+        <Menu
+          anchorEl={modulesMenuAnchorEl}
+          open={Boolean(modulesMenuAnchorEl)}
+          onClose={handleModulesMenuClose}
+        >
+          {secondaryNav.map((item) => (
+            <MenuItem key={item.path} onClick={() => { handleNavigation(item.path); handleModulesMenuClose(); }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {React.cloneElement(item.icon, { sx: { mr: 1 } })}
+                {item.label}
+              </Box>
+            </MenuItem>
+          ))}
+        </Menu>
+        </Container>
       </Toolbar>
     </AppBar>
   );

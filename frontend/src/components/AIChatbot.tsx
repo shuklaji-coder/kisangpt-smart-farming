@@ -40,6 +40,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { faq } from '../data/faq';
 
 interface ChatMessage {
   id: string;
@@ -300,10 +301,31 @@ const AIChatbot: React.FC = () => {
     return message;
   };
 
+  // Simple FAQ retrieval by token overlap
+  const getFaqAnswer = (query: string, lang: string) => {
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    let best = { score: 0, a: '' };
+    faq.filter(f => f.lang === (lang as any) || f.lang === 'en').forEach(item => {
+      const bag = (item.q + ' ' + item.tags.join(' ')).toLowerCase();
+      const overlap = terms.filter(t => bag.includes(t)).length;
+      const score = overlap / Math.max(1, terms.length);
+      if (score > best.score) best = { score, a: item.a };
+    });
+    return best;
+  };
+
   const generateAIResponse = async (userMessage: string, userEmotion: string, language: string) => {
     try {
       setIsLoading(true);
       
+      // Quick FAQ match (fast RAG)
+      const faqHit = getFaqAnswer(userMessage, language);
+      if (faqHit.score >= 0.35) {
+        addBotMessage(faqHit.a, language);
+        setIsLoading(false);
+        return;
+      }
+
       // If user is sad or confused, add motivational message first
       if ((userEmotion === 'sad' || userEmotion === 'confused') && motivationalMessages[userEmotion as keyof typeof motivationalMessages]) {
         const messages = motivationalMessages[userEmotion as keyof typeof motivationalMessages][language as keyof typeof motivationalMessages.sad] || 
@@ -317,12 +339,17 @@ const AIChatbot: React.FC = () => {
       }
 
       // Call your backend AI API
+      const system_context = `
+You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, step-by-step with bullet points. Prefer local practices for Indian farmers. If unsure, say what additional info is needed. Avoid brand endorsements; give generic active ingredients. Output language: ${language}.`;
+
       const response = await axios.post('http://localhost:8000/api/chat/ai-response', {
         message: userMessage,
         language: language,
         emotion: userEmotion,
         context: 'farming',
-        previous_messages: messages.slice(-5) // Send last 5 messages for context
+        system_context,
+        faq_context: faqHit.score > 0 ? faqHit.a : undefined,
+        previous_messages: messages.slice(-5)
       });
 
       let aiResponse = response.data.response;

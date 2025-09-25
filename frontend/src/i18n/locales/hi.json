@@ -86,11 +86,34 @@
     "windSpeed": "हवा की गति",
     "farmingAdvice": "मौसम के आधार पर खेती की सलाह"
   },
+  "auth": {
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "rememberMe": "याद रखें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "login": "लॉगिन",
+    "loggingIn": "लॉग इन हो रहे हैं...",
+    "newHere": "नए हैं?",
+    "signUp": "साइन अप करें",
+    "demoCredentials": "डेमो लॉगिन क्रेडेंशियल्स",
+    "fillDemo": "डेमो भरें 🚀",
+    "errors": {
+      "fillAllFields": "कृपया सभी फील्ड भरें",
+      "fillAllRequired": "कृपया सभी आवश्यक फील्ड भरें",
+      "invalidEmail": "कृपया वैध ईमेल पता दर्ज करें",
+      "loginFailed": "लॉगिन में समस्या",
+      "invalidCredentialsWithDemo": "गलत ईमेल या पासवर्ड\n\nडेमो यूजर्स:\n• farmer@example.com / farmer123\n• test@example.com / test123\n• demo@kisangpt.com / demo123",
+      "passwordTooShort": "पासवर्ड कम से कम 6 अक्षर का होना चाहिए",
+      "passwordsDontMatch": "पासवर्ड मेल नहीं खाते",
+      "agreeToTerms": "कृपया नियम व शर्तों से सहमत हों",
+      "signupFailed": "साइन अप में समस्या"
+    }
+  },
   "footer": {
     "developedWith": "बनाया गया है",
     "by": "द्वारा",
     "fullStackDeveloper": "फुल-स्टैक डेवलपर",
-    "copyright": "© 2024 किसानGPT स्मार्ट फार्मिंग • भारतीय किसानों के लिए ❤️ से बनाया गया 🇮🇳"
+    "copyright": ""
   },
   "common": {
     "loading": "लोड हो रहा है...",
@@ -118,10 +141,32 @@
     "farmingTraining": "खेती प्रशिक्षण समूह",
     "viewMore": "और देखें",
     "soilHealth": "मिट्टी की सेहत",
+    "cropHealth": "फसल स्वास्थ्य",
+    "marketTrend": "मार्केट ट्रेंड",
     "aiInsights": "AI इनसाइट्स",
     "todaysAdvice": "आज की खेती की सलाह",
     "farmingNews": "ताजा खेती समाचार",
-    "quickActions": "तुरंत कार्य",
+    "quickActions": "तुरंत सेवाएं",
+    "yourFarmStats": "आपके खेत के आंकड़े",
+    "estimatedProfit": "अनुमानित लाभ (AI आधारित)",
+    "fromSatelliteData": "सैटेलाइट डेटा से",
+    "ndviBasedAnalysis": "NDVI आधारित विश्लेषण",
+    "wheatRatePerQuintal": "गेहूं का रेट/क्विंटल",
+    "updatedToday": "आज अपडेटेड",
+    "startNow": "अभी शुरू करें",
+    "qa": {
+      "weather": "आज का मौसम और खेती की स्थिति देखें",
+      "community": "अपने आस-पास के किसानों से जुड़ें",
+      "cropRecommendation": "आपकी मिट्टी के लिए बेहतर फसल का चुनाव",
+      "marketAnalysis": "फसलों के दाम और बाजार की भविष्यवाणी",
+      "aiChat": "खेती के सवालों के लिए AI सहायक",
+      "diseaseDetection": "पौधों की बीमारियों की पहचान और इलाज",
+      "satelliteView": "अपने खेत को सैटेलाइट से देखें",
+      "arView": "फसलों को 3D में देखें AR/VR तकनीक से",
+      "governmentSchemes": "किसानों के लिए सब्सिडी और वित्तीय सहायता",
+      "rainAlerts": "बारिश की भविष्यवाणी और WhatsApp अलर्ट",
+      "dreamVisualization": "मानसिक सहायता और प्रेरणा पाएं"
+    },
     "weatherAdvice": {
       "default": "🌿 आज का सुझाव: सुबह 6-8 बजे खेत की निरीक्षण करें और पौधों में पानी की जांच करें।",
       "rain": "🌧️ आज बारिश का अनुमान है! फसल की ड्रेनेज की जांच करें, खाद का हल्का छिड़काव करें और कीटनाशक न दें।",

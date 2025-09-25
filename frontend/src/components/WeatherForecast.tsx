@@ -16,7 +16,14 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
+  ButtonGroup,
   LinearProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   WbSunny,
@@ -35,6 +42,7 @@ import {
   Thunderstorm,
   NightsStay,
   AcUnit,
+  Delete,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -70,6 +78,24 @@ interface FarmingConditions {
   recommendations: string[];
 }
 
+interface HourlyPoint {
+  time: string; // e.g., '09:00'
+  temp: number; // in °C (metric internal)
+  pop: number; // precipitation probability in %
+  wind_kmh: number; // wind speed in km/h
+}
+
+interface HourlyBlock {
+  title: string; // 'Today' | 'Tomorrow'
+  points: HourlyPoint[];
+}
+
+interface SavedFarmLocation {
+  name: string;
+  lat: number;
+  lon: number;
+}
+
 const WeatherForecast: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -81,10 +107,48 @@ const WeatherForecast: React.FC = () => {
   const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 });
   const [locationError, setLocationError] = useState('');
   const [error, setError] = useState('');
+  const [advisories, setAdvisories] = useState<string[]>([]);
+  const [units, setUnits] = useState<'metric' | 'imperial'>(() =>
+    localStorage.getItem('weather_units') === 'imperial' ? 'imperial' : 'metric'
+  );
+  const [hourlyBlocks, setHourlyBlocks] = useState<HourlyBlock[]>([]);
+  const [crop, setCrop] = useState<string>(() => localStorage.getItem('selected_crop') || 'General');
+  const [savedLocations, setSavedLocations] = useState<SavedFarmLocation[]>(() => {
+    try {
+      const raw = localStorage.getItem('saved_farm_locations');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [selectedSavedName, setSelectedSavedName] = useState<string>('');
 
-  useEffect(() => {
+useEffect(() => {
     getCurrentLocation();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Persist units preference
+  useEffect(() => {
+    try {
+      localStorage.setItem('weather_units', units);
+    } catch (e) {
+      // ignore storage errors
+    }
+  }, [units]);
+
+  // Persist crop selection
+  useEffect(() => {
+    try {
+      localStorage.setItem('selected_crop', crop);
+    } catch {}
+  }, [crop]);
+
+  // Persist saved locations whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('saved_farm_locations', JSON.stringify(savedLocations));
+    } catch {}
+  }, [savedLocations]);
 
   const getCurrentLocation = () => {
     setLoading(true);
@@ -193,15 +257,40 @@ const WeatherForecast: React.FC = () => {
     }
   };
 
-  const fetchWeatherData = async (lat?: number, lon?: number, locationName?: string) => {
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+const getCacheKey = (lat: number, lon: number) => `weather_cache_${lat.toFixed(3)}_${lon.toFixed(3)}`;
+
+const fetchWeatherData = async (lat?: number, lon?: number, locationName?: string, options?: { force?: boolean }) => {
     const currentLat = lat || coordinates.lat;
     const currentLon = lon || coordinates.lon;
     const currentLocation = locationName || location;
     
-    setLoading(true);
+setLoading(true);
     setError(''); // Clear previous errors
     
     try {
+      // Try cache first unless forced
+      if (!options?.force) {
+        try {
+          const cacheKey = getCacheKey(currentLat, currentLon);
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (Date.now() - parsed.timestamp < CACHE_TTL_MS) {
+              setCurrentWeather(parsed.currentWeather);
+              setForecast(parsed.forecast);
+              setFarmingConditions(parsed.farmingConditions);
+              setAdvisories(parsed.advisories || []);
+              setHourlyBlocks(parsed.hourlyBlocks || []);
+              setLoading(false);
+              return;
+            }
+          }
+        } catch (e) {
+          // ignore cache errors
+        }
+      }
       // Get current weather from OpenWeatherMap API (free) 
       // You can get a free API key from: https://openweathermap.org/api
       const weatherApiKey = process.env.REACT_APP_OPENWEATHER_API_KEY;
@@ -209,7 +298,7 @@ const WeatherForecast: React.FC = () => {
       if (!weatherApiKey || weatherApiKey === 'demo_key') {
         // Use mock data if no API key is configured
         console.warn('No OpenWeatherMap API key configured. Using mock data.');
-        setCurrentWeather({
+setCurrentWeather({
           location: currentLocation,
           temperature: 28,
           humidity: 65,
@@ -221,6 +310,11 @@ const WeatherForecast: React.FC = () => {
           visibility: 10,
           uv_index: 6
         });
+
+        setAdvisories([
+          'Using demo data. Some alerts may be approximations.',
+          'Light rain chance. Plan irrigation accordingly if needed.'
+        ]);
         
         // Set mock farming conditions
         setFarmingConditions({
@@ -245,6 +339,97 @@ const WeatherForecast: React.FC = () => {
           { date: 'Fri', temperature: 29, description: 'partly cloudy', icon: 'partly-cloudy', precipitation: 15 },
           { date: 'Sat', temperature: 31, description: 'sunny', icon: 'sunny', precipitation: 5 }
         ]);
+
+        // Mock hourly blocks (next 24h and following 24h)
+        setHourlyBlocks([
+          {
+            title: 'Today',
+            points: Array.from({ length: 8 }).map((_, i) => ({
+              time: `${(3 * i).toString().padStart(2, '0')}:00`,
+              temp: 26 + (i % 3),
+              pop: [10, 20, 30, 25, 15, 10, 20, 30][i],
+              wind_kmh: 8 + i,
+            })),
+          },
+          {
+            title: 'Tomorrow',
+            points: Array.from({ length: 8 }).map((_, i) => ({
+              time: `${(3 * i).toString().padStart(2, '0')}:00`,
+              temp: 27 + ((i + 1) % 3),
+              pop: [15, 25, 35, 20, 10, 15, 25, 35][i],
+              wind_kmh: 10 + i,
+            })),
+          },
+        ]);
+
+        // Cache demo data
+        try {
+          const cacheKey = getCacheKey(currentLat, currentLon);
+          localStorage.setItem(
+            cacheKey,
+            JSON.stringify({
+              timestamp: Date.now(),
+              currentWeather: {
+                location: currentLocation,
+                temperature: 28,
+                humidity: 65,
+                wind_speed: 10,
+                description: 'partly cloudy',
+                icon: '02d',
+                feels_like: 31,
+                pressure: 1013,
+                visibility: 10,
+                uv_index: 6
+              },
+              forecast: [
+                { date: 'Today', temperature: 28, description: 'partly cloudy', icon: 'partly-cloudy', precipitation: 20 },
+                { date: 'Tomorrow', temperature: 30, description: 'sunny', icon: 'sunny', precipitation: 10 },
+                { date: 'Thu', temperature: 26, description: 'cloudy', icon: 'cloudy', precipitation: 40 },
+                { date: 'Fri', temperature: 29, description: 'partly cloudy', icon: 'partly-cloudy', precipitation: 15 },
+                { date: 'Sat', temperature: 31, description: 'sunny', icon: 'sunny', precipitation: 5 }
+              ],
+              hourlyBlocks: [
+                {
+                  title: 'Today',
+                  points: Array.from({ length: 8 }).map((_, i) => ({
+                    time: `${(3 * i).toString().padStart(2, '0')}:00`,
+                    temp: 26 + (i % 3),
+                    pop: [10, 20, 30, 25, 15, 10, 20, 30][i],
+                    wind_kmh: 8 + i,
+                  })),
+                },
+                {
+                  title: 'Tomorrow',
+                  points: Array.from({ length: 8 }).map((_, i) => ({
+                    time: `${(3 * i).toString().padStart(2, '0')}:00`,
+                    temp: 27 + ((i + 1) % 3),
+                    pop: [15, 25, 35, 20, 10, 15, 25, 35][i],
+                    wind_kmh: 10 + i,
+                  })),
+                },
+              ],
+              farmingConditions: {
+                irrigation_needed: false,
+                spraying_conditions: 'Good',
+                harvest_conditions: 'Good',
+                planting_conditions: 'Excellent',
+                overall_score: 78,
+                recommendations: [
+                  'API key not configured - using demo data',
+                  'Get your free API key from openweathermap.org',
+                  'Add REACT_APP_OPENWEATHER_API_KEY to your .env file',
+                  'Restart the app after adding the API key'
+                ]
+              },
+              advisories: [
+                'Using demo data. Some alerts may be approximations.',
+                'Light rain chance. Plan irrigation accordingly if needed.'
+              ]
+            })
+          );
+        } catch (e) {
+          // ignore cache errors
+        }
         
         setError('Using demo data. Configure REACT_APP_OPENWEATHER_API_KEY for live weather data.');
         return;
@@ -303,9 +488,9 @@ const WeatherForecast: React.FC = () => {
         const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${currentLat}&lon=${currentLon}&appid=${weatherApiKey}&units=metric`;
         const forecastResponse = await fetch(forecastUrl);
         
-        if (forecastResponse.ok) {
+if (forecastResponse.ok) {
           const forecastData = await forecastResponse.json();
-          const dailyForecasts = [];
+          const dailyForecasts: ForecastData[] = [];
           
           // Process forecast data (every 3 hours, so take every 8th item for daily)
           for (let i = 0; i < Math.min(5, Math.floor(forecastData.list.length / 8)); i++) {
@@ -320,8 +505,113 @@ const WeatherForecast: React.FC = () => {
               precipitation: Math.round((dayData.pop || 0) * 100)
             });
           }
+
+          // Hourly blocks for today and tomorrow
+          const list: any[] = Array.isArray(forecastData.list) ? forecastData.list : [];
+          const block1 = list.slice(0, 8);
+          const block2 = list.slice(8, 16);
+          const mapToPoints = (arr: any[]): HourlyPoint[] =>
+            arr.map((item: any) => ({
+              time: new Date(item.dt * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
+              temp: Math.round(item.main?.temp ?? 0),
+              pop: Math.round(((item.pop ?? 0) * 100)),
+              wind_kmh: Math.round(((item.wind?.speed ?? 0) * 3.6)),
+            }));
+          const hb: HourlyBlock[] = [
+            { title: 'Today', points: mapToPoints(block1) },
+            { title: 'Tomorrow', points: mapToPoints(block2) },
+          ];
+          setHourlyBlocks(hb);
+
+          // Compute advisories
+          const next24List = Array.isArray(forecastData.list) ? forecastData.list.slice(0, 8) : [];
+          const maxPopNext24 = next24List.length > 0 ? Math.round(Math.max(...next24List.map((i: any) => ((i.pop || 0) * 100)))) : 0;
+          const windKmh = Math.round((weatherData.wind?.speed || 0) * 3.6);
+          const tempC = Math.round(weatherData.main?.temp || 0);
+          const feelsC = Math.round(weatherData.main?.feels_like || 0);
+          const newAdvisories: string[] = [];
+          if (maxPopNext24 >= 60) {
+            newAdvisories.push(`High chance of rain in next 24h (${maxPopNext24}%). Avoid spraying and plan irrigation accordingly.`);
+          } else if (maxPopNext24 >= 30) {
+            newAdvisories.push(`Possible rain in next 24h (${maxPopNext24}%). Consider irrigation scheduling and protect harvested produce.`);
+          }
+          if (windKmh >= 20) {
+            newAdvisories.push('Windy conditions — avoid spraying and secure lightweight materials.');
+          }
+          if (tempC >= 38 || feelsC >= 40) {
+            newAdvisories.push('Heat alert — schedule field work early morning/evening and ensure irrigation for sensitive crops.');
+          }
+
+          // Crop-specific advisories
+          const cropThresholds: Record<string, { maxSprayWindKmh: number; maxSprayRainPopPct: number; heatStressC: number; irrigationHumidityMinPct: number; }> = {
+            General: { maxSprayWindKmh: 15, maxSprayRainPopPct: 40, heatStressC: 38, irrigationHumidityMinPct: 55 },
+            Wheat: { maxSprayWindKmh: 12, maxSprayRainPopPct: 30, heatStressC: 34, irrigationHumidityMinPct: 50 },
+            Rice: { maxSprayWindKmh: 15, maxSprayRainPopPct: 50, heatStressC: 36, irrigationHumidityMinPct: 60 },
+            Cotton: { maxSprayWindKmh: 15, maxSprayRainPopPct: 40, heatStressC: 37, irrigationHumidityMinPct: 55 },
+            Maize: { maxSprayWindKmh: 18, maxSprayRainPopPct: 40, heatStressC: 36, irrigationHumidityMinPct: 50 },
+            Soybean: { maxSprayWindKmh: 15, maxSprayRainPopPct: 40, heatStressC: 35, irrigationHumidityMinPct: 55 },
+          };
+          const th = cropThresholds[crop] || cropThresholds.General;
+          if (windKmh > th.maxSprayWindKmh) {
+            newAdvisories.push(`${crop}: Avoid spraying (wind > ${th.maxSprayWindKmh} km/h).`);
+          }
+          if (maxPopNext24 > th.maxSprayRainPopPct) {
+            newAdvisories.push(`${crop}: Rain likely — defer spraying (POP > ${th.maxSprayRainPopPct}%).`);
+          }
+          if (tempC >= th.heatStressC) {
+            newAdvisories.push(`${crop}: Heat stress risk — consider shade/mulch and irrigate during cool hours.`);
+          }
+          if ((weatherData.main?.humidity ?? 0) < th.irrigationHumidityMinPct && maxPopNext24 < 30) {
+            newAdvisories.push(`${crop}: Irrigation recommended — humidity < ${th.irrigationHumidityMinPct}% and low rain chance.`);
+          }
+
+          setAdvisories(newAdvisories);
           
           setForecast(dailyForecasts);
+
+          // Cache fresh data
+          try {
+            const cacheKey = getCacheKey(currentLat, currentLon);
+            localStorage.setItem(
+              cacheKey,
+              JSON.stringify({
+                timestamp: Date.now(),
+                currentWeather: {
+                  location: currentLocation,
+                  temperature: Math.round(weatherData.main.temp),
+                  humidity: weatherData.main.humidity,
+                  wind_speed: Math.round(weatherData.wind.speed * 3.6),
+                  description: weatherData.weather[0].description,
+                  icon: weatherData.weather[0].icon,
+                  feels_like: Math.round(weatherData.main.feels_like),
+                  pressure: weatherData.main.pressure,
+                  visibility: Math.round((weatherData.visibility || 10000) / 1000),
+                  uv_index: 0
+                },
+                forecast: dailyForecasts,
+                hourlyBlocks: hb,
+                farmingConditions: (function() {
+                  // Use latest in state if available; else simple derived fallback
+                  return (typeof farmingConditions === 'object' && farmingConditions) ? farmingConditions : {
+                    irrigation_needed: weatherData.main.humidity < 60,
+                    spraying_conditions: weatherData.wind.speed < 3 ? 'Good' : 'Fair',
+                    harvest_conditions: weatherData.main.temp > 25 && weatherData.main.temp < 35 ? 'Excellent' : 'Good',
+                    planting_conditions: weatherData.main.temp > 20 && weatherData.main.temp < 30 ? 'Good' : 'Fair',
+                    overall_score: 85,
+                    recommendations: [
+                      weatherData.main.humidity < 50 ? 'Consider irrigation today' : 'Soil moisture looks good',
+                      weatherData.wind.speed < 3 ? 'Good conditions for spraying' : 'Wait for calmer winds for spraying',
+                      weatherData.weather[0].main === 'Clear' ? 'Perfect weather for outdoor farm work' : 'Plan indoor activities if needed',
+                      'Monitor weather changes throughout the day'
+                    ]
+                  } as FarmingConditions;
+                })(),
+                advisories: newAdvisories
+              })
+            );
+          } catch (e) {
+            // ignore cache errors
+          }
         }
         
       } else {
@@ -359,13 +649,14 @@ const WeatherForecast: React.FC = () => {
         ]
       });
       
-      setForecast([
+setForecast([
         { date: 'Today', temperature: 28, description: 'partly cloudy', icon: 'partly-cloudy', precipitation: 20 },
         { date: 'Tomorrow', temperature: 30, description: 'sunny', icon: 'sunny', precipitation: 10 },
         { date: 'Thu', temperature: 26, description: 'cloudy', icon: 'cloudy', precipitation: 40 },
         { date: 'Fri', temperature: 29, description: 'partly cloudy', icon: 'partly-cloudy', precipitation: 15 },
         { date: 'Sat', temperature: 31, description: 'sunny', icon: 'sunny', precipitation: 5 }
       ]);
+      setAdvisories(['Weather data unavailable — showing default recommendations.']);
     } finally {
       setLoading(false);
     }
@@ -396,10 +687,10 @@ const WeatherForecast: React.FC = () => {
     return iconMap[owmIcon] || 'partly-cloudy';
   };
 
-  // Refresh handler
+// Refresh handler
   const handleRefresh = () => {
     if (coordinates.lat && coordinates.lon) {
-      fetchWeatherData(coordinates.lat, coordinates.lon, location);
+      fetchWeatherData(coordinates.lat, coordinates.lon, location, { force: true });
     } else {
       getCurrentLocation();
     }
@@ -431,7 +722,7 @@ const WeatherForecast: React.FC = () => {
     }
   };
 
-  const getConditionColor = (condition: string) => {
+const getConditionColor = (condition: string) => {
     switch (condition.toLowerCase()) {
       case 'excellent': return '#4caf50';
       case 'good': return '#8bc34a';
@@ -440,6 +731,79 @@ const WeatherForecast: React.FC = () => {
       default: return '#2196f3';
     }
   };
+
+  // Unit formatting helpers (store metric internally; convert for display)
+  const toF = (c: number) => Math.round((c * 9) / 5 + 32);
+  const kmhToMph = (k: number) => Math.round(k * 0.621371);
+  const kmToMiles = (k: number) => Math.round(k * 0.621371);
+  const formatTemp = (c: number) => (units === 'metric' ? `${c}°C` : `${toF(c)}°F`);
+  const formatWind = (kmh: number) => (units === 'metric' ? `${kmh} km/h` : `${kmhToMph(kmh)} mph`);
+  const formatVisibility = (km: number) => (units === 'metric' ? `${km} km` : `${kmToMiles(km)} mi`);
+
+  // Saved farms helpers
+  const saveCurrentLocationAsFarm = () => {
+    if (!coordinates.lat || !coordinates.lon) return;
+    const name = location || `${coordinates.lat.toFixed(2)}, ${coordinates.lon.toFixed(2)}`;
+    if (savedLocations.find((f) => f.name === name)) return; // avoid duplicates by name
+    setSavedLocations([...savedLocations, { name, lat: coordinates.lat, lon: coordinates.lon }]);
+    setSelectedSavedName(name);
+  };
+
+  const deleteSelectedFarm = () => {
+    if (!selectedSavedName) return;
+    const next = savedLocations.filter((f) => f.name !== selectedSavedName);
+    setSavedLocations(next);
+    setSelectedSavedName('');
+  };
+
+  const selectFarmByName = (name: string) => {
+    setSelectedSavedName(name);
+    const farm = savedLocations.find((f) => f.name === name);
+    if (farm) {
+      setCoordinates({ lat: farm.lat, lon: farm.lon });
+      setLocation(farm.name);
+      fetchWeatherData(farm.lat, farm.lon, farm.name, { force: true });
+    }
+  };
+
+  // Lightweight SVG chart component
+  const SVGChart: React.FC<{ points: number[]; width?: number; height?: number; color?: string; min?: number; max?: number }>
+    = ({ points, width = 260, height = 80, color = '#2196f3', min, max }) => {
+      if (!points || points.length === 0) return null;
+      const padding = 6;
+      const n = points.length;
+      const xStep = (width - padding * 2) / Math.max(1, n - 1);
+      const vmin = min !== undefined ? min : Math.min(...points);
+      const vmax = max !== undefined ? max : Math.max(...points);
+      const rng = vmax - vmin || 1;
+      const toY = (v: number) => height - padding - ((v - vmin) / rng) * (height - padding * 2);
+      const toX = (i: number) => padding + i * xStep;
+      const path = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${toX(i)} ${toY(p)}`).join(' ');
+      return (
+        <svg width={width} height={height} role="img" aria-label="chart">
+          <path d={path} fill="none" stroke={color} strokeWidth={2} />
+        </svg>
+      );
+    };
+
+  const SVGBar: React.FC<{ points: number[]; width?: number; height?: number; color?: string; max?: number }>
+    = ({ points, width = 260, height = 80, color = '#00bcd4', max }) => {
+      if (!points || points.length === 0) return null;
+      const padding = 6;
+      const n = points.length;
+      const barW = (width - padding * 2) / n;
+      const vmax = max !== undefined ? max : 100;
+      return (
+        <svg width={width} height={height} role="img" aria-label="bar-chart">
+          {points.map((v, i) => {
+            const h = Math.max(0, (v / (vmax || 1)) * (height - padding * 2));
+            const x = padding + i * barW;
+            const y = height - padding - h;
+            return <rect key={i} x={x + 1} y={y} width={barW - 2} height={h} fill={color} rx={2} />;
+          })}
+        </svg>
+      );
+    };
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
@@ -464,9 +828,42 @@ const WeatherForecast: React.FC = () => {
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
             🌤️ {t('weather.title', 'Weather Forecast')}
           </Typography>
-          <Typography variant="h6" sx={{ opacity: 0.9 }}>
+          <Typography variant="h6" sx={{ opacity: 0.9, mb: 2 }}>
             {t('weather.subtitle', 'मौसम की जानकारी और खेती की सलाह')}
           </Typography>
+
+          {/* Saved farm locations controls */}
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
+            <FormControl size="small" sx={{ minWidth: 240 }}>
+              <InputLabel id="saved-farm-select-label" sx={{ color: 'white' }}>Saved Farms</InputLabel>
+              <Select
+                labelId="saved-farm-select-label"
+                label="Saved Farms"
+                value={selectedSavedName}
+                onChange={(e) => selectFarmByName(e.target.value as string)}
+                sx={{
+                  bgcolor: 'rgba(255,255,255,0.2)',
+                  color: 'white',
+                  '& .MuiSvgIcon-root': { color: 'white' },
+                }}
+              >
+                <MenuItem value=""><em>None</em></MenuItem>
+                {savedLocations.map((f) => (
+                  <MenuItem key={f.name} value={f.name}>{f.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button variant="outlined" color="inherit" onClick={saveCurrentLocationAsFarm} sx={{ borderColor: 'white' }}>
+              Save Current Location
+            </Button>
+            <Tooltip title="Delete selected farm">
+              <span>
+                <IconButton color="inherit" onClick={deleteSelectedFarm} disabled={!selectedSavedName}>
+                  <Delete />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Box>
         </Paper>
       </motion.div>
 
@@ -476,10 +873,21 @@ const WeatherForecast: React.FC = () => {
           Location Error: {locationError}
         </Alert>
       )}
-      {error && (
+{error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           Weather Error: {error}
         </Alert>
+      )}
+
+      {/* Dynamic Advisories */}
+      {advisories.length > 0 && (
+        <Box sx={{ mb: 2 }}>
+          {advisories.map((msg, idx) => (
+            <Alert key={idx} severity={/heat|alert|high/i.test(msg) ? 'warning' : 'info'} sx={{ mb: 1 }}>
+              {msg}
+            </Alert>
+          ))}
+        </Box>
       )}
 
       {loading ? (
@@ -498,9 +906,27 @@ const WeatherForecast: React.FC = () => {
             >
               <Card elevation={3} sx={{ borderRadius: 3, height: '100%' }}>
                 <CardContent sx={{ p: 3 }}>
-                  <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
+<Typography variant="h5" sx={{ mb: 1.5, fontWeight: 'bold', color: theme.palette.primary.main }}>
                     📍 Current Weather
                   </Typography>
+
+                  {/* Units toggle */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                    <ButtonGroup size="small" variant="outlined">
+                      <Button
+                        variant={units === 'metric' ? 'contained' : 'outlined'}
+                        onClick={() => setUnits('metric')}
+                      >
+                        °C / km/h
+                      </Button>
+                      <Button
+                        variant={units === 'imperial' ? 'contained' : 'outlined'}
+                        onClick={() => setUnits('imperial')}
+                      >
+                        °F / mph
+                      </Button>
+                    </ButtonGroup>
+                  </Box>
                   
                   {currentWeather && (
                     <Box>
@@ -509,8 +935,8 @@ const WeatherForecast: React.FC = () => {
                           {getWeatherIcon(currentWeather.icon)}
                         </Avatar>
                         <Box>
-                          <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                            {currentWeather.temperature}°C
+<Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                            {formatTemp(currentWeather.temperature)}
                           </Typography>
                           <Typography variant="body1" color="text.secondary">
                             {currentWeather.description}
@@ -527,8 +953,8 @@ const WeatherForecast: React.FC = () => {
                           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                             <Thermostat sx={{ fontSize: 20, mr: 1, color: '#ff5722' }} />
                             <Box>
-                              <Typography variant="body2" color="text.secondary">Feels like</Typography>
-                              <Typography variant="body1">{currentWeather.feels_like}°C</Typography>
+<Typography variant="body2" color="text.secondary">Feels like</Typography>
+                              <Typography variant="body1">{formatTemp(currentWeather.feels_like)}</Typography>
                             </Box>
                           </Box>
                         </Grid>
@@ -545,8 +971,8 @@ const WeatherForecast: React.FC = () => {
                           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                             <Air sx={{ fontSize: 20, mr: 1, color: '#4caf50' }} />
                             <Box>
-                              <Typography variant="body2" color="text.secondary">Wind Speed</Typography>
-                              <Typography variant="body1">{currentWeather.wind_speed} km/h</Typography>
+<Typography variant="body2" color="text.secondary">Wind Speed</Typography>
+                              <Typography variant="body1">{formatWind(currentWeather.wind_speed)}</Typography>
                             </Box>
                           </Box>
                         </Grid>
@@ -586,9 +1012,27 @@ const WeatherForecast: React.FC = () => {
             >
               <Card elevation={3} sx={{ borderRadius: 3, height: '100%' }}>
                 <CardContent sx={{ p: 3 }}>
-                  <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                    🌾 Farming Conditions
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
+                      🌾 Farming Conditions
+                    </Typography>
+                    <FormControl size="small" sx={{ minWidth: 160 }}>
+                      <InputLabel id="crop-select-label">Crop</InputLabel>
+                      <Select
+                        labelId="crop-select-label"
+                        label="Crop"
+                        value={crop}
+                        onChange={(e) => setCrop(e.target.value)}
+                      >
+                        <MenuItem value="General">General</MenuItem>
+                        <MenuItem value="Wheat">Wheat</MenuItem>
+                        <MenuItem value="Rice">Rice</MenuItem>
+                        <MenuItem value="Maize">Maize</MenuItem>
+                        <MenuItem value="Soybean">Soybean</MenuItem>
+                        <MenuItem value="Cotton">Cotton</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
                   
                   {farmingConditions && (
                     <Box>
@@ -681,6 +1125,66 @@ const WeatherForecast: React.FC = () => {
             </motion.div>
           </Grid>
 
+          {/* Hourly Charts */}
+          <Grid item xs={12}>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <Card elevation={3} sx={{ borderRadius: 3, mb: 3 }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
+                    ⏱️ Hourly Forecast (Next 48h)
+                  </Typography>
+                  <Grid container spacing={3}>
+                    {hourlyBlocks.map((blk, idx) => (
+                      <Grid key={idx} item xs={12} md={6}>
+                        <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>{blk.title}</Typography>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <Typography variant="caption" color="text.secondary">Temperature</Typography>
+                              <SVGChart points={blk.points.map(p => p.temp)} color="#ff7043" />
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {blk.points.map((p, i) => (
+                                  <Typography key={i} variant="caption" color="text.secondary">{p.time.replace(':00','')}</Typography>
+                                ))}
+                              </Box>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {blk.points.map((p, i) => (
+                                  <Typography key={i} variant="caption">{formatTemp(p.temp)}</Typography>
+                                ))}
+                              </Box>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="caption" color="text.secondary">Precipitation chance</Typography>
+                              <SVGBar points={blk.points.map(p => p.pop)} color="#03a9f4" />
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {blk.points.map((p, i) => (
+                                  <Typography key={i} variant="caption">{p.pop}%</Typography>
+                                ))}
+                              </Box>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="caption" color="text.secondary">Wind</Typography>
+                              <SVGChart points={blk.points.map(p => p.wind_kmh)} color="#4caf50" />
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {blk.points.map((p, i) => (
+                                  <Typography key={i} variant="caption">{formatWind(p.wind_kmh)}</Typography>
+                                ))}
+                              </Box>
+                            </Grid>
+                          </Grid>
+                        </Paper>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </Grid>
+
           {/* 5-Day Forecast */}
           <Grid item xs={12}>
             <motion.div
@@ -714,7 +1218,7 @@ const WeatherForecast: React.FC = () => {
                             {getWeatherIcon(day.icon)}
                           </Box>
                           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                            {day.temperature}°C
+                            {formatTemp(day.temperature)}
                           </Typography>
                           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                             {day.description}

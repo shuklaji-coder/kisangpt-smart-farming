@@ -14,6 +14,7 @@ import EnhancedCropRecommendation from './components/EnhancedCropRecommendation'
 import WeatherForecast from './components/WeatherForecast';
 import MarketAnalysis from './components/MarketAnalysis';
 import GovernmentSubsidy from './components/GovernmentSubsidy';
+import LoanApplication from './components/LoanApplication';
 import AIChatbot from './components/AIChatbot';
 import FloatingChatbot from './components/FloatingChatbot';
 import SatelliteFieldView from './components/SatelliteFieldView';
@@ -69,28 +70,80 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 14,
   },
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: '0 4px 12px rgba(46, 125, 50, 0.1)',
-          border: '1px solid rgba(76, 175, 80, 0.2)',
+          borderRadius: 16,
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+          border: '1px solid rgba(0,0,0,0.06)',
+          transition: 'transform .2s ease, box-shadow .2s ease',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 16px 36px rgba(0, 0, 0, 0.12)'
+          }
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          border: '1px solid rgba(0,0,0,0.06)'
+        }
+      }
+    },
     MuiButton: {
+      defaultProps: {
+        disableElevation: true
+      },
       styleOverrides: {
         root: {
           textTransform: 'none',
           fontSize: '1rem',
-          fontWeight: 500,
-          borderRadius: 25,
-          padding: '10px 24px',
+          fontWeight: 600,
+          borderRadius: 999,
+          padding: '10px 18px'
         },
-      },
+        containedPrimary: {
+          background: 'linear-gradient(45deg, #2e7d32, #66bb6a)',
+          color: '#fff'
+        },
+        containedSecondary: {
+          background: 'linear-gradient(45deg, #1e88e5, #64b5f6)',
+          color: '#fff'
+        },
+        outlined: {
+          borderColor: 'rgba(46, 125, 50, 0.35)'
+        }
+      }
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 999,
+          fontWeight: 600
+        }
+      }
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0 8px 20px rgba(0,0,0,0.12)',
+          backgroundColor: '#fff'
+        }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          borderRadius: 8,
+          boxShadow: '0 6px 20px rgba(0,0,0,0.12)'
+        }
+      }
+    }
   },
 });
 
@@ -121,6 +174,7 @@ const AppContent = () => {
           <Route path="/satellite-view" element={<SatelliteFieldView />} />
           <Route path="/ar-visualization" element={<ARPlantVisualization />} />
           <Route path="/rain-alerts" element={<RainAlertSettings />} />
+          <Route path="/loans" element={<LoanApplication />} />
         </Routes>
       </Container>
       {/* Footer with Developer Credits */}

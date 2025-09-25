@@ -272,16 +272,23 @@ const mockPriceData: { [key: string]: CropPrice[] } = {
 
 class MarketPriceService {
   private apiKey: string;
+  private backendUrl: string;
   private priceAlerts: PriceAlert[] = [];
   private priceCache: Map<string, CropPrice[]> = new Map();
   private cacheExpiration: number = 300000; // 5 minutes
+  private lastProvider: 'backend' | 'mock' = 'mock';
 
   constructor() {
     this.apiKey = process.env.REACT_APP_AGMARKET_API_KEY || 'demo_key';
+    this.backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
     this.loadAlertsFromStorage();
   }
 
-  // Get real-time crop prices from multiple mandis
+  getLastProvider(): 'backend' | 'mock' {
+    return this.lastProvider;
+  }
+
+// Get real-time crop prices from multiple mandis
   async getCropPrices(cropName: string, location?: { lat: number; lng: number }): Promise<CropPrice[]> {
     try {
       const cacheKey = `${cropName}_${location?.lat || 0}_${location?.lng || 0}`;
@@ -294,12 +301,30 @@ class MarketPriceService {
         }
       }
 
-      // In production, fetch from real APIs like:
-      // - Government e-NAM platform
-      // - State APMC websites
-      // - AgMarkNet API
-      // For demo, return mock data with some randomization
+      // Try backend first if configured
+      try {
+        if (this.backendUrl) {
+          const resp = await axios.get(`${this.backendUrl}/api/market/prices`, {
+            params: {
+              crop: cropName,
+              lat: location?.lat,
+              lon: location?.lng,
+            },
+            timeout: 8000,
+          });
+          if (resp.status === 200 && Array.isArray(resp.data) && resp.data.length > 0) {
+            const mapped: CropPrice[] = resp.data.map((item: any) => this.normalizeBackendPrice(item));
+            // Update cache and provider marker
+            this.priceCache.set(cacheKey, mapped);
+            this.lastProvider = 'backend';
+            return mapped;
+          }
+        }
+      } catch (e) {
+        // Backend unavailable or CORS issue; fall back to mock
+      }
 
+      // Demo/mock fallback
       let prices = mockPriceData[cropName.toLowerCase()] || [];
       
       // Add some realistic price variations
@@ -316,13 +341,43 @@ class MarketPriceService {
 
       // Cache the results
       this.priceCache.set(cacheKey, prices);
+      this.lastProvider = 'mock';
 
       return prices;
 
     } catch (error) {
       console.error('Error fetching crop prices:', error);
+      this.lastProvider = 'mock';
       return this.getFallbackPrices(cropName);
     }
+  }
+
+  private normalizeBackendPrice(item: any): CropPrice {
+    // Attempt to map backend response to CropPrice. Uses sensible defaults.
+    const crop = (item.crop || item.commodity || 'unknown').toString().toLowerCase();
+    const hindiName = item.hindiName || item.hindi || item.localName || crop;
+    const variety = item.variety || 'सामान्य';
+    const unit = (item.unit || item.uom || 'quintal').toLowerCase();
+    const currentPrice = Number(item.currentPrice ?? item.price ?? item.modal_price ?? 0);
+    const previousPrice = Number(item.previousPrice ?? item.prev_price ?? currentPrice);
+    const change = currentPrice && previousPrice ? ((currentPrice - previousPrice) / previousPrice) * 100 : 0;
+    const trend: 'up' | 'down' | 'stable' = change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'stable';
+
+    return {
+      crop,
+      hindiName,
+      variety,
+      currentPrice,
+      unit: unit === 'kg' || unit === 'ton' ? unit : 'quintal',
+      previousPrice,
+      changePercent: Number(change.toFixed(2)),
+      trend,
+      minPrice: Number(item.minPrice ?? item.min_price ?? currentPrice),
+      maxPrice: Number(item.maxPrice ?? item.max_price ?? currentPrice),
+      avgPrice: Number(item.avgPrice ?? item.avg_price ?? currentPrice),
+      qualityGrade: (item.qualityGrade || item.grade || 'FAQ') as CropPrice['qualityGrade'],
+      lastUpdated: item.lastUpdated || item.updated_at || new Date().toISOString(),
+    };
   }
 
   // Get detailed market information for nearby mandis
@@ -389,9 +444,31 @@ class MarketPriceService {
     }
   }
 
-  // Get historical trends and forecast
+// Get historical trends and forecast
   async getMarketTrends(cropName: string, period: 'daily' | 'weekly' | 'monthly' = 'weekly'): Promise<MarketTrend> {
     try {
+      // Try backend first
+      try {
+        if (this.backendUrl) {
+          const resp = await axios.get(`${this.backendUrl}/api/market/trends`, {
+            params: { crop: cropName, period },
+            timeout: 8000,
+          });
+          if (resp.status === 200 && resp.data && Array.isArray(resp.data.data)) {
+            const d = resp.data;
+            return {
+              crop: d.crop || cropName,
+              period: (d.period || period) as MarketTrend['period'],
+              data: d.data,
+              forecast: d.forecast || [],
+              analysis: d.analysis || this.analyzeMarketTrends(d.data),
+            };
+          }
+        }
+      } catch (e) {
+        // ignore and fall back to mock
+      }
+
       // Generate mock historical data
       const historicalData = this.generateHistoricalData(cropName, period);
       const forecast = this.generatePriceForecast(cropName, historicalData);

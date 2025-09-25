@@ -29,28 +29,51 @@ const resources = {
   }
 };
 
+// Determine initial language: prefer saved value, then browser language, then Hindi
+const getInitialLanguage = (): string => {
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('appLanguage');
+      if (saved && resources[saved as keyof typeof resources]) return saved;
+    }
+  } catch {}
+  try {
+    if (typeof navigator !== 'undefined' && navigator.language) {
+      const two = navigator.language.slice(0, 2);
+      if (resources[two as keyof typeof resources]) return two;
+    }
+  } catch {}
+  return 'hi';
+};
+
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'hi', // Default language is Hindi for farmers
+    lng: getInitialLanguage(),
     fallbackLng: 'en',
-    
     interpolation: {
-      escapeValue: false, // React already escapes values
+      escapeValue: false,
     },
-    
     react: {
       useSuspense: false,
     },
-    
-    // Disable strict type checking for production builds
     returnNull: false,
     returnEmptyString: false,
     saveMissing: false,
-    
-    // TypeScript compatibility
     parseMissingKeyHandler: (key: string) => key,
   });
+
+// Persist language changes
+try {
+  i18n.on('languageChanged', (lng) => {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.setItem('appLanguage', lng);
+      try {
+        document.documentElement.setAttribute('lang', lng);
+      } catch {}
+    }
+  });
+} catch {}
 
 export default i18n;

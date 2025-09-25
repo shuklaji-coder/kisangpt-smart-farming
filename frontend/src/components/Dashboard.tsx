@@ -14,6 +14,13 @@ import {
   IconButton,
   Fab,
   Alert,
+  TextField,
+  Checkbox,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -35,6 +42,12 @@ import {
   Notifications,
   LocalFlorist,
   AccountBalance,
+  CloudQueue,
+  Grass,
+  Add,
+  Delete,
+  CheckCircle,
+  RadioButtonUnchecked,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -45,6 +58,8 @@ import { cropRecommendationEngine } from '../services/cropRecommendationEngine';
 import { satelliteService } from '../services/satelliteService';
 import { marketPriceService } from '../services/marketPriceService';
 import { diseaseDetectionService } from '../services/diseaseDetectionService';
+import { getTranslation } from '../utils/translation';
+import NewsTicker from './NewsTicker';
 
 // Custom Marquee component since MUI doesn't have one
 const ScrollingTicker = ({ children, speed = 50 }: { children: React.ReactNode, speed?: number }) => {
@@ -75,11 +90,13 @@ const ScrollingTicker = ({ children, speed = 50 }: { children: React.ReactNode, 
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
+  const tt = getTranslation(t);
   const theme = useTheme();
   const navigate = useNavigate();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [userName, setUserName] = useState('किसान जी');
   const [userEmail, setUserEmail] = useState('');
+  const [now, setNow] = useState(new Date());
   const [weatherData, setWeatherData] = useState<any>(null);
   const [location, setLocation] = useState<{lat: number, lon: number, name: string} | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
@@ -92,6 +109,11 @@ const Dashboard: React.FC = () => {
   const [soilHealth, setSoilHealth] = useState<number>(85);
   const [aiInsights, setAiInsights] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Farmer Tasks (Today)
+  type Task = { id: string; text: string; done: boolean };
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const todayKey = React.useMemo(() => new Date().toISOString().split('T')[0], []);
 
   // Get user data from localStorage
   useEffect(() => {
@@ -117,11 +139,82 @@ const Dashboard: React.FC = () => {
     }
   }, [userName]);
 
+  // Live time updater (every second)
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
   // Get user location and weather data
   useEffect(() => {
     getCurrentLocation();
     fetchAIServicesData();
   }, []);
+
+  // Load tasks from storage or generate suggestions
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(`today_tasks_${todayKey}`);
+      if (stored) {
+        setTasks(JSON.parse(stored));
+      }
+    } catch {}
+  }, [todayKey]);
+
+  useEffect(() => {
+    // If no stored tasks, generate after we have some weather data
+    if (tasks.length === 0 && weatherData) {
+      const suggested = generateSuggestedTasks(weatherData);
+      setTasks(suggested);
+      try { localStorage.setItem(`today_tasks_${todayKey}`, JSON.stringify(suggested)); } catch {}
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weatherData]);
+
+  const saveTasks = (list: Task[]) => {
+    setTasks(list);
+    try { localStorage.setItem(`today_tasks_${todayKey}`, JSON.stringify(list)); } catch {}
+  };
+
+  const toggleTask = (id: string) => {
+    const updated = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+    saveTasks(updated);
+  };
+
+  const addTask = (text: string) => {
+    if (!text.trim()) return;
+    const updated = [{ id: Date.now().toString(), text: text.trim(), done: false }, ...tasks];
+    saveTasks(updated);
+  };
+
+  const deleteTask = (id: string) => {
+    saveTasks(tasks.filter(t => t.id !== id));
+  };
+
+  const generateSuggestedTasks = (w: any): Task[] => {
+    const list: string[] = [];
+    try {
+      const temp = w?.main?.temp ?? 28;
+      const humidity = w?.main?.humidity ?? 60;
+      const main = (w?.weather?.[0]?.main || '').toLowerCase();
+      const wind = w?.wind?.speed ?? 3.0;
+
+      if (main.includes('rain')) list.push('उपकरण/बीज को ढकें, छिड़काव टालें');
+      if (temp > 35) list.push('सुबह जल्दी या शाम को सिंचाई करें');
+      if (humidity > 80) list.push('फंगल रोग से बचाव के लिए निगरानी करें');
+      if (wind > 5) list.push('तेज हवा में स्प्रे न करें');
+
+      if (list.length === 0) list.push('खेत की सामान्य जांच और निराई‑गुड़ाई');
+      list.push('मिट्टी की नमी जाँचें');
+      list.push('कल के काम प्लान करें');
+    } catch {
+      return [
+        { id: '1', text: 'खेत की सामान्य जांच', done: false },
+        { id: '2', text: 'मिट्टी की नमी जाँचें', done: false },
+      ];
+    }
+    return list.map((t, i) => ({ id: `${Date.now()}_${i}`, text: t, done: false }));
+  };
 
   // Fetch AI services data
   const fetchAIServicesData = async () => {
@@ -483,118 +576,126 @@ const Dashboard: React.FC = () => {
       change: '+12%',
       icon: <TrendingUp />,
       color: '#4caf50',
-      description: 'अनुमानित लाभ (AI आधारित)'
+      description: tt('dashboard.estimatedProfit')
     },
     {
-      title: 'मिट्टी स्वास्थ्य',
+      title: tt('dashboard.soilHealth'),
       value: `${soilHealth}%`,
       change: satelliteData?.analysis?.soil_fertility_index > 80 ? 'Excellent' : 'Good',
       icon: <Agriculture />,
       color: '#2196f3',
-      description: 'सैटेलाइट डेटा से'
+      description: tt('dashboard.fromSatelliteData')
     },
     {
-      title: 'फसल स्वास्थ्य',
+      title: tt('dashboard.cropHealth'),
       value: satelliteData ? `${satelliteData.analysis.crop_health_score}%` : '85%',
       change: satelliteData?.vegetation_indices?.ndvi > 0.7 ? '+Excellent' : '+Good',
       icon: <LocalFlorist />,
       color: '#ff9800',
-      description: 'NDVI आधारित विश्लेषण'
+      description: tt('dashboard.ndviBasedAnalysis')
     },
     {
-      title: 'मार्केट ट्रेंड',
+      title: tt('dashboard.marketTrend'),
       value: marketPrices?.wheat ? `₹${marketPrices.wheat.currentPrice}` : '₹2,150',
       change: marketPrices?.wheat?.trend === 'up' ? `+${marketPrices.wheat.changePercent}%` : 'Stable',
       icon: <Assessment />,
       color: '#9c27b0',
-      description: 'गेहूं का रेट/क्विंटल'
+      description: tt('dashboard.wheatRatePerQuintal')
     },
   ];
 
   const quickActions = [
     {
-      title: '🌤️ मौसम की जानकारी',
-      description: 'आज का मौसम और खेती की स्थिति देखें',
+      title: `🌤️ ${tt('navbar.weather')}`,
+      description: tt('dashboard.qa.weather'),
       icon: <LocationOn />,
       color: '#03a9f4',
       path: '/weather',
       badge: 'Hot',
     },
     {
-      title: '👥 किसान कम्युनिटी',
-      description: 'अपने आस-पास के किसानों से जुड़ें',
+      title: `👥 ${tt('navbar.community')}`,
+      description: tt('dashboard.qa.community'),
       icon: <Group />,
       color: '#9c27b0',
       path: '/community',
       badge: 'New',
     },
     {
-      title: '🎯 फसल सुझाव',
-      description: 'आपकी मिट्टी के लिए बेहतर फसल का चुनाव',
+      title: `🎯 ${tt('navbar.cropRecommendation')}`,
+      description: tt('dashboard.qa.cropRecommendation'),
       icon: <School />,
       color: '#4caf50',
       path: '/crop-recommendation',
       badge: 'AI',
     },
     {
-      title: '💹 बाजार विश्लेषण',
-      description: 'फसलों के दाम और बाजार की भविष्यवाणी',
+      title: `💹 ${tt('navbar.marketAnalysis')}`,
+      description: tt('dashboard.qa.marketAnalysis'),
       icon: <Assessment />,
       color: '#ff5722',
       path: '/market-analysis',
       badge: 'Live',
     },
     {
-      title: '🤖 AI किसान मित्र',
-      description: 'खेती के सवालों के लिए AI सहायक',
+      title: `🏦 Loan / KCC Apply` ,
+      description: 'Kheti ke liye seed/fertilizer/equipment loan request bhejein',
+      icon: <AccountBalance />,
+      color: '#2e7d32',
+      path: '/loans',
+      badge: 'New',
+    },
+    {
+      title: `🤖 ${tt('navbar.aiChat')}`,
+      description: tt('dashboard.qa.aiChat'),
       icon: <SmartToy />,
       color: '#4caf50',
       path: '/ai-chat',
       badge: 'Voice',
     },
     {
-      title: '👩‍⚕️ फसल डॉक्टर',
-      description: 'पौधों की बीमारियों की पहचान और इलाज',
+      title: '👩‍⚕️ ' + tt('diseaseDetection.title'),
+      description: tt('dashboard.qa.diseaseDetection'),
       icon: <BugReport />,
       color: '#f44336',
       path: '/disease-detection',
       badge: 'Smart',
     },
     {
-      title: '🛰️ सैटेलाइट व्यू',
-      description: 'अपने खेत को सैटेलाइट से देखें',
+      title: `🛰️ ${tt('navbar.satellite')}`,
+      description: tt('dashboard.qa.satelliteView'),
       icon: <Satellite />,
       color: '#2196f3',
       path: '/satellite-view',
       badge: '3D',
     },
     {
-      title: '🌱 AR प्लांट व्यू',
-      description: 'फसलों को 3D में देखें AR/VR तकनीक से',
+      title: `🌱 ${tt('navbar.arView')}`,
+      description: tt('dashboard.qa.arView'),
       icon: <ViewInAr />,
       color: '#9c27b0',
       path: '/ar-visualization',
       badge: 'VR',
     },
     {
-      title: '🏦 सरकारी योजनाएं',
-      description: 'किसानों के लिए सब्सिडी और वित्तीय सहायता',
+      title: `🏦 ${tt('navbar.governmentSchemes')}`,
+      description: tt('dashboard.qa.governmentSchemes'),
       icon: <AccountBalance />,
       color: '#1976d2',
       path: '/government-subsidy',
       badge: 'Money',
     },
     {
-      title: '🌧️ रेन अलर्ट',
-      description: 'बारिश की भविष्यवाणी और WhatsApp अलर्ट',
+      title: `🌧️ ${tt('navbar.rainAlerts')}`,
+      description: tt('dashboard.qa.rainAlerts'),
       icon: <Notifications />,
       color: '#00bcd4',
       path: '/rain-alerts',
       badge: 'WhatsApp',
     },
     {
-      title: '🎨 सपनों का विज़ुअलाइज़ेशन',
-      description: 'मानसिक सहायता और प्रेरणा पाएं',
+      title: `🎨 ${tt('dreamVisualization.title')}`,
+      description: tt('dashboard.qa.dreamVisualization'),
       icon: <Psychology />,
       color: '#e91e63',
       path: '/dream-visualization',
@@ -606,138 +707,16 @@ const Dashboard: React.FC = () => {
     <Box>
       {/* Breaking News Ticker */}
       <motion.div
-        initial={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
+        transition={{ duration: 0.5 }}
       >
-        <Paper
-          elevation={4}
-          sx={{
-            background: farmingNews[currentNewsIndex]?.urgent 
-              ? 'linear-gradient(135deg, #ff5722 0%, #ff7043 30%, #ff8a65 70%, #ffab91 100%)'
-              : 'linear-gradient(135deg, #2e7d32 0%, #388e3c 30%, #4caf50 70%, #66bb6a 100%)',
-            color: 'white',
-            p: { xs: 1, md: 1.5 },
-            mb: 0,
-            borderRadius: { xs: 0, md: 2 },
-            position: 'sticky',
-            top: 64,
-            zIndex: 100,
-            overflow: 'hidden',
-            boxShadow: farmingNews[currentNewsIndex]?.urgent 
-              ? '0 4px 20px rgba(255, 87, 34, 0.4), 0 2px 10px rgba(0,0,0,0.2)'
-              : '0 4px 20px rgba(46, 125, 50, 0.4), 0 2px 10px rgba(0,0,0,0.2)',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: '-100%',
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%)',
-              animation: 'shimmer 3s infinite',
-              pointerEvents: 'none',
-            },
-            '@keyframes shimmer': {
-              '0%': { left: '-100%' },
-              '100%': { left: '100%' },
-            },
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', height: { xs: '35px', md: '40px' } }}>
-            {/* Breaking News Label */}
-            <Box
-              sx={{
-                bgcolor: 'rgba(255, 255, 255, 0.2)',
-                borderRadius: 1,
-                px: 2,
-                py: 0.5,
-                mr: 2,
-                minWidth: 'fit-content',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-              }}
-            >
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: 'bold',
-                  fontSize: '0.75rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: 0.5,
-                }}
-              >
-                {farmingNews[currentNewsIndex]?.urgent ? '🚨 Breaking' : '📢 News'}
-              </Typography>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  bgcolor: farmingNews[currentNewsIndex]?.urgent ? '#ffeb3b' : '#4caf50',
-                  animation: farmingNews[currentNewsIndex]?.urgent ? 'pulse 1.5s infinite' : 'none',
-                  '@keyframes pulse': {
-                    '0%': { opacity: 1, transform: 'scale(1)', boxShadow: '0 0 5px rgba(255,235,59,0.5)' },
-                    '50%': { opacity: 0.7, transform: 'scale(1.3)', boxShadow: '0 0 15px rgba(255,235,59,0.8)' },
-                    '100%': { opacity: 1, transform: 'scale(1)', boxShadow: '0 0 5px rgba(255,235,59,0.5)' },
-                  },
-                }}
-              />
-            </Box>
-
-            {/* Scrolling News Content */}
-            <Box sx={{ flex: 1, overflow: 'hidden' }}>
-              <ScrollingTicker speed={30}>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontWeight: 'medium',
-                    fontSize: { xs: '0.85rem', md: '0.95rem' },
-                    whiteSpace: 'nowrap',
-                    textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
-                  }}
-                >
-                  {farmingNews[currentNewsIndex]?.title}
-                  <Box component="span" sx={{ mx: 4, color: 'rgba(255,255,255,0.7)' }}>•</Box>
-                  <Box component="span" sx={{ 
-                    bgcolor: 'rgba(255, 255, 255, 0.2)', 
-                    px: 1, 
-                    py: 0.2, 
-                    borderRadius: 1,
-                    fontSize: '0.7rem',
-                    textTransform: 'uppercase'
-                  }}>
-                    {farmingNews[currentNewsIndex]?.category}
-                  </Box>
-                </Typography>
-              </ScrollingTicker>
-            </Box>
-
-            {/* News Counter */}
-            <Box
-              sx={{
-                bgcolor: 'rgba(255, 255, 255, 0.2)',
-                borderRadius: 1,
-                px: 1,
-                py: 0.2,
-                ml: 2,
-                minWidth: 'fit-content',
-              }}
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  fontWeight: 'bold',
-                  fontSize: '0.65rem',
-                }}
-              >
-                {currentNewsIndex + 1}/{farmingNews.length}
-              </Typography>
-            </Box>
-          </Box>
-        </Paper>
+        <NewsTicker
+          items={farmingNews.map(n => ({ title: n.title, category: n.category, urgent: n.urgent, icon: n.urgent ? '⚠️' : '🌾' }))}
+          height={56}
+          speed={120}
+          label="कृषि समाचार • Farming News"
+        />
       </motion.div>
 
       <Box sx={{ p: { xs: 1, md: 3 } }}>
@@ -750,13 +729,15 @@ const Dashboard: React.FC = () => {
         <Paper
           elevation={8}
           sx={{
-            background: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 25%, #4caf50 75%, #81c784 100%)',
+            background: 'radial-gradient(900px 420px at 15% 10%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 60%), linear-gradient(120deg, #0f6d2b 0%, #1e8f3f 40%, #4caf50 75%, #8bd17c 100%)',
             color: 'white',
             p: 4,
             mb: 4,
             borderRadius: 4,
             position: 'relative',
             overflow: 'hidden',
+            border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 18px 40px rgba(20, 87, 45, 0.35)',
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -764,16 +745,16 @@ const Dashboard: React.FC = () => {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
+              background: 'linear-gradient(45deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.06) 55%, transparent 100%)',
               zIndex: 1,
             },
             '&::after': {
               content: '"🌾"',
               position: 'absolute',
-              top: 20,
-              right: 30,
-              fontSize: '60px',
-              opacity: 0.3,
+              top: 24,
+              right: 36,
+              fontSize: '68px',
+              opacity: 0.24,
               zIndex: 1,
             }
           }}
@@ -792,43 +773,41 @@ const Dashboard: React.FC = () => {
               <Agriculture sx={{ fontSize: 35 }} />
             </Avatar>
             <Box sx={{ flex: 1 }}>
-              <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
+<Typography variant="h3" sx={{ fontWeight: 'bold', mb: 0.5, color: '#ffffff', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
                 {/* @ts-ignore */}
                 {t('dashboard.welcome', { name: userName })}
               </Typography>
+              {/* Visible name chip to ensure the farmer name is clearly shown */}
+              <Chip label={userName} sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: '#fff', fontWeight: 'bold', mr: 1, mb: 1 }} />
               <Typography variant="h6" sx={{ opacity: 0.9, mb: 1 }}>
                 {/* @ts-ignore */}
                 {t('dashboard.futureVision')}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
                 {userEmail && (
-                  <Typography variant="body2" sx={{ opacity: 0.8, display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="body2" sx={{ opacity: 0.9, display: 'flex', alignItems: 'center' }}>
                     📫 {userEmail}
                   </Typography>
                 )}
-                <Typography variant="body2" sx={{ opacity: 0.8, display: 'flex', alignItems: 'center' }}>
-                  📅 {new Date().toLocaleDateString('hi-IN', { 
-                    weekday: 'long',
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
+                <Typography variant="body2" sx={{ opacity: 0.9, display: 'flex', alignItems: 'center' }}>
+                  📅 {new Intl.DateTimeFormat('hi-IN', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata'
+                  }).format(now)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8, display: 'flex', alignItems: 'center' }}>
-                  ⏰ {new Date().toLocaleTimeString('hi-IN', {
-                    hour: '2-digit',
-                    minute: '2-digit'
+                <Typography variant="body2" sx={{ opacity: 0.95, display: 'flex', alignItems: 'center', fontWeight: 700 }}>
+                  ⏰ {now.toLocaleTimeString('hi-IN', {
+                    hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Kolkata'
                   })}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          <Box sx={{ position: 'relative', zIndex: 2, mt: 2, p: 3, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 2, backdropFilter: 'blur(10px)' }}>
-            <Typography variant="body1" sx={{ opacity: 0.9, mb: 1 }}>
+          <Box sx={{ position: 'relative', zIndex: 2, mt: 2, p: 3, bgcolor: 'rgba(255,255,255,0.14)', borderRadius: 2, border: '1px solid rgba(255,255,255,0.22)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
+            <Typography variant="body1" sx={{ opacity: 0.95, mb: 1, fontWeight: 600 }}>
               {/* @ts-ignore */}
               {t('dashboard.personalizedAdvice')}
             </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.8, fontStyle: 'italic' }}>
+            <Typography variant="body2" sx={{ opacity: 0.9, fontStyle: 'italic' }}>
               {getWeatherBasedAdvice()}
             </Typography>
           </Box>
@@ -837,7 +816,7 @@ const Dashboard: React.FC = () => {
 
       {/* Stats Cards */}
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main, display: 'flex', alignItems: 'center' }}>
-        📈 आपके खेत के आंकड़े
+        {`📈 ${tt('dashboard.yourFarmStats')} • Your Farm Stats`}
       </Typography>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {statsCards.map((stat, index) => (
@@ -911,7 +890,7 @@ const Dashboard: React.FC = () => {
                       }}
                     />
                     <Typography variant="caption" color="text.secondary">
-                      आज अपडेटेड
+                      {tt('dashboard.updatedToday')}
                     </Typography>
                   </Box>
                 </CardContent>
@@ -949,7 +928,7 @@ const Dashboard: React.FC = () => {
           }}
         >
           <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#f57c00', mb: 3, display: 'flex', alignItems: 'center' }}>
-            🌅 आज का सारांश
+            🌅 आज का सारांश • Today's Summary
           </Typography>
           
           <Grid container spacing={3}>
@@ -1018,6 +997,69 @@ const Dashboard: React.FC = () => {
         </Paper>
       </motion.div>
 
+      {/* Today's Tasks */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.35 }}
+      >
+        <Paper elevation={6} sx={{ p: 3, mb: 4, borderRadius: 4 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+            ✅ आज के काम • Today’s Tasks
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <TextField
+              size="small"
+              placeholder="नया काम जोड़ें..."
+              fullWidth
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  addTask((e.target as HTMLInputElement).value);
+                  (e.target as HTMLInputElement).value = '';
+                }
+              }}
+              InputProps={{ endAdornment: (
+                <IconButton onClick={() => {
+                  const el = document.getElementById('taskInput') as HTMLInputElement | null;
+                  if (el) { addTask(el.value); el.value=''; }
+                }}>
+                  <Add />
+                </IconButton>
+              )}}
+              id="taskInput"
+            />
+          </Box>
+          <List dense>
+            {tasks.map((task) => (
+              <ListItem
+                key={task.id}
+                secondaryAction={
+                  <IconButton edge="end" onClick={() => deleteTask(task.id)} aria-label="delete">
+                    <Delete />
+                  </IconButton>
+                }
+              >
+                <ListItemIcon>
+                  <IconButton onClick={() => toggleTask(task.id)} aria-label="toggle">
+                    {task.done ? <CheckCircle sx={{ color: '#4caf50' }} /> : <RadioButtonUnchecked />}
+                  </IconButton>
+                </ListItemIcon>
+                <ListItemText
+                  primary={task.text}
+                  primaryTypographyProps={{
+                    sx: { textDecoration: task.done ? 'line-through' : 'none', color: task.done ? 'text.disabled' : 'text.primary' }
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
+          <Divider sx={{ mt: 1 }} />
+          <Typography variant="caption" color="text.secondary">
+            Saved locally for {new Date(todayKey).toLocaleDateString('hi-IN')}
+          </Typography>
+        </Paper>
+      </motion.div>
+
       {/* AI Insights Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -1046,7 +1088,7 @@ const Dashboard: React.FC = () => {
           }}
         >
           <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#2e7d32', mb: 3, display: 'flex', alignItems: 'center' }}>
-            🤖 AI कृषि सहायक के सुझाव
+            🤖 AI सुझाव • AI Insights
           </Typography>
           
           {loading ? (
@@ -1169,11 +1211,47 @@ const Dashboard: React.FC = () => {
       {/* Quick Actions */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, display: 'flex', alignItems: 'center' }}>
-          🚀 तुरंत सेवाएं
+          {`🚀 ${tt('dashboard.quickActions')} • Quick Actions`}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-          आपके खेत के लिए समार्ट समाधान
+          आपके खेत के लिए आसान सेवाएं • Simple tools for your farm
         </Typography>
+      </Box>
+
+      {/* Primary Shortcuts */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mb: 2 }}>
+        <Button
+          variant="contained"
+          startIcon={<CloudQueue />}
+          onClick={() => navigate('/weather')}
+          sx={{ borderRadius: 6, px: 2.5, py: 1.25 }}
+        >
+          {tt('navbar.weather')} • Weather
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<Grass />}
+          onClick={() => navigate('/crop-recommendation')}
+          sx={{ borderRadius: 6, px: 2.5, py: 1.25 }}
+        >
+          {tt('navbar.cropRecommendation')}
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<Assessment />}
+          onClick={() => navigate('/market-analysis')}
+          sx={{ borderRadius: 6, px: 2.5, py: 1.25 }}
+        >
+          {tt('navbar.marketAnalysis')}
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SmartToy />}
+          onClick={() => navigate('/ai-chat')}
+          sx={{ borderRadius: 6, px: 2.5, py: 1.25 }}
+        >
+          {tt('navbar.aiChat')}
+        </Button>
       </Box>
 
       <Grid container spacing={3}>
@@ -1241,8 +1319,8 @@ const Dashboard: React.FC = () => {
                       bgcolor: action.color,
                       mx: 'auto',
                       mb: 2,
-                      width: 70,
-                      height: 70,
+                      width: 82,
+                      height: 82,
                       boxShadow: `0 8px 20px ${action.color}30`,
                       background: `linear-gradient(135deg, ${action.color}, ${action.color}cc)`,
                     }}
@@ -1264,7 +1342,8 @@ const Dashboard: React.FC = () => {
                     }}
                     sx={{
                       borderRadius: 3,
-                      py: 1.2,
+                      py: 1.4,
+                      fontWeight: 'bold',
                       background: `linear-gradient(45deg, ${action.color}, ${action.color}cc)`,
                       boxShadow: `0 4px 15px ${action.color}40`,
                       '&:hover': {
@@ -1273,7 +1352,7 @@ const Dashboard: React.FC = () => {
                       },
                     }}
                   >
-                    अभी शुरू करें
+                    {tt('dashboard.startNow')} • Start
                   </Button>
                 </CardContent>
               </Card>

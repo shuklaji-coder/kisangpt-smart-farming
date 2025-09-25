@@ -25,6 +25,13 @@ import {
   Tabs,
   Avatar,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Slider,
+  Divider,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -48,7 +55,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { marketPriceService, CropPrice, MarketTrend, ProfitCalculation } from '../services/marketPriceService';
+import { marketPriceService, CropPrice, MarketTrend, ProfitCalculation, MarketComparison } from '../services/marketPriceService';
 
 interface MarketPrice {
   crop: string;
@@ -124,33 +131,70 @@ const MarketAnalysis: React.FC = () => {
   });
   const [marketTrends, setMarketTrends] = useState<MarketTrend[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isLive, setIsLive] = useState<boolean>(false);
+
+  // Comparison state
+  const [comparisonCrop, setComparisonCrop] = useState<string>('wheat');
+  const [comparisonQuantity, setComparisonQuantity] = useState<number>(10); // quintals
+  const [comparison, setComparison] = useState<MarketComparison | null>(null);
+  const [comparisonLoading, setComparisonLoading] = useState<boolean>(false);
+
+  // Alerts state
+  const [alertCrop, setAlertCrop] = useState<string>('wheat');
+  const [alertTargetPrice, setAlertTargetPrice] = useState<number>(3000);
+  const [alertCondition, setAlertCondition] = useState<'above' | 'below'>('above');
+  const [alerts, setAlerts] = useState(marketPriceService.getPriceAlerts());
+  const [alertChecking, setAlertChecking] = useState<boolean>(false);
+  const [triggeredAlerts, setTriggeredAlerts] = useState<string[]>([]);
 
   useEffect(() => {
-    fetchMarketData();
+    // Try to get geolocation for better mandi selection
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          fetchMarketData({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        },
+        () => {
+          // Fallback to Delhi
+          setUserLocation({ lat: 28.6139, lng: 77.2090 });
+          fetchMarketData({ lat: 28.6139, lng: 77.2090 });
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    } else {
+      setUserLocation({ lat: 28.6139, lng: 77.2090 });
+      fetchMarketData({ lat: 28.6139, lng: 77.2090 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchMarketData = async () => {
+  const fetchMarketData = async (loc?: { lat: number; lng: number }) => {
     console.log('🔄 Starting AI-powered market data fetch...');
     setLoading({ prices: true, trends: true, profits: true });
     setError(null);
     
     try {
       const crops = ['wheat', 'rice', 'cotton', 'mustard', 'sugarcane'];
-      const userLocation = { lat: 28.6139, lng: 77.2090 }; // Delhi coordinates as default
+      const locToUse = loc || userLocation || { lat: 28.6139, lng: 77.2090 }; // Delhi default
       
       console.log('📊 Fetching real-time crop prices from market service...');
-      // Fetch real market prices using AI service
+      // Fetch real market prices using service
       const pricesPromises = crops.map(crop => 
-        marketPriceService.getCropPrices(crop, userLocation)
+        marketPriceService.getCropPrices(crop, locToUse)
           .catch(error => {
             console.warn(`Failed to fetch prices for ${crop}:`, error);
-            return [];
+            return [] as any[];
           })
       );
       
       const allPricesData = await Promise.all(pricesPromises);
       
-      // Convert AI service data to component format
+      // live/demo indicator
+      setIsLive(marketPriceService.getLastProvider() === 'backend');
+      
+      // Convert service data to component format
       const marketData: MarketPrice[] = allPricesData.map((pricesArray, index) => {
         const crop = crops[index];
         const cropPrice = pricesArray[0]; // Get best price
@@ -186,8 +230,8 @@ const MarketAnalysis: React.FC = () => {
       setMarketPrices(marketData);
       setLoading(prev => ({ ...prev, prices: false }));
       
-      console.log('📈 Fetching AI market trends and forecasts...');
-      // Fetch market trends for forecasting
+      console.log('📈 Fetching market trends and forecasts...');
+      // Fetch market trends for forecasting (may use backend)
       const trendsPromises = crops.slice(0, 3).map(crop => 
         marketPriceService.getMarketTrends(crop, 'weekly')
           .catch(error => {
@@ -222,6 +266,13 @@ const MarketAnalysis: React.FC = () => {
       
       setForecasts(forecastData);
       setLoading(prev => ({ ...prev, trends: false }));
+
+      // After prices fetched, we can pre-load comparison for default crop
+      try {
+        if (userLocation || loc) {
+          await fetchComparisonInternal(comparisonCrop, comparisonQuantity, loc || (userLocation as any));
+        }
+      } catch {}
       
       console.log('💰 Calculating AI-powered profit analysis...');
       // Fetch profit analysis
@@ -297,6 +348,50 @@ const MarketAnalysis: React.FC = () => {
     }
   };
 
+  // Comparison and alerts helpers
+  const fetchComparisonInternal = async (crop: string, quantity: number, loc: { lat: number; lng: number }) => {
+    try {
+      setComparisonLoading(true);
+      const comp = await marketPriceService.getMarketComparison(crop, loc, quantity);
+      setComparison(comp);
+    } catch (e) {
+      console.warn('Comparison fetch failed', e);
+    } finally {
+      setComparisonLoading(false);
+    }
+  };
+
+  const handleCreateAlert = async () => {
+    try {
+      await marketPriceService.createPriceAlert(alertCrop, alertTargetPrice, alertCondition, []);
+      setAlerts(marketPriceService.getPriceAlerts());
+    } catch (e) {
+      console.error('Failed to create alert', e);
+    }
+  };
+
+  const handleToggleAlert = (id: string) => {
+    marketPriceService.toggleAlert(id);
+    setAlerts(marketPriceService.getPriceAlerts());
+  };
+
+  const handleDeleteAlert = (id: string) => {
+    marketPriceService.deleteAlert(id);
+    setAlerts(marketPriceService.getPriceAlerts());
+  };
+
+  const handleCheckAlerts = async () => {
+    try {
+      setAlertChecking(true);
+      const triggered = await marketPriceService.checkPriceAlerts();
+      setTriggeredAlerts(triggered.map(a => `${a.crop} ${a.condition} ₹${a.targetPrice}`));
+    } catch (e) {
+      console.error('Check alerts failed', e);
+    } finally {
+      setAlertChecking(false);
+    }
+  };
+
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       {/* Header */}
@@ -323,6 +418,12 @@ const MarketAnalysis: React.FC = () => {
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
             {t('market.subtitle', 'बाजार का विश्लेषण - मूल्य पूर्वानुमान और लाभ योजना')}
           </Typography>
+          <Box sx={{ mt: 1, display: 'flex', gap: 1, justifyContent: 'center' }}>
+            <Chip size="small" label={isLive ? 'Live prices' : 'Demo prices'} sx={{ bgcolor: isLive ? 'rgba(76,175,80,0.2)' : 'rgba(255,255,255,0.2)', color: 'white' }} />
+            {userLocation && (
+              <Chip size="small" icon={<LocationOn sx={{ color: 'white' }} />} label={`${userLocation.lat.toFixed(2)}, ${userLocation.lng.toFixed(2)}`} sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }} />
+            )}
+          </Box>
         </Paper>
       </motion.div>
 
@@ -344,6 +445,8 @@ const MarketAnalysis: React.FC = () => {
           <Tab icon={<ShowChart />} label="Current Prices" />
           <Tab icon={<Timeline />} label="Price Forecast" />
           <Tab icon={<MonetizationOn />} label="Profit Analysis" />
+          <Tab icon={<LocationOn />} label="Market Comparison" />
+          <Tab icon={<Warning />} label="Price Alerts" />
         </Tabs>
       </Paper>
 
@@ -357,7 +460,7 @@ const MarketAnalysis: React.FC = () => {
         <Box sx={{ ml: 'auto' }}>
           <Button
             startIcon={<Refresh />}
-            onClick={fetchMarketData}
+            onClick={() => fetchMarketData()}
             disabled={loading.prices || loading.trends || loading.profits}
             variant="outlined"
             sx={{ borderRadius: 3 }}
@@ -404,8 +507,8 @@ const MarketAnalysis: React.FC = () => {
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                           {price.crop} ({price.crop_hindi})
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {price.market}
+                    <Typography variant="body2" color="text.secondary">
+                          {isLive ? 'Live Market' : price.market}
                         </Typography>
                       </Box>
                     </Box>
@@ -713,6 +816,210 @@ const MarketAnalysis: React.FC = () => {
           ))}
         </Grid>
         )}
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={3}>
+        {/* Market Comparison */}
+        <Box sx={{ mb: 2 }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={3}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="comp-crop">Crop</InputLabel>
+                <Select
+                  labelId="comp-crop"
+                  label="Crop"
+                  value={comparisonCrop}
+                  onChange={(e) => setComparisonCrop(e.target.value)}
+                >
+                  {['wheat','rice','cotton','mustard','sugarcane'].map(c => (
+                    <MenuItem key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField
+                type="number"
+                size="small"
+                label="Quantity (quintals)"
+                value={comparisonQuantity}
+                onChange={(e) => setComparisonQuantity(Math.max(1, Number(e.target.value)))}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Button
+                variant="outlined"
+                onClick={() => userLocation && fetchComparisonInternal(comparisonCrop, comparisonQuantity, userLocation)}
+                disabled={!userLocation || comparisonLoading}
+                startIcon={<Refresh />}
+                sx={{ borderRadius: 3 }}
+              >
+                {comparisonLoading ? 'Analyzing...' : 'Compare Nearby Mandis'}
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+
+        {comparison && (
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>Best Option</Typography>
+            <Card elevation={2} sx={{ borderRadius: 3, mb: 2 }}>
+              <CardContent>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={8}>
+                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{comparison.bestOption.mandi.mandiName} ({comparison.bestOption.mandi.hindiName})</Typography>
+                    <Typography variant="body2" color="text.secondary">{comparison.bestOption.mandi.state}, {comparison.bestOption.mandi.district}</Typography>
+                    <Chip sx={{ mt: 1 }} color="success" label="Highly Recommended" />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <Box sx={{ textAlign: { xs: 'left', md: 'right' } }}>
+                      <Typography variant="h6">Price: ₹{comparison.bestOption.price.currentPrice}/quintal</Typography>
+                      <Typography variant="h6" sx={{ color: '#4caf50', fontWeight: 'bold' }}>Estimated Profit: ₹{comparison.bestOption.totalProfit.toLocaleString()}</Typography>
+                      <Typography variant="body2" color="text.secondary">Reason: {comparison.bestOption.reason}</Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+
+            {comparison.alternativeOptions.length > 0 && (
+              <>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>Alternatives</Typography>
+                <Grid container spacing={2}>
+                  {comparison.alternativeOptions.map((alt, idx) => (
+                    <Grid item xs={12} md={6} key={idx}>
+                      <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{alt.mandi.mandiName}</Typography>
+                        <Typography variant="body2" color="text.secondary">{alt.mandi.state}, {alt.mandi.district}</Typography>
+                        <Box sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
+                          {alt.pros.map((p, i) => <Chip key={i} size="small" color="success" label={p} />)}
+                          {alt.cons.map((c, i) => <Chip key={i} size="small" color="warning" label={c} />)}
+                        </Box>
+                      </Paper>
+                    </Grid>
+                  ))}
+                </Grid>
+              </>
+            )}
+
+            <Divider sx={{ my: 3 }} />
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>Nearby Mandis (ranked)</Typography>
+            <Grid container spacing={2}>
+              {comparison.nearbyMandis.map((row, idx) => (
+                <Grid item xs={12} md={6} key={idx}>
+                  <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{row.mandi.mandiName}</Typography>
+                        <Typography variant="caption" color="text.secondary">Distance: {row.mandi.distance} km</Typography>
+                      </Box>
+                      <Chip label={row.recommendation.replace('_', ' ').toUpperCase()} size="small" />
+                    </Box>
+                    <Grid container spacing={1} sx={{ mt: 1 }}>
+                      <Grid item xs={6}>
+                        <Typography variant="body2">Price</Typography>
+                        <Typography variant="h6">₹{row.price.currentPrice}</Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography variant="body2">Profitability</Typography>
+                        <Typography variant="h6" sx={{ color: '#4caf50' }}>₹{row.profitability.toLocaleString()}</Typography>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
+
+        {!comparison && (
+          <Alert severity="info">Select crop and click "Compare Nearby Mandis" to generate comparison.</Alert>
+        )}
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={4}>
+        {/* Price Alerts */}
+        <Box sx={{ mb: 2 }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={3}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="alert-crop">Crop</InputLabel>
+                <Select
+                  labelId="alert-crop"
+                  label="Crop"
+                  value={alertCrop}
+                  onChange={(e) => setAlertCrop(e.target.value)}
+                >
+                  {['wheat','rice','cotton','mustard','sugarcane'].map(c => (
+                    <MenuItem key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="alert-condition">Condition</InputLabel>
+                <Select
+                  labelId="alert-condition"
+                  label="Condition"
+                  value={alertCondition}
+                  onChange={(e) => setAlertCondition(e.target.value as any)}
+                >
+                  <MenuItem value="above">Above</MenuItem>
+                  <MenuItem value="below">Below</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField
+                type="number"
+                size="small"
+                label="Target Price (₹/quintal)"
+                value={alertTargetPrice}
+                onChange={(e) => setAlertTargetPrice(Math.max(0, Number(e.target.value)))}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Button variant="contained" onClick={handleCreateAlert} sx={{ borderRadius: 3 }}>Create Alert</Button>
+            </Grid>
+          </Grid>
+        </Box>
+
+        <Box sx={{ mb: 2 }}>
+          <Button variant="outlined" onClick={handleCheckAlerts} disabled={alertChecking} startIcon={<Refresh />} sx={{ borderRadius: 3 }}>
+            {alertChecking ? 'Checking...' : 'Check Alerts Now'}
+          </Button>
+        </Box>
+
+        {triggeredAlerts.length > 0 && (
+          <Box sx={{ mb: 2 }}>
+            {triggeredAlerts.map((msg, idx) => (
+              <Alert key={idx} severity="success" sx={{ mb: 1 }}>Triggered: {msg}</Alert>
+            ))}
+          </Box>
+        )}
+
+        <Grid container spacing={2}>
+          {alerts.map((a) => (
+            <Grid item xs={12} md={6} key={a.id}>
+              <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{a.crop} — {a.condition.toUpperCase()} ₹{a.targetPrice}</Typography>
+                    <Typography variant="caption" color="text.secondary">Created: {new Date(a.createdAt).toLocaleString()}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Chip size="small" color={a.isActive ? 'success' : 'default'} label={a.isActive ? 'Active' : 'Inactive'} />
+                    <Button size="small" onClick={() => handleToggleAlert(a.id)}>{a.isActive ? 'Pause' : 'Resume'}</Button>
+                    <Button size="small" color="error" onClick={() => handleDeleteAlert(a.id)}>Delete</Button>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </TabPanel>
     </Box>
   );

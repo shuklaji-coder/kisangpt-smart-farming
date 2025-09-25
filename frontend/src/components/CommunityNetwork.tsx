@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -45,6 +45,9 @@ import {
   QuestionAnswer,
   LocalFlorist,
   Handshake,
+  Star,
+  StarBorder,
+  Verified
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -105,6 +108,17 @@ const CommunityNetwork: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedFarmer, setSelectedFarmer] = useState<FarmerProfile | null>(null);
   const [newPostDialog, setNewPostDialog] = useState(false);
+
+  // Mentors (top rated) and favorites
+  const mentors = useMemo(() => farmers.filter(f => f.rating >= 4.8), [farmers]);
+  const [favorites, setFavorites] = useState<string[]>(() => { try { return JSON.parse(localStorage.getItem('fav_farmers') || '[]'); } catch { return []; } });
+  const toggleFav = (id: string) => {
+    const set = new Set(favorites);
+    set.has(id) ? set.delete(id) : set.add(id);
+    const arr = Array.from(set);
+    setFavorites(arr);
+    try { localStorage.setItem('fav_farmers', JSON.stringify(arr)); } catch {}
+  };
 
   useEffect(() => {
     fetchCommunityData();
@@ -269,6 +283,21 @@ const CommunityNetwork: React.FC = () => {
         </Paper>
       </motion.div>
 
+      {/* Top Mentors strip */}
+      {mentors.length > 0 && (
+        <Paper elevation={2} sx={{ mb: 3, borderRadius: 3, p:2 }}>
+          <Box sx={{ display:'flex', alignItems:'center', gap:1, mb:1 }}>
+            <Verified color="success" />
+            <Typography variant="subtitle1" sx={{ fontWeight:700 }}>Top Mentors in Your Network</Typography>
+          </Box>
+          <Box sx={{ display:'flex', gap:1, overflowX:'auto', pb:1 }}>
+            {mentors.map(m => (
+              <Chip key={m.id} avatar={<Avatar sx={{ bgcolor:'success.main' }}>{m.name.charAt(0)}</Avatar>} label={`${m.name} • ⭐ ${m.rating}`} sx={{ bgcolor:'rgba(76,175,80,0.08)' }} />
+            ))}
+          </Box>
+        </Paper>
+      )}
+
       {/* Tabs */}
       <Paper elevation={2} sx={{ mb: 3, borderRadius: 3 }}>
         <Tabs
@@ -419,9 +448,14 @@ const CommunityNetwork: React.FC = () => {
                         />
                       )}
                     </Box>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                      {farmer.name}
-                    </Typography>
+                    <Box sx={{ display:'flex', justifyContent:'center', alignItems:'center', gap:0.5, mb:1 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                        {farmer.name}
+                      </Typography>
+                      <IconButton size="small" onClick={(e)=>{ e.stopPropagation(); toggleFav(farmer.id); }}>
+                        {favorites.includes(farmer.id) ? <Star color="warning" fontSize="small" /> : <StarBorder fontSize="small" />}
+                      </IconButton>
+                    </Box>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                       <LocationOn sx={{ fontSize: 16, mr: 0.5 }} />
                       {farmer.location}

@@ -111,6 +111,8 @@ const CropRecommendation: React.FC = () => {
   const [satelliteData, setSatelliteData] = useState<any>(null);
   const [soilAnalysis, setSoilAnalysis] = useState<any>(null);
   const [aiProcessing, setAiProcessing] = useState(false);
+  const [useSatellite, setUseSatellite] = useState(true);
+  const [fieldContext, setFieldContext] = useState<{ ndvi?: number; ph?: number; soil_type?: string; season?: string } | null>(null);
 
   const steps = ['व्यक्तिगत जानकारी', 'खेत की जानकारी', 'फसल सुझाव'];
 
@@ -503,6 +505,61 @@ const CropRecommendation: React.FC = () => {
         throw new Error('स्थान की जानकारी उपलब्ध नहीं है');
       }
 
+      // If satellite toggle is on, use backend advanced endpoint directly
+      if (useSatellite) {
+        const adv = await axios.get(`/api/v1/crop/recommend-advanced`, {
+          params: { lat: formData.coordinates.lat, lng: formData.coordinates.lon }
+        });
+        const items = adv.data?.recommendations || [];
+
+        // Set field context
+        const ctx = adv.data?.context || null;
+        setFieldContext(ctx);
+
+        // Derive satellite-like data for the UI panel (with safe fallbacks)
+        if (ctx) {
+          const derivedSat = {
+            soil_properties: {
+              ph: typeof ctx.ph === 'number' ? ctx.ph : (typeof ctx.soil_ph === 'number' ? ctx.soil_ph : 6.8),
+              moisture: typeof ctx.moisture === 'number' ? ctx.moisture : 25,
+              nitrogen: typeof ctx.nitrogen === 'number' ? ctx.nitrogen : 120,
+              phosphorus: typeof ctx.phosphorus === 'number' ? ctx.phosphorus : 40,
+              potassium: typeof ctx.potassium === 'number' ? ctx.potassium : 40,
+              organic_matter: typeof ctx.organic_matter === 'number' ? ctx.organic_matter : 1.2,
+              temperature: typeof ctx.temperature === 'number' ? ctx.temperature : (formData.weatherData?.main?.temp || 28)
+            },
+            vegetation_indices: {
+              ndvi: typeof ctx.ndvi === 'number' ? ctx.ndvi : 0.5
+            },
+            analysis: {
+              crop_health_score: Math.round(Math.min(100, Math.max(0, ((typeof ctx.ndvi === 'number' ? ctx.ndvi : 0.5) * 100) + (ctx && ctx.ph >= 6 && ctx.ph <= 7.5 ? 5 : 0)))) ,
+              water_stress_level: (typeof ctx.ndvi === 'number' ? (ctx.ndvi < 0.4 ? 'high' : ctx.ndvi < 0.6 ? 'medium' : 'low') : 'medium'),
+              soil_fertility_index: Math.round(Math.min(100, Math.max(0, 70 + (typeof ctx.organic_matter === 'number' ? (ctx.organic_matter - 1.0) * 10 : 0))))
+            }
+          } as any;
+
+          setSatelliteData(derivedSat);
+          setSoilAnalysis(derivedSat.soil_properties);
+        }
+
+        const formatted = items.map((r: any) => ({
+          name: r.crop,
+          name_hindi: r.crop,
+          suitability_score: Math.round((r.success_probability || 0.6) * 10),
+          expected_yield: '—',
+          market_price: '—',
+          profit_potential: '—',
+          growth_duration: '—',
+          water_requirement: 'मध्यम',
+          soil_type: ['दोमट'],
+          season: formData.season || 'खरीफ',
+          benefits: r.recommended_practices || [],
+          considerations: []
+        }));
+        setRecommendations(formatted);
+        return;
+      }
+
       // Step 1: Get satellite data for soil analysis
       const satData = await satelliteService.getSatelliteAnalysis({
         latitude: formData.coordinates.lat,
@@ -510,6 +567,7 @@ const CropRecommendation: React.FC = () => {
       });
       setSatelliteData(satData);
       setSoilAnalysis(satData.soil_properties);
+      setFieldContext({ ndvi: satData?.vegetation_indices?.ndvi, ph: satData?.soil_properties?.ph, soil_type: formData.soil_type, season: formData.season });
 
       // Step 2: Prepare data for AI crop recommendation engine
       const soilData = {
@@ -653,6 +711,63 @@ const CropRecommendation: React.FC = () => {
     return 'Poor';
   };
 
+  // --- Match scoring helpers for pH and NDVI ---
+  type Range = { min: number; max: number };
+
+  const normalizeCropKey = (name?: string) =>
+    (name || '')
+      .toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/[\u0900-\u097F]/g, ''); // strip Devanagari for fallback matching
+
+  const cropPhRanges: Record<string, Range> = {
+    wheat: { min: 6.0, max: 7.5 },
+    rice: { min: 5.5, max: 7.0 },
+    maize: { min: 5.8, max: 7.0 },
+    mustard: { min: 6.0, max: 7.5 },
+    cotton: { min: 5.8, max: 8.0 },
+    sugarcane: { min: 6.5, max: 7.5 },
+    watermelon: { min: 6.0, max: 7.5 },
+    muskmelon: { min: 6.0, max: 7.5 },
+  };
+
+  const cropNdviRanges: Record<string, Range> = {
+    // Typical canopy vigor expectations by crop during vegetative phase
+    wheat: { min: 0.50, max: 0.80 },
+    rice: { min: 0.60, max: 0.85 },
+    maize: { min: 0.50, max: 0.80 },
+    mustard: { min: 0.35, max: 0.65 },
+    cotton: { min: 0.40, max: 0.70 },
+    sugarcane: { min: 0.60, max: 0.85 },
+    watermelon: { min: 0.45, max: 0.70 },
+    muskmelon: { min: 0.45, max: 0.70 },
+  };
+
+  const getRangesForCrop = (name: string): { ph?: Range; ndvi?: Range } => {
+    const key = normalizeCropKey(name);
+    return {
+      ph: cropPhRanges[key],
+      ndvi: cropNdviRanges[key],
+    };
+  };
+
+  type MatchCategory = 'good' | 'fair' | 'poor' | 'unknown';
+
+  const categorizeMatch = (value: number | undefined, range?: Range, buffer = 0): MatchCategory => {
+    if (typeof value !== 'number' || !range) return 'unknown';
+    if (value >= range.min && value <= range.max) return 'good';
+    // one-sided proximity buffer
+    if (value >= range.min - buffer && value <= range.max + buffer) return 'fair';
+    return 'poor';
+  };
+
+  const getChipColor = (cat: MatchCategory): 'success' | 'warning' | 'error' | 'default' => {
+    if (cat === 'good') return 'success';
+    if (cat === 'fair') return 'warning';
+    if (cat === 'poor') return 'error';
+    return 'default';
+  };
+
   // Helper functions for stepper forms
   const renderPersonalInfo = () => (
     <Grid container spacing={3}>
@@ -760,6 +875,28 @@ const CropRecommendation: React.FC = () => {
 
   const renderFarmDetails = () => (
     <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Paper elevation={0} sx={{ p: 2, border: '1px dashed #4caf50', bgcolor: 'rgba(76,175,80,0.05)' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography>🛰️ Use satellite + weather powered recommendations</Typography>
+            <Button size="small" variant={useSatellite ? 'contained' : 'outlined'} onClick={() => setUseSatellite(!useSatellite)}>
+              {useSatellite ? 'Satellite: ON' : 'Satellite: OFF'}
+            </Button>
+          </Box>
+          {fieldContext && (
+            <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+              {typeof fieldContext.ndvi === 'number' && (
+                <Chip label={`NDVI: ${fieldContext.ndvi.toFixed(2)}`} color={fieldContext.ndvi >= 0.5 ? 'success' : fieldContext.ndvi >= 0.3 ? 'warning' : 'error'} />
+              )}
+              {typeof fieldContext.ph === 'number' && (
+                <Chip label={`pH: ${fieldContext.ph.toFixed(1)}`} color={fieldContext.ph >= 6.0 && fieldContext.ph <= 7.8 ? 'success' : 'warning'} />
+              )}
+              {fieldContext.soil_type && <Chip label={`Soil: ${fieldContext.soil_type}`} />}
+              {fieldContext.season && <Chip label={`Season: ${fieldContext.season}`} />}
+            </Box>
+          )}
+        </Paper>
+      </Grid>
       <Grid item xs={12} md={6}>
         <FormControl fullWidth>
           <InputLabel>मौसम/सीजन</InputLabel>
@@ -1143,12 +1280,43 @@ const CropRecommendation: React.FC = () => {
                           <Typography variant="body2" color="text.secondary">
                             {crop.name}
                           </Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                             <Rating value={crop.suitability_score / 2} readOnly size="small" />
                             <Typography variant="body2" sx={{ ml: 1, fontWeight: 'bold', color: getSuitabilityColor(crop.suitability_score) }}>
                               {crop.suitability_score}/10
                             </Typography>
                           </Box>
+
+                          {/* NDVI/pH match chips */}
+                          {(() => {
+                            const ndviValue = fieldContext?.ndvi ?? satelliteData?.vegetation_indices?.ndvi;
+                            const phValue = fieldContext?.ph ?? satelliteData?.soil_properties?.ph;
+                            const { ph, ndvi } = getRangesForCrop(crop.name || crop.name_hindi);
+
+                            const ndviMatch = categorizeMatch(ndviValue, ndvi, 0.07);
+                            const phMatch = categorizeMatch(phValue, ph, 0.3);
+
+                            return (
+                              <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                {typeof ndviValue === 'number' && (
+                                  <Chip
+                                    size="small"
+                                    label={`NDVI ${ndviMatch === 'unknown' ? '' : ndviMatch === 'good' ? '✔️' : ndviMatch === 'fair' ? '≈' : '⚠️'} ${ndviMatch.toUpperCase()}`.trim()}
+                                    color={getChipColor(ndviMatch)}
+                                    variant={ndviMatch === 'unknown' ? 'outlined' : 'filled'}
+                                  />
+                                )}
+                                {typeof phValue === 'number' && (
+                                  <Chip
+                                    size="small"
+                                    label={`pH ${phMatch === 'unknown' ? '' : phMatch === 'good' ? '✔️' : phMatch === 'fair' ? '≈' : '⚠️'} ${phMatch.toUpperCase()}`.trim()}
+                                    color={getChipColor(phMatch)}
+                                    variant={phMatch === 'unknown' ? 'outlined' : 'filled'}
+                                  />
+                                )}
+                              </Box>
+                            );
+                          })()}
                         </Box>
                       </Box>
 

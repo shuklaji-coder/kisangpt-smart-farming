@@ -62,7 +62,6 @@ export interface FarmerProfile {
     risks: string[];
     benefits: string[];
     recommendations: string[];
-    expectedProfit: number;
     breakEvenPoint: number;
   }
 
@@ -334,23 +333,22 @@ class CropRecommendationEngine {
       // Generate risks and benefits
       const risks = this.generateRisks(soilScore, climateScore, marketScore, cropData);
       const benefits = this.generateBenefits(overallScore, cropData, expectedProfit);
-      const recommendations = this.generateRecommendations(soilData, cropData, overallScore);
+      const generatedRecommendations = this.generateRecommendations(soilData, cropData, overallScore);
 
       const recommendation: CropRecommendation = {
         cropName: cropData.name,
         hindiName: cropData.hindiName,
         suitabilityScore: Math.round(overallScore),
         predictedYield: Math.round(predictedYield),
-        profitMargin: Math.round(profitMargin),
         sustainabilityScore: Math.round(sustainabilityScore),
         sowingTime: cropData.sowingSeason,
         harvestTime: `${cropData.duration} दिन`,
-        waterRequirement: cropData.waterReq,
+        waterRequirement: cropData.waterReq as CropRecommendation['waterRequirement'],
         investmentRequired: Math.round(totalCost),
         marketDemand: cropMarketData.demandLevel,
         risks,
         benefits,
-        recommendations,
+        recommendations: generatedRecommendations,
         expectedProfit: Math.round(expectedProfit),
         breakEvenPoint: Math.round(totalCost / cropMarketData.currentPrice)
       };

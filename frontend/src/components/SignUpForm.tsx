@@ -91,7 +91,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
 
     // Validation
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('कृपया सभी आवश्यक फील्ड भरें / Please fill all required fields');
+      setError(t('auth.errors.fillAllRequired'));
       setLoading(false);
       return;
     }
@@ -99,26 +99,26 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('कृपया वैध ईमेल पता दर्ज करें / Please enter a valid email address');
+      setError(t('auth.errors.invalidEmail'));
       setLoading(false);
       return;
     }
 
     // Password strength validation
     if (formData.password.length < 6) {
-      setError('पासवर्ड कम से कम 6 अक्षर का होना चाहिए / Password must be at least 6 characters long');
+      setError(t('auth.errors.passwordTooShort'));
       setLoading(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('पासवर्ड मेल नहीं खाते / Passwords do not match');
+      setError(t('auth.errors.passwordsDontMatch'));
       setLoading(false);
       return;
     }
 
     if (!formData.agreeToTerms) {
-      setError('कृपया नियम व शर्तों से सहमत हों / Please agree to terms and conditions');
+      setError(t('auth.errors.agreeToTerms'));
       setLoading(false);
       return;
     }
@@ -136,7 +136,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
           onSignUp(response.user);
         }
       } else {
-        setError(response?.message || 'साइन अप में समस्या / Signup failed');
+        setError(response?.message || t('auth.errors.signupFailed'));
       }
     } catch (err: any) {
       console.warn('API call failed, creating demo account:', err.message);

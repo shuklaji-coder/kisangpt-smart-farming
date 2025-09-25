@@ -86,11 +86,34 @@
     "windSpeed": "Wind Speed",
     "farmingAdvice": "Farming Advice Based on Weather"
   },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "login": "Login",
+    "loggingIn": "Logging in...",
+    "newHere": "New here?",
+    "signUp": "Sign up",
+    "demoCredentials": "Demo Login Credentials",
+    "fillDemo": "Fill Demo 🚀",
+    "errors": {
+      "fillAllFields": "Please fill all fields",
+      "fillAllRequired": "Please fill all required fields",
+      "invalidEmail": "Please enter a valid email address",
+      "loginFailed": "Login failed",
+      "invalidCredentialsWithDemo": "Invalid email or password\n\nDemo Users:\n• farmer@example.com / farmer123\n• test@example.com / test123\n• demo@kisangpt.com / demo123",
+      "passwordTooShort": "Password must be at least 6 characters long",
+      "passwordsDontMatch": "Passwords do not match",
+      "agreeToTerms": "Please agree to terms and conditions",
+      "signupFailed": "Signup failed"
+    }
+  },
   "footer": {
     "developedWith": "Developed with",
     "by": "by",
     "fullStackDeveloper": "Full-Stack Developer",
-    "copyright": "© 2024 KisanGPT Smart Farming • Made with ❤️ for Indian Farmers 🇮🇳"
+    "copyright": ""
   },
   "common": {
     "loading": "Loading...",
@@ -118,10 +141,32 @@
     "farmingTraining": "Farming Training Group",
     "viewMore": "View More",
     "soilHealth": "Soil Health",
+    "cropHealth": "Crop Health",
+    "marketTrend": "Market Trend",
     "aiInsights": "AI Insights",
     "todaysAdvice": "Today's Farming Advice",
     "farmingNews": "Latest Farming News",
     "quickActions": "Quick Actions",
+    "yourFarmStats": "Your Farm Stats",
+    "estimatedProfit": "Estimated profit (AI-based)",
+    "fromSatelliteData": "From satellite data",
+    "ndviBasedAnalysis": "NDVI-based analysis",
+    "wheatRatePerQuintal": "Wheat rate/quintal",
+    "updatedToday": "Updated today",
+    "startNow": "Start now",
+    "qa": {
+      "weather": "View today's weather and field conditions",
+      "community": "Connect with nearby farmers",
+      "cropRecommendation": "Choose better crops for your soil",
+      "marketAnalysis": "Prices and market forecasts",
+      "aiChat": "AI assistant for farming questions",
+      "diseaseDetection": "Identify plant diseases and treatments",
+      "satelliteView": "See your fields with satellite",
+      "arView": "See crops in 3D via AR/VR",
+      "governmentSchemes": "Subsidies and financial help",
+      "rainAlerts": "Rain forecast and WhatsApp alerts",
+      "dreamVisualization": "Mental support and motivation"
+    },
     "weatherAdvice": {
       "default": "🌿 Today's tip: Inspect your fields between 6-8 AM and check plant water needs.",
       "rain": "🌧️ Rain expected today! Check crop drainage, apply light fertilizer spray and avoid pesticides.",

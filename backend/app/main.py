@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 from app.core.config import settings
 from app.core.database import init_database
 from app.api.routes import voice, text, location, crop, disease, market, reply
+from app.api.routes import soil
+from app.api.routes import rotation
 from app.core.logging_config import setup_logging
 
 # Load environment variables
@@ -65,6 +67,8 @@ app.include_router(location.router, prefix="/api/v1/location")
 app.include_router(crop.router, prefix="/api/v1/crop")
 app.include_router(disease.router, prefix="/api/v1/disease")
 app.include_router(market.router, prefix="/api/v1/market")
+app.include_router(soil.router, prefix="/api/v1/soil")
+app.include_router(rotation.router, prefix="/api/v1/rotation")
 app.include_router(reply.router, prefix="/api/v1/reply")
 
 # Mount static files
