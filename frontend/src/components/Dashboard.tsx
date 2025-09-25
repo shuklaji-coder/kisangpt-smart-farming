@@ -662,6 +662,14 @@ const Dashboard: React.FC = () => {
       badge: 'Smart',
     },
     {
+      title: '🆘 Quick Help',
+      description: 'WhatsApp/Call expert with your location and issue',
+      icon: <SmartToy />,
+      color: '#e53935',
+      path: '/help',
+      badge: 'Help',
+    },
+    {
       title: `🛰️ ${tt('navbar.satellite')}`,
       description: tt('dashboard.qa.satelliteView'),
       icon: <Satellite />,
@@ -731,8 +739,8 @@ const Dashboard: React.FC = () => {
           sx={{
             background: 'radial-gradient(900px 420px at 15% 10%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 60%), linear-gradient(120deg, #0f6d2b 0%, #1e8f3f 40%, #4caf50 75%, #8bd17c 100%)',
             color: 'white',
-            p: 4,
-            mb: 4,
+            p: { xs: 2, md: 4 },
+            mb: { xs: 2, md: 4 },
             borderRadius: 4,
             position: 'relative',
             overflow: 'hidden',
@@ -763,9 +771,9 @@ const Dashboard: React.FC = () => {
             <Avatar
               sx={{
                 bgcolor: 'rgba(255, 255, 255, 0.2)',
-                mr: 3,
-                width: 70,
-                height: 70,
+                mr: { xs: 2, md: 3 },
+                width: { xs: 56, md: 70 },
+                height: { xs: 56, md: 70 },
                 boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
                 border: '3px solid rgba(255,255,255,0.3)',
               }}
@@ -773,7 +781,7 @@ const Dashboard: React.FC = () => {
               <Agriculture sx={{ fontSize: 35 }} />
             </Avatar>
             <Box sx={{ flex: 1 }}>
-<Typography variant="h3" sx={{ fontWeight: 'bold', mb: 0.5, color: '#ffffff', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
+<Typography variant="h3" sx={{ fontWeight: 'bold', mb: 0.5, color: '#ffffff', textShadow: '2px 2px 4px rgba(0,0,0,0.3)', fontSize: { xs: '1.6rem', md: '2.2rem' } }}>
                 {/* @ts-ignore */}
                 {t('dashboard.welcome', { name: userName })}
               </Typography>

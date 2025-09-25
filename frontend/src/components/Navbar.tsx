@@ -146,6 +146,7 @@ const Navbar: React.FC = () => {
     { path: '/satellite-view', label: t('navbar.satellite'), icon: <Satellite /> },
     { path: '/ar-visualization', label: t('navbar.arView'), icon: <ViewInAr /> },
     { path: '/rain-alerts', label: t('navbar.rainAlerts'), icon: <Notifications /> },
+    { path: '/help', label: t('navbar.help', 'Help'), icon: <SmartToy /> },
   ];
 
   const primaryNavPaths = ['/', '/market-analysis', '/weather', '/ai-chat'];
@@ -158,32 +159,33 @@ const Navbar: React.FC = () => {
       boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
     }}>
       <Toolbar disableGutters>
-        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', px: { xs: 1, md: 2 } }}>
           {/* Logo and App Name */}
-<Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Agriculture sx={{ 
-              fontSize: 32, 
-              mr: 1.25, 
+              fontSize: { xs: 26, md: 32 }, 
+              mr: 1, 
               color: '#fff'
             }} />
-          <Box>
             <Typography
               variant="h6"
               component="div"
               sx={{
                 fontWeight: 800,
                 color: '#fff',
-                letterSpacing: '0.3px'
+                letterSpacing: '0.3px',
+                fontSize: { xs: '1.05rem', md: '1.25rem' }
               }}
             >
               KisanGPT
+            </Typography>
             </Typography>
           </Box>
         </Box>
 
         {/* Desktop Navigation */}
-{!isMobile && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 2 }}>
+{/* Desktop Navigation (hidden on phones) */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.5, ml: 2, overflowX: 'auto', whiteSpace: 'nowrap' }}>
             {primaryNav.map((item) => {
               const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
               return (
@@ -216,10 +218,16 @@ const Navbar: React.FC = () => {
               {t('navbar.modules', 'More')}
             </Button>
           </Box>
-        )}
 
         {/* Spacer to push user controls to the right */}
         <Box sx={{ flexGrow: 1 }} />
+
+        {/* Language Selector (icon on phones) */}
+        <Box sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
+          <IconButton color="inherit" onClick={handleLanguageClick} aria-label="language">
+            <Language />
+          </IconButton>
+        </Box>
 
         {/* User Profile or Login */}
         {user ? (
@@ -308,10 +316,12 @@ const Navbar: React.FC = () => {
           </Button>
         )}
 
-        {/* Language Selector */}
-        <Button color="inherit" onClick={handleLanguageClick} startIcon={<Language />} sx={{ ml: 1, textTransform: 'none', opacity: 0.9, '&:hover': { opacity: 1 } }}>
-          {currentLang.name}
-        </Button>
+        {/* Language Selector (hidden on phones, shows icon above) */}
+        <Box sx={{ display: { xs: 'none', md: 'inline-flex' } }}>
+          <Button color="inherit" onClick={handleLanguageClick} startIcon={<Language />} sx={{ ml: 1, textTransform: 'none', opacity: 0.9, '&:hover': { opacity: 1 } }}>
+            {currentLang.name}
+          </Button>
+        </Box>
 
         {/* Mobile Menu Button */}
         {isMobile && (

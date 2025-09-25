@@ -225,7 +225,7 @@ const LoanApplication: React.FC = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           Fill this step-by-step form to submit your loan request. No OTP or sensitive data is shared here in demo.
         </Typography>
-        <Stepper activeStep={activeStep} alternativeLabel>
+        <Stepper activeStep={activeStep} alternativeLabel sx={{ '& .MuiStepLabel-label': { fontSize: { xs: '0.75rem', md: '0.875rem' } } }}>
           {steps.map((label) => (
             <Step key={label}><StepLabel>{label}</StepLabel></Step>
           ))}

@@ -15,6 +15,7 @@ import WeatherForecast from './components/WeatherForecast';
 import MarketAnalysis from './components/MarketAnalysis';
 import GovernmentSubsidy from './components/GovernmentSubsidy';
 import LoanApplication from './components/LoanApplication';
+import QuickHelp from './components/QuickHelp';
 import AIChatbot from './components/AIChatbot';
 import FloatingChatbot from './components/FloatingChatbot';
 import SatelliteFieldView from './components/SatelliteFieldView';
@@ -175,6 +176,7 @@ const AppContent = () => {
           <Route path="/ar-visualization" element={<ARPlantVisualization />} />
           <Route path="/rain-alerts" element={<RainAlertSettings />} />
           <Route path="/loans" element={<LoanApplication />} />
+          <Route path="/help" element={<QuickHelp />} />
         </Routes>
       </Container>
       {/* Footer with Developer Credits */}

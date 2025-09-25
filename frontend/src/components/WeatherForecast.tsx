@@ -1125,8 +1125,8 @@ const getConditionColor = (condition: string) => {
             </motion.div>
           </Grid>
 
-          {/* Hourly Charts */}
-          <Grid item xs={12}>
+          {/* Hourly Charts (hidden on phones for compact view) */}
+          <Grid item xs={12} sx={{ display: { xs: 'none', md: 'block' } }}>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
