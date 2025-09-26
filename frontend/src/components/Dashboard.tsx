@@ -1597,52 +1597,6 @@ const { t } = (useTranslation as any)();
         </Paper>
       </motion.div>
       
-      {/* Floating Weather Widget */}
-      {weatherData && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8, x: 100 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
-        >
-          <Paper
-            elevation={8}
-            sx={{
-              position: 'fixed',
-              top: { xs: 'auto', md: 120 },
-              bottom: { xs: 100, md: 'auto' },
-              right: 24,
-              zIndex: 999,
-              p: 2,
-              minWidth: 200,
-              background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
-              borderRadius: 4,
-              border: '2px solid rgba(33, 150, 243, 0.2)',
-              backdropFilter: 'blur(10px)',
-              '&:hover': {
-                transform: 'scale(1.05)',
-                boxShadow: '0 12px 30px rgba(33, 150, 243, 0.3)',
-              },
-              transition: 'all 0.3s ease-in-out',
-            }}
-          >
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem', fontWeight: 'bold' }}>
-                🌤️ LIVE WEATHER
-              </Typography>
-              <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 'bold', mb: 0.5 }}>
-                {Math.round(weatherData.main.temp)}°C
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#1565c0', mb: 1 }}>
-                {weatherData.weather[0].main}
-              </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
-                <Typography variant="caption">💧 {weatherData.main.humidity}%</Typography>
-                <Typography variant="caption">🌬️ {Math.round(weatherData.wind.speed * 3.6)}km/h</Typography>
-              </Box>
-            </Box>
-          </Paper>
-        </motion.div>
-      )}
 
       {/* Voice Control FAB */}
       <Fab
