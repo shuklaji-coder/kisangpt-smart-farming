@@ -52,6 +52,9 @@ import { useTranslation } from 'react-i18next';
 import { enhancedSatelliteService, SatelliteAnalysis } from '../services/enhancedSatelliteService';
 import { locationService, LocationData } from '../services/locationService';
 import { cropRecommendationEngine } from '../services/cropRecommendationEngine';
+import axios from 'axios';
+
+const API_BASE = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
 
 // Enhanced interfaces
 interface EnhancedCropRecommendation {
@@ -168,19 +171,74 @@ const EnhancedCropRecommendation: React.FC = () => {
     }
   };
 
+  const mapHindi = (name: string) => ({
+    'Wheat': 'गेहूं', 'Rice': 'धान', 'Maize': 'मक्का', 'Mustard': 'सरसों', 'Cotton': 'कपास', 'Sugarcane': 'गन्ना'
+  }[name] || name);
+
   const generateEnhancedRecommendations = async (
     location: LocationData,
     satellite: SatelliteAnalysis
   ): Promise<EnhancedCropRecommendation[]> => {
-    
     console.log('🌾 Generating location-specific recommendations...');
-    
-    // Use satellite analysis to get optimal crops for this location
-    const satelliteRecommendations = satellite.analysis.recommendedCrops;
-    
+
+    // 1) Try backend advanced recommender first (district + pH + NDVI + weather fusion)
+    try {
+      const url = API_BASE ? `${API_BASE}/api/v1/crop/recommend-advanced` : `/api/v1/crop/recommend-advanced`;
+      const res = await axios.get(url, {
+        params: { lat: location.latitude, lng: location.longitude },
+        timeout: 8000,
+      });
+      const items = res.data?.recommendations || [];
+      if (items.length > 0) {
+        const adv: EnhancedCropRecommendation[] = items.map((r: any, idx: number) => {
+          const en = (r.crop || '').toString();
+          const hi = mapHindi(en);
+          const yieldQ = r.predicted_yield_quintal_per_hectare || 35;
+          const water = r.water_requirement || 'medium';
+          const sust = r.sustainability_score || 75;
+          const demand = r.market_demand || 'medium';
+          return {
+            id: idx + 1,
+            name: en,
+            hindiName: hi,
+            suitabilityScore: Math.round((r.success_probability || 0.6) * 100),
+            expectedYield: `${yieldQ} क्विंटल/हेक्टेयर`,
+            marketPrice: '—',
+            profitPotential: Math.round(40000 + (sust * 500)),
+            growthDuration: '—',
+            waterRequirement: water,
+            riskLevel: water === 'high' ? 'high' : water === 'low' ? 'low' as const : 'medium' as const,
+            season: (res.data?.context?.season || getCurrentSeason()),
+            plantingTime: 'मौसम के अनुसार',
+            benefits: r.recommended_practices || [],
+            requirements: [
+              `pH: ${(res.data?.context?.ph ?? satellite.soilData.ph).toFixed ? (res.data?.context?.ph ?? satellite.soilData.ph).toFixed(1) : (res.data?.context?.ph ?? satellite.soilData.ph)}`,
+              `NDVI: ${(res.data?.context?.ndvi ?? satellite.ndviData.ndvi).toFixed ? (res.data?.context?.ndvi ?? satellite.ndviData.ndvi).toFixed(2) : (res.data?.context?.ndvi ?? satellite.ndviData.ndvi)}`
+            ],
+            satelliteInsights: {
+              ndviScore: Math.round((res.data?.context?.ndvi ?? satellite.ndviData.ndvi) * 100),
+              soilHealth: satellite.analysis.soilFertilityIndex,
+              waterStress: satellite.analysis.waterStressLevel,
+              cropHealth: satellite.analysis.cropHealthScore,
+              recommendations: satellite.analysis.actionableInsights
+            },
+            marketData: {
+              currentPrice: 0,
+              pricetrend: 'stable',
+              demand: demand
+            }
+          };
+        });
+        return adv.sort((a, b) => b.suitabilityScore - a.suitabilityScore);
+      }
+    } catch (e) {
+      console.warn('Advanced backend recommender unavailable, using satellite-only path.', e);
+    }
+
+    // 2) Satellite-only path (existing)
+    const satelliteRecommendations = satellite.analysis.recommendedCrops || ['Wheat', 'Rice', 'Maize'];
     const enhancedRecs: EnhancedCropRecommendation[] = satelliteRecommendations.map((cropName, index) => {
       const crop = getCropDetails(cropName, satellite, location);
-      
       return {
         id: index + 1,
         name: crop.name,
@@ -205,13 +263,11 @@ const EnhancedCropRecommendation: React.FC = () => {
         },
         marketData: {
           currentPrice: crop.marketPrice,
-          pricetrend: 'stable', // Can be enhanced with market service
+          pricetrend: 'stable',
           demand: 'high'
         }
       };
     });
-
-    // Sort by suitability score
     return enhancedRecs.sort((a, b) => b.suitabilityScore - a.suitabilityScore);
   };
 
