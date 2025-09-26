@@ -385,7 +385,6 @@ const Navbar: React.FC = () => {
             </MenuItem>
           ))}
         </Menu>
-        </Container>
       </Toolbar>
     </AppBar>
   );
