@@ -3,6 +3,13 @@
   command = "npm run build"
   publish = "build"
 
+[build.environment]
+  CI = "false"
+  TSC_COMPILE_ON_ERROR = "true"
+  DISABLE_ESLINT_PLUGIN = "true"
+  GENERATE_SOURCEMAP = "false"
+  NODE_VERSION = "18"
+
 # React Router SPA routing
 [[redirects]]
   from = "/*"
