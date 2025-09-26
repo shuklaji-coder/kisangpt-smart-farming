@@ -247,18 +247,58 @@ async def recommend_crops_advanced(lat: float, lng: float):
             weather_data=weather_data
         )
 
-        # 7) Re-rank with NDVI & pH adjustments (lightweight fusion)
+        # 7) Lightweight fusion + enrichment
         def boost(prob: float, ndvi: float, ph_val: float) -> float:
             ndvi_factor = 0.9 + 0.2 * max(0, min(1, ndvi))  # 0.9..1.1
-            ph_factor = 1.0 if 6.0 <= ph_val <= 7.8 else 0.9
+            ph_factor = 1.05 if 6.0 <= ph_val <= 7.5 else 0.93
             return min(0.97, max(0.05, prob * ndvi_factor * ph_factor))
+
+        # Baseline yields (quintal/ha) and water needs
+        baseline_yield = {
+            "wheat": 42, "rice": 65, "maize": 50, "mustard": 18, "cotton": 20, "sugarcane": 800,
+        }
+        water_req = {
+            "wheat": "medium", "rice": "high", "maize": "medium", "mustard": "low", "cotton": "medium", "sugarcane": "high",
+        }
+        # Heuristic market demand by staple status
+        def demand_for(crop: str) -> str:
+            ck = crop.lower()
+            if ck in ("wheat", "rice"): return "high"
+            if ck in ("maize", "sugarcane"): return "medium"
+            return "medium"
+
+        # Sustainability from pH closeness + soil type match
+        def sustainability_score_for(crop: str) -> int:
+            score = 75
+            # pH closeness bonus
+            if 6.0 <= ph <= 7.5:
+                score += 8
+            elif 5.5 <= ph <= 8.0:
+                score += 3
+            # soil type simple boost for compatible soils
+            ck = crop.lower()
+            if (soil_type == "BLACK_SOIL" and ck in ("cotton", "sugarcane")) or \
+               (soil_type in ("ALLUVIAL", "RED_SOIL") and ck in ("wheat", "rice", "maize", "mustard")):
+                score += 6
+            # NDVI vigor boost
+            score += int(max(0, min(1, ndvi_value)) * 5)
+            return int(max(40, min(95, score)))
 
         enriched = []
         for r in recs:
+            crop_name = r.get("crop", "").strip()
             p = boost(r.get("success_probability", 0.6), ndvi_value, ph)
+            pred_yield = baseline_yield.get(crop_name.lower(), 35)
+            pred_yield = int(round(pred_yield * (0.8 + 0.4 * p)))  # scale by success prob
+            sust = sustainability_score_for(crop_name)
+            dem = demand_for(crop_name)
             r["success_probability"] = p
+            r["predicted_yield_quintal_per_hectare"] = pred_yield
+            r["water_requirement"] = water_req.get(crop_name.lower(), "medium")
+            r["sustainability_score"] = sust
+            r["market_demand"] = dem
             r["reason"] = (
-                f"NDVI {ndvi_value:.2f}, pH {ph}; soil {soil_type}, {season}. "
+                f"District {district_name.title()}, season {season}, soil {soil_type}, pH {ph}; NDVI {ndvi_value:.2f}. "
                 + r.get("reason", "")
             )
             enriched.append(r)
@@ -266,12 +306,17 @@ async def recommend_crops_advanced(lat: float, lng: float):
         # Sort by boosted probability
         enriched.sort(key=lambda x: x.get("success_probability", 0), reverse=True)
 
+        # 8) Build response payload (top 3)
         response_items = [
             {
-                "crop": r["crop"],
+                "crop": r.get("crop"),
                 "success_probability": float(r.get("success_probability", 0.6)),
                 "reason": r.get("reason", f"Soil pH {ph}, soil type {soil_type}, season {season}, NDVI {ndvi_value:.2f}"),
-                "recommended_practices": r.get("recommended_practices", ["Balanced NPK", "Timely irrigation"])
+                "recommended_practices": r.get("recommended_practices", ["Balanced NPK", "Timely irrigation"]),
+                "predicted_yield_quintal_per_hectare": int(r.get("predicted_yield_quintal_per_hectare", 35)),
+                "water_requirement": r.get("water_requirement", "medium"),
+                "sustainability_score": int(r.get("sustainability_score", 75)),
+                "market_demand": r.get("market_demand", "medium"),
             } for r in enriched[:3]
         ]
         

@@ -52,6 +52,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { cropRecommendationEngine } from '../services/cropRecommendationEngine';
+
+const API_BASE = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
 import { satelliteService } from '../services/satelliteService';
 import { marketPriceService } from '../services/marketPriceService';
 import { locationService } from '../services/locationService';
@@ -509,7 +511,8 @@ const CropRecommendation: React.FC = () => {
 
       // If satellite toggle is on, use backend advanced endpoint directly
       if (useSatellite) {
-        const adv = await axios.get(`/api/v1/crop/recommend-advanced`, {
+        const url = API_BASE ? `${API_BASE}/api/v1/crop/recommend-advanced` : `/api/v1/crop/recommend-advanced`;
+        const adv = await axios.get(url, {
           params: { lat: formData.coordinates.lat, lng: formData.coordinates.lon }
         });
         const items = adv.data?.recommendations || [];
@@ -554,12 +557,15 @@ const CropRecommendation: React.FC = () => {
           growth_duration: '—',
           water_requirement: 'मध्यम',
           soil_type: ['दोमट'],
-          season: formData.season || 'खरीफ',
+          season: (adv.data?.context?.season || formData.season || 'खरीफ') as string,
           benefits: r.recommended_practices || [],
           considerations: []
         }));
-        setRecommendations(formatted);
-        return;
+        if (formatted.length > 0) {
+          setRecommendations(formatted);
+          return;
+        }
+        // If advanced path returned empty, fall through to engine-based path
       }
 
       // Step 1: Get satellite data for soil analysis
