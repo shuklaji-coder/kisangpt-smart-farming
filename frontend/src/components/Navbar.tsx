@@ -180,7 +180,7 @@ const Navbar: React.FC = () => {
               KisanGPT
             </Typography>
           </Box>
-        </Box>
+        </Container>
 
         {/* Desktop Navigation */}
 {/* Desktop Navigation (hidden on phones) */}
