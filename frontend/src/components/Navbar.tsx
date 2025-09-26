@@ -45,7 +45,8 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  // Treat only phones as mobile; tablets/MD and above get desktop navbar
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const [languageAnchorEl, setLanguageAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMenuAnchorEl, setMobileMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -195,6 +196,8 @@ const Navbar: React.FC = () => {
             whiteSpace: 'nowrap',
             flexGrow: 1,
             minWidth: 0,
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': { display: 'none' },
           }}>
             {primaryNav.map((item) => {
               const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
