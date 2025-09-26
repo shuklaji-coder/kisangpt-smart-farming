@@ -39,7 +39,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { authAPI } from '../services/api';
 
 const Navbar: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  // Cast to any to avoid TS deep instantiation on some CI environments
+  // This does not affect runtime; only loosens types here
+  const { t, i18n } = (useTranslation as any)();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
