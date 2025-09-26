@@ -45,6 +45,32 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
   const [loading, setLoading] = useState(false);
   const [floatingElements, setFloatingElements] = useState<Array<{ id: number; x: number; y: number; icon: string; delay: number }>>([]);
 
+  // Demo users helper (used when backend is unavailable OR returns non-success)
+  const tryDemoLogin = (email: string, password: string) => {
+    const defaultDemoUsers = [
+      { email: 'farmer@example.com', password: 'farmer123', name: 'रमेश कुमार', role: 'farmer' },
+      { email: 'test@example.com', password: 'test123', name: 'टेस्ट यूजर', role: 'farmer' },
+      { email: 'demo@kisangpt.com', password: 'demo123', name: 'डेमो किसान', role: 'farmer' },
+      { email: 'admin@kisangpt.com', password: 'admin123', name: 'एडमिन', role: 'admin' }
+    ];
+    const registeredDemoUsers = JSON.parse(localStorage.getItem('demoUsers') || '[]');
+    const demoUsers = [...defaultDemoUsers, ...registeredDemoUsers];
+    const user = demoUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    if (!user) return null;
+    const userData = {
+      id: Date.now(),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: '🧑‍🌾',
+      location: 'Delhi, India',
+      joinDate: new Date().toISOString().split('T')[0]
+    };
+    localStorage.setItem('authToken', 'demo-token-' + Date.now());
+    localStorage.setItem('user', JSON.stringify(userData));
+    return userData;
+  };
+
   // Create floating farming elements to match field image
   useEffect(() => {
     const elements = [];
@@ -137,46 +163,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           onLogin(response.user || { email: formData.email, password: formData.password });
         }
       } else {
-        setError(response?.message || t('auth.errors.loginFailed'));
+        // Backend responded but did not authenticate — try demo users
+        const demoUser = tryDemoLogin(formData.email, formData.password);
+        if (demoUser) {
+          if (onLogin) onLogin({ email: formData.email, password: formData.password });
+        } else {
+          setError(response?.message || t('auth.errors.loginFailed'));
+        }
       }
     } catch (err: any) {
       console.warn('API call failed, using demo mode:', err.message);
       
       // Fallback: Demo login for development/demo purposes
-      const defaultDemoUsers = [
-        { email: 'farmer@example.com', password: 'farmer123', name: 'रमेश कुमार', role: 'farmer' },
-        { email: 'test@example.com', password: 'test123', name: 'टेस्ट यूजर', role: 'farmer' },
-        { email: 'demo@kisangpt.com', password: 'demo123', name: 'डेमो किसान', role: 'farmer' },
-        { email: 'admin@kisangpt.com', password: 'admin123', name: 'एडमिन', role: 'admin' }
-      ];
-      
-      // Add dynamically registered demo users
-      const registeredDemoUsers = JSON.parse(localStorage.getItem('demoUsers') || '[]');
-      const demoUsers = [...defaultDemoUsers, ...registeredDemoUsers];
-
-      const user = demoUsers.find(u => 
-        u.email.toLowerCase() === formData.email.toLowerCase() && 
-        u.password === formData.password
-      );
-
-      if (user) {
-        // Demo login successful
-        const userData = {
-          id: Date.now(),
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          avatar: '🧑‍🌾',
-          location: 'Delhi, India',
-          joinDate: new Date().toISOString().split('T')[0]
-        };
-
-        localStorage.setItem('authToken', 'demo-token-' + Date.now());
-        localStorage.setItem('user', JSON.stringify(userData));
-        
-        if (onLogin) {
-          onLogin({ email: formData.email, password: formData.password });
-        }
+      const demoUser = tryDemoLogin(formData.email, formData.password);
+      if (demoUser) {
+        if (onLogin) onLogin({ email: formData.email, password: formData.password });
       } else {
         setError(t('auth.errors.invalidCredentialsWithDemo'));
       }
