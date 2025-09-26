@@ -1,17 +1,10 @@
 [build]
   base = "frontend"
-  publish = "frontend/build"
-  command = "CI=false npm run build"
+  command = "npm run build"
+  publish = "build"
 
-[build.environment]
-  NODE_VERSION = "18"
-  NPM_FLAGS = "--legacy-peer-deps"
-
+# React Router SPA routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[context.production.environment]
-  REACT_APP_API_URL = "http://localhost:8000"
-  REACT_APP_WEATHER_API_KEY = "demo-key"
