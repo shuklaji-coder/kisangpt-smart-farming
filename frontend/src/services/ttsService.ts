@@ -5,11 +5,29 @@ export class TTSService {
   private defaultRate: number = 0.9;
   private defaultPitch: number = 1;
   private defaultVolume: number = 0.8;
+  private userInteracted = false;
+  private consentKey = 'tts_consent_enabled';
 
   constructor() {
     this.synth = window.speechSynthesis;
     this.voices = [];
     this.loadVoices();
+
+    // Detect first user interaction to satisfy autoplay/gesture policies
+    const markInteracted = () => {
+      this.userInteracted = true;
+      try { localStorage.setItem(this.consentKey, '1'); } catch {}
+      window.removeEventListener('pointerdown', markInteracted);
+      window.removeEventListener('keydown', markInteracted);
+      window.removeEventListener('touchstart', markInteracted as any);
+    };
+    // Restore prior consent
+    try { this.userInteracted = localStorage.getItem(this.consentKey) === '1'; } catch {}
+    if (!this.userInteracted) {
+      window.addEventListener('pointerdown', markInteracted, { once: true });
+      window.addEventListener('keydown', markInteracted, { once: true });
+      window.addEventListener('touchstart', markInteracted as any, { once: true });
+    }
   }
 
   private loadVoices(): void {
@@ -49,6 +67,15 @@ export class TTSService {
         return;
       }
 
+      // Autoplay/permission guard: only speak when visible and after user interaction
+      const visible = document.visibilityState === 'visible';
+      if (!this.userInteracted || !visible) {
+        // Silently skip to avoid 'not-allowed' errors; caller flows continue
+        console.warn('TTS skipped: waiting for user interaction or visible tab');
+        resolve();
+        return;
+      }
+
       // Stop any ongoing speech
       this.stop();
 
@@ -72,11 +99,24 @@ export class TTSService {
 
       // Event handlers
       utterance.onend = () => resolve();
-      utterance.onerror = (event) => reject(new Error(`Speech synthesis error: ${event.error}`));
+      utterance.onerror = (event) => {
+        // Convert not-allowed to a soft skip instead of throwing
+        if ((event as any).error === 'not-allowed') {
+          console.warn('TTS blocked by browser policy (not-allowed). Await user interaction.');
+          resolve();
+        } else {
+          reject(new Error(`Speech synthesis error: ${(event as any).error}`));
+        }
+      };
       utterance.onstart = () => console.log('TTS: Started speaking');
 
       // Start speaking
-      this.synth.speak(utterance);
+      try {
+        this.synth.speak(utterance);
+      } catch (e) {
+        console.warn('TTS speak failed:', e);
+        resolve();
+      }
     });
   }
 
@@ -100,6 +140,15 @@ export class TTSService {
 
   public isSpeaking(): boolean {
     return this.synth ? this.synth.speaking : false;
+  }
+
+  public isAllowed(): boolean {
+    return !!this.synth && (this.userInteracted || (localStorage.getItem(this.consentKey) === '1')) && document.visibilityState === 'visible';
+  }
+
+  public enableByUserGesture(): void {
+    this.userInteracted = true;
+    try { localStorage.setItem(this.consentKey, '1'); } catch {}
   }
 
   public isPaused(): boolean {

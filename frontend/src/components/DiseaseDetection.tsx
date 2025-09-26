@@ -43,6 +43,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { diseaseDetectionService } from '../services/diseaseDetectionService';
+import { detectDiseaseOnDevice } from '../services/onnxDiseaseModel';
 import { Tooltip } from '@mui/material';
 
 interface DiseaseInfo {
@@ -95,7 +96,24 @@ const DiseaseDetection: React.FC = () => {
     setLoading(true);
     
     try {
-      // Use AI disease detection service
+      // Try on-device ONNX model first (if configured)
+      const onnx = await detectDiseaseOnDevice(selectedImage);
+      if (onnx) {
+        const diseaseInfo: DiseaseInfo = {
+          name: `Detected: ${onnx.label}`,
+          severity: onnx.confidence > 0.8 ? 'High' : onnx.confidence > 0.6 ? 'Medium' : 'Low',
+          confidence: onnx.confidence,
+          symptoms: ['मॉडल द्वारा पहचाना गया पैटर्न'],
+          treatments: ['स्थानीय कृषि विशेषज्ञ से सलाह लें', 'लक्षण-आधारित उपचार अपनाएँ'],
+          prevention: ['स्वच्छ खेती', 'उचित पोषण', 'समय पर स्प्रे'],
+          economic_impact: 'मॉडल अनुमान (on-device)'
+        };
+        setDiseaseResult(diseaseInfo);
+        setOpenDialog(true);
+        return;
+      }
+
+      // Use server-side AI disease detection service
       const healthAnalysis = await diseaseDetectionService.detectDisease(selectedImage);
       
       // Convert AI analysis to component format

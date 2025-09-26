@@ -342,7 +342,8 @@ const AIChatbot: React.FC = () => {
       const system_context = `
 You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, step-by-step with bullet points. Prefer local practices for Indian farmers. If unsure, say what additional info is needed. Avoid brand endorsements; give generic active ingredients. Output language: ${language}.`;
 
-      const response = await axios.post('http://localhost:8000/api/chat/ai-response', {
+      const API = process.env.REACT_APP_API_URL?.replace(/\/$/, '') || '';
+      const response = await axios.post(`${API}/api/v1/ai/chat`, {
         message: userMessage,
         language: language,
         emotion: userEmotion,

@@ -160,15 +160,11 @@ const Navbar: React.FC = () => {
       backgroundColor: '#2e7d32',
       boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
     }}>
-<Toolbar disableGutters sx={{ minHeight: 56, alignItems: 'center', justifyContent: 'space-between', px: { xs: 1, md: 2 } }}>
-        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', flexWrap: 'nowrap', overflow: { xs: 'hidden', md: 'visible' }, px: { xs: 0, md: 2 } }}>
-          {/* Logo and App Name */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Agriculture sx={{ 
-              fontSize: { xs: 26, md: 32 }, 
-              mr: 1, 
-              color: '#fff'
-            }} />
+<Toolbar disableGutters sx={{ minHeight: 56, px: { xs: 1, md: 2 } }}>
+        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'nowrap' }}>
+          {/* Left: Logo and App Name */}
+          <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <Agriculture sx={{ fontSize: { xs: 26, md: 32 }, mr: 1, color: '#fff' }} />
             <Typography
               variant="h6"
               component="div"
@@ -178,21 +174,28 @@ const Navbar: React.FC = () => {
                 color: '#fff',
                 letterSpacing: '0.3px',
                 fontSize: { xs: '1.05rem', md: '1.25rem' },
-maxWidth: { xs: '50vw', md: 'max-content' },
+                maxWidth: { xs: '50vw', md: 'max-content' },
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                minWidth: 0
+                minWidth: 0,
               }}
             >
               KisanGPT
             </Typography>
           </Box>
-        </Container>
 
-        {/* Desktop Navigation */}
-{/* Desktop Navigation (hidden on phones) */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.5, ml: 2, overflowX: 'auto', whiteSpace: 'nowrap' }}>
+          {/* Middle: Desktop Navigation (scrollable if overflow) */}
+          <Box sx={{
+            display: { xs: 'none', md: 'flex' },
+            alignItems: 'center',
+            gap: 0.5,
+            ml: 2,
+            overflowX: 'auto',
+            whiteSpace: 'nowrap',
+            flexGrow: 1,
+            minWidth: 0,
+          }}>
             {primaryNav.map((item) => {
               const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
               return (
@@ -208,155 +211,139 @@ maxWidth: { xs: '50vw', md: 'max-content' },
                     px: 1.25,
                     textTransform: 'none',
                     borderBottom: isActive ? '2px solid #fff' : '2px solid transparent',
-                    '&:hover': { opacity: 1 }
+                    '&:hover': { opacity: 1 },
+                    flexShrink: 0,
                   }}
                 >
                   {item.label}
                 </Button>
               );
             })}
-            {/* More menu */}
             <Button
               color="inherit"
               onClick={handleModulesMenuClick}
               startIcon={<Dashboard />}
-              sx={{ color: '#ffffff', opacity: 0.9, textTransform: 'none', '&:hover': { opacity: 1 } }}
+              sx={{ color: '#ffffff', opacity: 0.9, textTransform: 'none', '&:hover': { opacity: 1 }, flexShrink: 0 }}
             >
               {t('navbar.modules', 'More')}
             </Button>
           </Box>
 
-        {/* Spacer to push user controls to the right */}
-        <Box sx={{ flexGrow: 1 }} />
+          {/* Right: Language + User + Mobile menu */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
+            {/* Language icon (phones) */}
+            <Box sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
+              <IconButton color="inherit" onClick={handleLanguageClick} aria-label="language">
+                <Language />
+              </IconButton>
+            </Box>
 
-        {/* Language Selector (icon on phones) */}
-        <Box sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
-          <IconButton color="inherit" onClick={handleLanguageClick} aria-label="language">
-            <Language />
-          </IconButton>
-        </Box>
+            {/* User Profile or Login (desktop) */}
+            {user ? (
+              <>
+                <IconButton color="inherit" onClick={handleUserMenuClick} aria-label="account" sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
+                  <AccountCircle />
+                </IconButton>
+                <Chip
+                  avatar={
+                    <Avatar sx={{
+                      bgcolor: '#fff',
+                      color: '#2e7d32',
+                      width: 35,
+                      height: 35,
+                      border: '2px solid rgba(255,255,255,0.3)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                    }}>
+                      <Person sx={{ fontSize: 20 }} />
+                    </Avatar>
+                  }
+                  label={`🙏 ${user.name || t('navbar.farmerJi')}`}
+                  onClick={handleUserMenuClick}
+                  sx={{
+                    display: { xs: 'none', md: 'inline-flex' },
+                    ml: 2,
+                    pl: 1,
+                    pr: 2,
+                    py: 0.5,
+                    color: '#ffeb3b',
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                    border: '2px solid rgba(255, 235, 59, 0.6)',
+                    borderRadius: 5,
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      border: '2px solid rgba(255, 235, 59, 0.85)',
+                      transform: 'scale(1.05)',
+                    },
+                    '& .MuiChip-label': {
+                      color: '#ffeb3b',
+                      fontWeight: 'bold',
+                      fontSize: '0.95rem',
+                      textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
+                    },
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                  }}
+                />
+                <Menu
+                  anchorEl={userMenuAnchorEl}
+                  open={Boolean(userMenuAnchorEl)}
+                  onClose={handleUserMenuClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <MenuItem onClick={handleUserMenuClose}>
+                    <Person sx={{ mr: 2 }} />
+                    {t('navbar.profile')}
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Logout sx={{ mr: 2 }} />
+                    {t('navbar.logout')}
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <Button
+                color="inherit"
+                startIcon={<Login />}
+                onClick={() => handleNavigation('/login')}
+                sx={{
+                  display: { xs: 'none', md: 'inline-flex' },
+                  ml: 2,
+                  color: '#fff',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: 3,
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    border: '2px solid rgba(255, 255, 255, 0.6)',
+                  },
+                }}
+              >
+                {t('navbar.login')}
+              </Button>
+            )}
 
-        {/* User Profile or Login */}
-        {user ? (
-          <>
-            <IconButton color="inherit" onClick={handleUserMenuClick} aria-label="account" sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
-              <AccountCircle />
-            </IconButton>
-            <Chip
-              avatar={
-                <Avatar sx={{ 
-                  bgcolor: '#fff', 
-                  color: '#2e7d32',
-                  width: 35,
-                  height: 35,
-                  border: '2px solid rgba(255,255,255,0.3)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                }}>
-                  <Person sx={{ fontSize: 20 }} />
-                </Avatar>
-              }
-              label={`🙏 ${user.name || t('navbar.farmerJi')}`}
-              onClick={handleUserMenuClick}
-              sx={{
-                ml: 2,
-                pl: 1,
-                pr: 2,
-                py: 0.5,
-                color: '#ffeb3b',
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                border: '2px solid rgba(255, 235, 59, 0.6)',
-                borderRadius: 5,
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                  border: '2px solid rgba(255, 235, 59, 0.85)',
-                  transform: 'scale(1.05)',
-                },
-                '& .MuiChip-label': {
-                  color: '#ffeb3b',
-                  fontWeight: 'bold',
-                  fontSize: '0.95rem',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
-                },
-                transition: 'all 0.3s ease',
-                cursor: 'pointer',
-              }}
-              sx={{ display: { xs: 'none', md: 'inline-flex' } }}
-            />
-            <Menu
-              anchorEl={userMenuAnchorEl}
-              open={Boolean(userMenuAnchorEl)}
-              onClose={handleUserMenuClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <MenuItem onClick={handleUserMenuClose}>
-                <Person sx={{ mr: 2 }} />
-                {t('navbar.profile')}
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <Logout sx={{ mr: 2 }} />
-                {t('navbar.logout')}
-              </MenuItem>
-            </Menu>
-          </>
-        ) : (
-          <Button
-            color="inherit"
-            startIcon={<Login />}
-            onClick={() => handleNavigation('/login')}
-            sx={{
-              ml: 2,
-              color: '#fff',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: 3,
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                border: '2px solid rgba(255, 255, 255, 0.6)',
-              },
-            }}
-          >
-            {t('navbar.login')}
-          </Button>
-        )}
+            {/* Language (desktop) */}
+            <Box sx={{ display: { xs: 'none', md: 'inline-flex' } }}>
+              <Button color="inherit" onClick={handleLanguageClick} startIcon={<Language />} sx={{ ml: 1, textTransform: 'none', opacity: 0.9, '&:hover': { opacity: 1 } }}>
+                {currentLang.name}
+              </Button>
+            </Box>
 
-        {/* Language Selector (hidden on phones, shows icon above) */}
-        <Box sx={{ display: { xs: 'none', md: 'inline-flex' } }}>
-          <Button color="inherit" onClick={handleLanguageClick} startIcon={<Language />} sx={{ ml: 1, textTransform: 'none', opacity: 0.9, '&:hover': { opacity: 1 } }}>
-            {currentLang.name}
-          </Button>
-        </Box>
-
-        {/* Mobile Menu Button */}
-        {isMobile && (
-          <IconButton
-            color="inherit"
-            onClick={handleMobileMenuClick}
-            sx={{ ml: 1 }}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
+            {/* Mobile Menu Button */}
+            {isMobile && (
+              <IconButton color="inherit" onClick={handleMobileMenuClick} sx={{ ml: 1 }}>
+                <MenuIcon />
+              </IconButton>
+            )}
+          </Box>
+        </Container>
 
         {/* Language Menu */}
-        <Menu
-          anchorEl={languageAnchorEl}
-          open={Boolean(languageAnchorEl)}
-          onClose={handleLanguageClose}
-        >
+        <Menu anchorEl={languageAnchorEl} open={Boolean(languageAnchorEl)} onClose={handleLanguageClose}>
           {languages.map((language) => (
-            <MenuItem
-              key={language.code}
-              onClick={() => handleLanguageChange(language.code)}
-              selected={i18n.language === language.code}
-            >
+            <MenuItem key={language.code} onClick={() => handleLanguageChange(language.code)} selected={i18n.language === language.code}>
               <Typography sx={{ mr: 1 }}>{language.flag}</Typography>
               {language.name}
             </MenuItem>
@@ -364,16 +351,9 @@ maxWidth: { xs: '50vw', md: 'max-content' },
         </Menu>
 
         {/* Mobile Navigation Menu */}
-        <Menu
-          anchorEl={mobileMenuAnchorEl}
-          open={Boolean(mobileMenuAnchorEl)}
-          onClose={handleMobileMenuClose}
-        >
+        <Menu anchorEl={mobileMenuAnchorEl} open={Boolean(mobileMenuAnchorEl)} onClose={handleMobileMenuClose}>
           {navigationItems.map((item) => (
-            <MenuItem
-              key={item.path}
-              onClick={() => handleNavigation(item.path)}
-            >
+            <MenuItem key={item.path} onClick={() => handleNavigation(item.path)}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 {React.cloneElement(item.icon, { sx: { mr: 2 } })}
                 {item.label}
@@ -383,11 +363,7 @@ maxWidth: { xs: '50vw', md: 'max-content' },
         </Menu>
 
         {/* More Menu (simple list) */}
-        <Menu
-          anchorEl={modulesMenuAnchorEl}
-          open={Boolean(modulesMenuAnchorEl)}
-          onClose={handleModulesMenuClose}
-        >
+        <Menu anchorEl={modulesMenuAnchorEl} open={Boolean(modulesMenuAnchorEl)} onClose={handleModulesMenuClose}>
           {secondaryNav.map((item) => (
             <MenuItem key={item.path} onClick={() => { handleNavigation(item.path); handleModulesMenuClose(); }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>

@@ -15,6 +15,9 @@ from app.core.database import init_database
 from app.api.routes import voice, text, location, crop, disease, market, reply
 from app.api.routes import soil
 from app.api.routes import rotation
+from app.api.routes.enhanced import enhanced_routes
+from app.api.routes import ai as ai_routes
+from app.api.routes import satellite_proxy as satellite_proxy_routes
 from app.core.logging_config import setup_logging
 
 # Load environment variables
@@ -70,6 +73,12 @@ app.include_router(market.router, prefix="/api/v1/market")
 app.include_router(soil.router, prefix="/api/v1/soil")
 app.include_router(rotation.router, prefix="/api/v1/rotation")
 app.include_router(reply.router, prefix="/api/v1/reply")
+# Enhanced aggregated services
+app.include_router(enhanced_routes.router)
+# AI chat (Ollama/local LLM) endpoints
+app.include_router(ai_routes.router, prefix="/api/v1/ai")
+# Satellite proxies (e.g., NDVI tiles)
+app.include_router(satellite_proxy_routes.router, prefix="/api/v1/satellite")
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")

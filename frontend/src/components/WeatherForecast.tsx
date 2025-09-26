@@ -722,13 +722,14 @@ setForecast([
     }
   };
 
-const getConditionColor = (condition: string) => {
-    switch (condition.toLowerCase()) {
+const getConditionColor = (condition?: string) => {
+    const c = (condition || '').toString().toLowerCase().trim();
+    switch (c) {
       case 'excellent': return '#4caf50';
       case 'good': return '#8bc34a';
       case 'fair': return '#ff9800';
       case 'poor': return '#f44336';
-      default: return '#2196f3';
+      default: return '#2196f3'; // default info color if unknown/empty
     }
   };
 

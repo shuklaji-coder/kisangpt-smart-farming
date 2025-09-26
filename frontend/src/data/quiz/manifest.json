@@ -1,0 +1,11 @@
+{
+  "packs": [
+    {
+      "id": "agri_basics_hi",
+      "title": "कृषि मूल बातें",
+      "description": "सिंचाई, पोषक तत्व, मौसम और मंडी की सरल जानकारी",
+      "language": "hi",
+      "importId": "agri_basics.hi"
+    }
+  ]
+}

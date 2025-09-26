@@ -133,10 +133,14 @@ const { t } = (useTranslation as any)();
     const spokenFlag = 'welcome_spoken';
     const alreadySpoken = localStorage.getItem(spokenFlag) === '1';
     const speakWelcome = async () => {
-      if (!alreadySpoken && userName && userName !== 'किसान जी') {
-        const welcomeMessage = `नमस्कार ${userName}! किसान जीपीटी में आपका स्वागत है।`;
-        await ttsService.speak(welcomeMessage, 'hi');
-        localStorage.setItem(spokenFlag, '1');
+      try {
+        if (!alreadySpoken && userName && userName !== 'किसान जी' && ttsService.isAllowed()) {
+          const welcomeMessage = `नमस्कार ${userName}! किसान जीपीटी में आपका स्वागत है।`;
+          await ttsService.speak(welcomeMessage, 'hi');
+          localStorage.setItem(spokenFlag, '1');
+        }
+      } catch (e) {
+        // ignore TTS errors
       }
     };
     speakWelcome();

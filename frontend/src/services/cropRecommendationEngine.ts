@@ -52,6 +52,7 @@ export interface FarmerProfile {
     hindiName: string;
     suitabilityScore: number;
     predictedYield: number;
+    sustainabilityScore: number;
     expectedProfit: number;
     breakEvenPrice: number;
     sowingTime: string;

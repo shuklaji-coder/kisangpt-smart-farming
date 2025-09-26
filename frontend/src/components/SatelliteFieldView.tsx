@@ -62,6 +62,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { enhancedSatelliteService, type SatelliteAnalysis } from '../services/enhancedSatelliteService';
 
+// BHUVAN WMS configuration via env (provide actual layer names via env for production)
+const BHUVAN_WMS_URL_ENV = process.env.REACT_APP_BHUVAN_WMS_URL || 'https://bhuvan-vec1.nrsc.gov.in/bhuvan/wms';
+const BHUVAN_LANDUSE_LAYER_ENV = process.env.REACT_APP_BHUVAN_LANDUSE_LAYER || '';
+const BHUVAN_SOIL_LAYER_ENV = process.env.REACT_APP_BHUVAN_SOIL_LAYER || '';
+const BHUVAN_CROPMASK_LAYER_ENV = process.env.REACT_APP_BHUVAN_CROPMASK_LAYER || '';
+const BHUVAN_WMS_VERSION = process.env.REACT_APP_BHUVAN_WMS_VERSION || '1.3.0';
+
 interface FieldData {
   coordinates: {
     lat: number;
@@ -132,6 +139,22 @@ const SatelliteFieldView: React.FC = () => {
   const imageryLayerRef = useRef<any>(null);
   const labelsLayerRef = useRef<any>(null);
   const ndviTileLayerRef = useRef<any>(null);
+  // BHUVAN WMS layers refs
+  const bhuvanLayersRef = useRef<{ [key: string]: any }>({});
+  
+  // Editable BHUVAN settings (persist to localStorage)
+  const [bhuvanWmsUrl, setBhuvanWmsUrl] = useState<string>(() => {
+    try { return localStorage.getItem('bhuvan_wms_url') || BHUVAN_WMS_URL_ENV; } catch { return BHUVAN_WMS_URL_ENV; }
+  });
+  const [bhuvanLanduseLayer, setBhuvanLanduseLayer] = useState<string>(() => {
+    try { return localStorage.getItem('bhuvan_layer_landuse') || BHUVAN_LANDUSE_LAYER_ENV; } catch { return BHUVAN_LANDUSE_LAYER_ENV; }
+  });
+  const [bhuvanSoilLayer, setBhuvanSoilLayer] = useState<string>(() => {
+    try { return localStorage.getItem('bhuvan_layer_soil') || BHUVAN_SOIL_LAYER_ENV; } catch { return BHUVAN_SOIL_LAYER_ENV; }
+  });
+  const [bhuvanCropmaskLayer, setBhuvanCropmaskLayer] = useState<string>(() => {
+    try { return localStorage.getItem('bhuvan_layer_cropmask') || BHUVAN_CROPMASK_LAYER_ENV; } catch { return BHUVAN_CROPMASK_LAYER_ENV; }
+  });
   
   // Satellite layers configuration
   const [layers, setLayers] = useState<SatelliteLayer[]>([
@@ -145,7 +168,12 @@ const SatelliteFieldView: React.FC = () => {
   // NDVI tile configuration (from env or localStorage)
   const [ndviTileTemplate, setNdviTileTemplate] = useState<string>(() => {
     const fromStorage = (() => { try { return localStorage.getItem('ndvi_tile_url') || ''; } catch { return ''; } })();
-    return fromStorage || (process.env.REACT_APP_NDVI_TILE_URL || '');
+    if (fromStorage) return fromStorage;
+    const envUrl = process.env.REACT_APP_NDVI_TILE_URL || '';
+    if (envUrl) return envUrl;
+    const api = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
+    if (api) return `${api}/api/v1/satellite/ndvi-tiles/{z}/{x}/{y}.png?date={date}`;
+    return '';
   });
   const [showNdviConfig, setShowNdviConfig] = useState(false);
   const [ndviDate, setNdviDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -648,6 +676,48 @@ const SatelliteFieldView: React.FC = () => {
     return '#f44336';
   };
 
+  // Inline component to toggle BHUVAN WMS layers
+  const BhuvanToggle: React.FC<{ label: string; envLayer: string; layerKey: string }> = ({ label, envLayer, layerKey }) => {
+    const [on, setOn] = useState(false);
+    const handleToggle = () => {
+      const next = !on;
+      setOn(next);
+      const L: any = (window as any).L;
+      const map = mapInstanceRef.current;
+      if (!L || !map) return;
+      if (!envLayer) {
+        setError('BHUVAN layer not configured. Set env variable for this layer.');
+        setTimeout(() => setError(''), 2500);
+        setOn(false);
+        return;
+      }
+      if (next) {
+        const wms = L.tileLayer.wms(bhuvanWmsUrl, {
+          layers: envLayer,
+          format: 'image/png',
+          transparent: true,
+          version: BHUVAN_WMS_VERSION,
+          crossOrigin: true,
+        });
+        bhuvanLayersRef.current[layerKey] = wms.addTo(map);
+      } else {
+        const wms = bhuvanLayersRef.current[layerKey];
+        if (wms) {
+          try { map.removeLayer(wms); } catch {}
+          bhuvanLayersRef.current[layerKey] = null;
+        }
+      }
+    };
+    return (
+      <ListItem sx={{ px: 0 }}>
+        <FormControlLabel
+          control={<Switch checked={on} onChange={handleToggle} size="small" />}
+          label={`${label}${envLayer ? '' : ' (configure)'}`}
+        />
+      </ListItem>
+    );
+  };
+
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       {/* Header */}
@@ -1098,6 +1168,20 @@ const SatelliteFieldView: React.FC = () => {
                       )}
                     </ListItem>
                   ))}
+
+                  {/* BHUVAN WMS Layers */}
+                  <ListItem sx={{ px: 0, mt: 1 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>BHUVAN Layers</Typography>
+                  </ListItem>
+                  <Box sx={{ pl: 0.5, pb: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <TextField size="small" label="WMS URL" value={bhuvanWmsUrl} onChange={(e) => setBhuvanWmsUrl(e.target.value)} onBlur={() => { try { localStorage.setItem('bhuvan_wms_url', bhuvanWmsUrl); } catch {} }} placeholder="https://.../wms" />
+                    <TextField size="small" label="Landuse Layer Name" value={bhuvanLanduseLayer} onChange={(e) => setBhuvanLanduseLayer(e.target.value)} onBlur={() => { try { localStorage.setItem('bhuvan_layer_landuse', bhuvanLanduseLayer); } catch {} }} placeholder="e.g. bhuwan:landuse_..." />
+                    <TextField size="small" label="Soil Layer Name" value={bhuvanSoilLayer} onChange={(e) => setBhuvanSoilLayer(e.target.value)} onBlur={() => { try { localStorage.setItem('bhuvan_layer_soil', bhuvanSoilLayer); } catch {} }} placeholder="e.g. bhuwan:soil_..." />
+                    <TextField size="small" label="Crop Mask Layer Name" value={bhuvanCropmaskLayer} onChange={(e) => setBhuvanCropmaskLayer(e.target.value)} onBlur={() => { try { localStorage.setItem('bhuvan_layer_cropmask', bhuvanCropmaskLayer); } catch {} }} placeholder="e.g. bhuwan:cropmask_..." />
+                  </Box>
+                  <BhuvanToggle label="Land Use / Land Cover" envLayer={bhuvanLanduseLayer} layerKey="landuse" />
+                  <BhuvanToggle label="Soil Map" envLayer={bhuvanSoilLayer} layerKey="soil" />
+                  <BhuvanToggle label="Crop Mask" envLayer={bhuvanCropmaskLayer} layerKey="cropmask" />
                 </List>
               </CardContent>
             </Card>
