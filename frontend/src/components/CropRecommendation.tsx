@@ -116,7 +116,7 @@ const CropRecommendation: React.FC = () => {
   const [useSatellite, setUseSatellite] = useState(true);
   const [fieldContext, setFieldContext] = useState<{ ndvi?: number; ph?: number; soil_type?: string; season?: string } | null>(null);
 
-  const steps = ['व्यक्तिगत जानकारी', 'खेत की जानकारी', 'फसल सुझाव'];
+  const steps = ['खेत की जानकारी', 'फसल सुझाव'];
 
   const seasons = [
     { value: 'रबी', label: 'रबी (अक्टूबर-मार्च) - सर्दी की फसल' },
@@ -274,7 +274,7 @@ const CropRecommendation: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (activeStep === 1) {
+    if (activeStep === 0) {
       fetchRecommendations();
     }
     setActiveStep(prev => prev + 1);
@@ -698,8 +698,11 @@ const CropRecommendation: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchRecommendations();
-  }, []);
+    if (activeStep === 1) {
+      // Ensure recommendations are fetched when entering the results step
+      fetchRecommendations();
+    }
+  }, [activeStep]);
 
   const getSuitabilityColor = (score: number) => {
     if (score >= 8.5) return '#4caf50';
@@ -1490,9 +1493,8 @@ const CropRecommendation: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {activeStep === 0 && renderPersonalInfo()}
-          {activeStep === 1 && renderFarmDetails()}
-          {activeStep === 2 && renderRecommendations()}
+          {activeStep === 0 && renderFarmDetails()}
+          {activeStep === 1 && renderRecommendations()}
         </motion.div>
 
         {/* Navigation Buttons */}
@@ -1509,9 +1511,8 @@ const CropRecommendation: React.FC = () => {
             variant="contained"
             onClick={handleNext}
             disabled={
-              (activeStep === 0 && (!formData.name || !formData.experience_level || !formData.primary_goal || !formData.phone)) ||
-              (activeStep === 1 && (!formData.season || !formData.soil_type || !formData.water_availability || !formData.irrigation_method || !formData.budget_range)) ||
-              activeStep === 2
+              (activeStep === 0 && (!formData.season || !formData.soil_type || !formData.water_availability || !formData.irrigation_method || !formData.budget_range)) ||
+              activeStep === 1
             }
             size="large"
             sx={{
