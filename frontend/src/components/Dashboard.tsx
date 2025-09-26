@@ -89,7 +89,7 @@ const ScrollingTicker = ({ children, speed = 50 }: { children: React.ReactNode, 
 };
 
 const Dashboard: React.FC = () => {
-  const { t } = useTranslation();
+const { t } = (useTranslation as any)();
   const tt = getTranslation(t);
   const theme = useTheme();
   const navigate = useNavigate();
