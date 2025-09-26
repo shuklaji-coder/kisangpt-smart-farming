@@ -30,6 +30,17 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Checkbox,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
 } from '@mui/material';
 import {
   Agriculture,
@@ -73,6 +84,7 @@ interface CropRecommendationData {
   considerations: string[];
   sustainability_score?: number; // 0-100
   market_demand?: 'high' | 'medium' | 'low';
+  why_reason?: string;
 }
 
 interface FormData {
@@ -96,6 +108,17 @@ const CropRecommendation: React.FC = () => {
   const theme = useTheme();
   const [recommendations, setRecommendations] = useState<CropRecommendationData[]>([]);
   const [loading, setLoading] = useState(false);
+  // Preferences for re-ranking
+  const [prefProfit, setPrefProfit] = useState<number>(40);
+  const [prefSustain, setPrefSustain] = useState<number>(35);
+  const [prefWater, setPrefWater] = useState<number>(25);
+  // Compare selection
+  const [compareSelected, setCompareSelected] = useState<string[]>([]);
+  const [compareOpen, setCompareOpen] = useState(false);
+  // Planned crops
+  const [planned, setPlanned] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('planned_crops') || '[]'); } catch { return []; }
+  });
   const [formData, setFormData] = useState<FormData>({
     name: '',
     location: '',
@@ -547,20 +570,23 @@ const CropRecommendation: React.FC = () => {
           setSoilAnalysis(derivedSat.soil_properties);
         }
 
-        const formatted = items.map((r: any) => ({
-          name: r.crop,
-          name_hindi: r.crop,
-          suitability_score: Math.round((r.success_probability || 0.6) * 10),
-          expected_yield: '—',
-          market_price: '—',
-          profit_potential: '—',
-          growth_duration: '—',
-          water_requirement: 'मध्यम',
-          soil_type: ['दोमट'],
-          season: (adv.data?.context?.season || formData.season || 'खरीफ') as string,
-          benefits: r.recommended_practices || [],
-          considerations: []
-        }));
+      const formatted = items.map((r: any) => ({
+        name: r.crop,
+        name_hindi: r.crop,
+        suitability_score: Math.round((r.success_probability || 0.6) * 10),
+        expected_yield: r.predicted_yield_quintal_per_hectare ? `${r.predicted_yield_quintal_per_hectare} क्विंटल/हेक्टेयर` : '—',
+        market_price: '—',
+        profit_potential: '—',
+        growth_duration: '—',
+        water_requirement: (r.water_requirement === 'low' ? 'कम' : r.water_requirement === 'high' ? 'अधिक' : 'मध्यम'),
+        soil_type: ['दोमट'],
+        season: (adv.data?.context?.season || formData.season || 'खरीफ') as string,
+        benefits: r.recommended_practices || [],
+        considerations: [],
+        sustainability_score: r.sustainability_score,
+        market_demand: r.market_demand,
+        why_reason: r.reason,
+      }));
         if (formatted.length > 0) {
           setRecommendations(formatted);
           return;
@@ -713,12 +739,58 @@ const CropRecommendation: React.FC = () => {
     return ['दोमट', 'चिकनी दोमट', 'बलुई दोमट'];
   };
 
+  // Compute rank score from preferences
+  const parseProfit = (p: string): number => {
+    try {
+      const m = p.replace(/[^0-9]/g, '');
+      return Math.min(200000, Math.max(0, parseInt(m || '0', 10)));
+    } catch { return 0; }
+  };
+  const waterSavingScore = (w: string): number => {
+    const t = (w || '').toLowerCase();
+    if (t.includes('कम')) return 100;
+    if (t.includes('low')) return 100;
+    if (t.includes('मध्यम') || t.includes('medium')) return 60;
+    if (t.includes('अधिक') || t.includes('high')) return 20;
+    return 50;
+  };
+  const computeRank = (c: CropRecommendationData): number => {
+    const profit = parseProfit(c.profit_potential || '₹50000');
+    const profitN = Math.min(100, Math.round((profit / 200000) * 100));
+    const sustain = c.sustainability_score ?? 70;
+    const water = waterSavingScore(c.water_requirement);
+    const sum = prefProfit + prefSustain + prefWater || 1;
+    const wP = prefProfit / sum, wS = prefSustain / sum, wW = prefWater / sum;
+    return Math.round(profitN * wP + sustain * wS + water * wW);
+  };
+
+  // Planned crops helpers
+  const addToPlan = (name: string) => {
+    if (planned.includes(name)) return;
+    const next = [...planned, name];
+    setPlanned(next);
+    try { localStorage.setItem('planned_crops', JSON.stringify(next)); } catch {}
+  };
+  const removeFromPlan = (name: string) => {
+    const next = planned.filter(n => n !== name);
+    setPlanned(next);
+    try { localStorage.setItem('planned_crops', JSON.stringify(next)); } catch {}
+  };
+
   useEffect(() => {
     if (activeStep === 1) {
       // Ensure recommendations are fetched when entering the results step
       fetchRecommendations();
     }
   }, [activeStep]);
+
+  // Re-rank by preferences whenever recommendations or prefs change
+  useEffect(() => {
+    if (!recommendations || recommendations.length === 0) return;
+    const ranked = [...recommendations].sort((a, b) => computeRank(b) - computeRank(a));
+    setRecommendations(ranked);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefProfit, prefSustain, prefWater]);
 
   const getSuitabilityColor = (score: number) => {
     if (score >= 8.5) return '#4caf50';
@@ -1165,6 +1237,35 @@ const CropRecommendation: React.FC = () => {
 
   const renderRecommendations = () => (
     <Box>
+      {/* Planned crops */}
+      {planned.length > 0 && (
+        <Paper elevation={0} sx={{ p: 2, mb: 2, border: '1px dashed #4caf50', bgcolor: 'rgba(76,175,80,0.05)' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>📌 Planned Crops</Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {planned.map(p => (
+              <Chip key={p} label={p} onDelete={() => removeFromPlan(p)} color="success" variant="outlined" />
+            ))}
+          </Box>
+        </Paper>
+      )}
+      {/* Preferences re-ranking */}
+      <Paper elevation={0} sx={{ p: 2, mb: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>🎛️ Preference Weights</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <Typography variant="caption">Profit</Typography>
+            <Slider value={prefProfit} onChange={(_,v)=>setPrefProfit(v as number)} min={0} max={100} valueLabelDisplay="auto" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="caption">Sustainability</Typography>
+            <Slider value={prefSustain} onChange={(_,v)=>setPrefSustain(v as number)} min={0} max={100} valueLabelDisplay="auto" />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="caption">Water Saving</Typography>
+            <Slider value={prefWater} onChange={(_,v)=>setPrefWater(v as number)} min={0} max={100} valueLabelDisplay="auto" />
+          </Grid>
+        </Grid>
+      </Paper>
       {loading ? (
         <Box sx={{ textAlign: 'center', py: 4 }}>
           <motion.div
@@ -1284,7 +1385,20 @@ const CropRecommendation: React.FC = () => {
                     )}
                     
                     <CardContent sx={{ p: 3 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                        <Checkbox
+                          checked={compareSelected.includes(crop.name)}
+                          onChange={(e)=>{
+                            const checked = e.target.checked;
+                            setCompareSelected(prev=>{
+                              if (!checked) return prev.filter(n=>n!==crop.name);
+                              if (prev.length>=3) return prev; // limit 3
+                              return [...prev, crop.name];
+                            });
+                          }}
+                          size="small"
+                        />
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Avatar
                           sx={{
                             bgcolor: getSuitabilityColor(crop.suitability_score),
@@ -1400,6 +1514,9 @@ const CropRecommendation: React.FC = () => {
                         </AccordionSummary>
                         <AccordionDetails sx={{ pt: 0 }}>
                           <Typography variant="body2" sx={{ mb: 1 }}>
+                            <strong>Why this crop:</strong> {crop.why_reason || 'आपके मौसम, मिट्टी और पानी की उपलब्धता के आधार पर उपयुक्त'}
+                          </Typography>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
                             <strong>अवधि:</strong> {crop.growth_duration}
                           </Typography>
                           <Typography variant="body2" sx={{ mb: 1 }}>
@@ -1431,10 +1548,10 @@ const CropRecommendation: React.FC = () => {
 
                       {/* CTA Buttons */}
                       <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                        <Button variant="contained" size="small" onClick={() => alert(`${crop.name_hindi} को योजना में जोड़ा गया`)}>
+                        <Button variant="contained" size="small" onClick={() => addToPlan(crop.name)}>
                           योजना में जोड़ें
                         </Button>
-                        <Button variant="outlined" size="small" onClick={() => alert(`${crop.name_hindi} के लिए सलाह खोली जाएगी`)}>
+<Button variant="outlined" size="small" onClick={() => alert(`${crop.name_hindi} के लिए सलाह खोली जाएगी`)}>
                           सलाह देखें
                         </Button>
                       </Box>
@@ -1446,6 +1563,51 @@ const CropRecommendation: React.FC = () => {
           </Grid>
         </Box>
       )}
+
+      {/* Compare modal trigger */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+        <Button disabled={compareSelected.length < 2} variant="contained" onClick={()=>setCompareOpen(true)}>
+          Compare ({compareSelected.length})
+        </Button>
+      </Box>
+
+      <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>📊 Compare Selected Crops</DialogTitle>
+        <DialogContent>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Metric</TableCell>
+                {compareSelected.map(name => (
+                  <TableCell key={name} sx={{ fontWeight: 'bold' }}>{name}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {['Suitability','Expected Yield','Profit','Water','Sustainability','Demand','Season'].map((m, idx)=> (
+                <TableRow key={idx}>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{m}</TableCell>
+                  {compareSelected.map(name => {
+                    const c = recommendations.find(r=>r.name===name);
+                    const val = !c ? '-' :
+                      m==='Suitability'? `${c.suitability_score}/10` :
+                      m==='Expected Yield'? c.expected_yield :
+                      m==='Profit'? c.profit_potential :
+                      m==='Water'? c.water_requirement :
+                      m==='Sustainability'? (c.sustainability_score? `${c.sustainability_score}%` : '-') :
+                      m==='Demand'? (c.market_demand || '-') :
+                      m==='Season'? c.season : '-';
+                    return <TableCell key={name+idx}>{val}</TableCell>;
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>setCompareOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 

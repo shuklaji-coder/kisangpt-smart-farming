@@ -30,7 +30,7 @@ import {
   AutoAwesome,
   ExpandMore
 } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, TFunction } from 'react-i18next';
 import { motion } from 'framer-motion';
 
 // helper for exporting a section as PNG
@@ -53,7 +53,7 @@ async function exportSectionAsPng(node: HTMLElement, filename: string) {
 }
 
 const DreamVisualization: React.FC = () => {
-  const { t } = useTranslation();
+const { t }: { t: TFunction } = useTranslation();
   const theme = useTheme();
 
   // Advanced Builder state
