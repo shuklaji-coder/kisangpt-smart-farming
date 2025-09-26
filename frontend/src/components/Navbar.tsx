@@ -161,7 +161,7 @@ const Navbar: React.FC = () => {
       boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
     }}>
 <Toolbar disableGutters sx={{ minHeight: 56, alignItems: 'center', justifyContent: 'space-between', px: { xs: 1, md: 2 } }}>
-        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', flexWrap: 'nowrap', overflow: 'hidden', px: 0 }}>
+        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', flexWrap: 'nowrap', overflow: { xs: 'hidden', md: 'visible' }, px: { xs: 0, md: 2 } }}>
           {/* Logo and App Name */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Agriculture sx={{ 
@@ -178,7 +178,7 @@ const Navbar: React.FC = () => {
                 color: '#fff',
                 letterSpacing: '0.3px',
                 fontSize: { xs: '1.05rem', md: '1.25rem' },
-                maxWidth: { xs: '50vw', md: 'auto' },
+maxWidth: { xs: '50vw', md: 'max-content' },
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
