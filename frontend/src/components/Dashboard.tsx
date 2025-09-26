@@ -130,14 +130,47 @@ const { t } = (useTranslation as any)();
   }, []);
 
   useEffect(() => {
-    // Welcome message when component loads - wait for userName to be set
-    if (userName && userName !== 'किसान जी') {
-      const welcomeMessage = `नमस्कार ${userName}! किसान जीपीटी में आपका स्वागत है। आज का मौसम खेती के लिए अनुकूल है।`;
-      setTimeout(() => {
-        handleTTSSpeak(welcomeMessage);
-      }, 1000);
-    }
+    const spokenFlag = 'welcome_spoken';
+    const alreadySpoken = localStorage.getItem(spokenFlag) === '1';
+    const speakWelcome = async () => {
+      if (!alreadySpoken && userName && userName !== 'किसान जी') {
+        const welcomeMessage = `नमस्कार ${userName}! किसान जीपीटी में आपका स्वागत है।`;
+        await ttsService.speak(welcomeMessage, 'hi');
+        localStorage.setItem(spokenFlag, '1');
+      }
+    };
+    speakWelcome();
   }, [userName]);
+
+  // Auto news voice: speak one headline every 60s
+  const newsVoiceStartedRef = React.useRef(false);
+  const newsIndexRef = React.useRef(0);
+  const newsIntervalRef = React.useRef<number | null>(null);
+
+  useEffect(() => {
+    if (newsVoiceStartedRef.current) return;
+    newsVoiceStartedRef.current = true;
+    // start after 10s to give time after welcome
+    const startTimer = window.setTimeout(() => {
+      if (newsIntervalRef.current) return;
+      newsIntervalRef.current = window.setInterval(async () => {
+        try {
+          // Skip if currently speaking
+          if (isSpeaking) return;
+          const item = farmingNews[newsIndexRef.current % farmingNews.length];
+          await ttsService.speak(item.title, 'hi');
+          newsIndexRef.current = (newsIndexRef.current + 1) % farmingNews.length;
+        } catch {}
+      }, 60000); // every 60s
+    }, 10000);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      if (newsIntervalRef.current) {
+        window.clearInterval(newsIntervalRef.current);
+      }
+    };
+  }, []);
 
   // Live time updater (every second)
   useEffect(() => {

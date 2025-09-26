@@ -160,8 +160,8 @@ const Navbar: React.FC = () => {
       backgroundColor: '#2e7d32',
       boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
     }}>
-      <Toolbar disableGutters>
-        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', px: { xs: 1, md: 2 } }}>
+<Toolbar disableGutters sx={{ minHeight: 56, alignItems: 'center', justifyContent: 'space-between', px: { xs: 1, md: 2 } }}>
+        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', flexWrap: 'nowrap', overflow: 'hidden', px: 0 }}>
           {/* Logo and App Name */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Agriculture sx={{ 
@@ -233,6 +233,11 @@ const Navbar: React.FC = () => {
         {/* User Profile or Login */}
         {user ? (
           <>
+            {isMobile ? (
+              <IconButton color="inherit" onClick={handleUserMenuClick} aria-label="account">
+                <AccountCircle />
+              </IconButton>
+            ) : (
             <Chip
               avatar={
                 <Avatar sx={{ 
@@ -273,7 +278,8 @@ const Navbar: React.FC = () => {
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
               }}
-            />
+/> 
+            )}
             <Menu
               anchorEl={userMenuAnchorEl}
               open={Boolean(userMenuAnchorEl)}
