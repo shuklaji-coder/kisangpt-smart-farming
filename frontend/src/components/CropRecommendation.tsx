@@ -59,7 +59,7 @@ import { locationService } from '../services/locationService';
 interface CropRecommendationData {
   name: string;
   name_hindi: string;
-  suitability_score: number;
+  suitability_score: number; // 0-10 scale
   expected_yield: string;
   market_price: string;
   profit_potential: string;
@@ -69,6 +69,8 @@ interface CropRecommendationData {
   season: string;
   benefits: string[];
   considerations: string[];
+  sustainability_score?: number; // 0-100
+  market_demand?: 'high' | 'medium' | 'low';
 }
 
 interface FormData {
@@ -638,7 +640,9 @@ const CropRecommendation: React.FC = () => {
         soil_type: getSoilTypesFromAI(),
         season: rec.sowingTime,
         benefits: rec.benefits,
-        considerations: rec.risks
+        considerations: rec.risks,
+        sustainability_score: rec.sustainabilityScore,
+        market_demand: rec.marketDemand,
       }));
 
       setRecommendations(formattedRecommendations.slice(0, 6));
@@ -1356,7 +1360,20 @@ const CropRecommendation: React.FC = () => {
                         </Grid>
                       </Grid>
 
-                      <Accordion elevation={0} sx={{ bgcolor: 'transparent' }}>
+                      {/* New chips: season, water, sustainability, demand */}
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+                        <Chip label={`Season: ${crop.season}`} size="small" />
+                        <Chip label={`Water: ${crop.water_requirement}`} size="small" />
+                        {typeof crop.sustainability_score === 'number' && (
+                          <Chip label={`Sustainability: ${crop.sustainability_score}%`} size="small" color={crop.sustainability_score >= 75 ? 'success' : crop.sustainability_score >= 55 ? 'warning' : 'default'} />
+                        )}
+                        {crop.market_demand && (
+                          <Chip label={`Demand: ${crop.market_demand}`} size="small" color={crop.market_demand === 'high' ? 'success' : crop.market_demand === 'low' ? 'error' : 'warning'} />
+                        )}
+                        <Chip label={crop.profit_potential} size="small" color="success" variant="outlined" />
+                      </Box>
+
+                      <Accordion elevation={0} sx={{ bgcolor: 'transparent', mb: 1 }}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                           <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                             विस्तृत जानकारी
@@ -1392,6 +1409,16 @@ const CropRecommendation: React.FC = () => {
                           ))}
                         </AccordionDetails>
                       </Accordion>
+
+                      {/* CTA Buttons */}
+                      <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                        <Button variant="contained" size="small" onClick={() => alert(`${crop.name_hindi} को योजना में जोड़ा गया`)}>
+                          योजना में जोड़ें
+                        </Button>
+                        <Button variant="outlined" size="small" onClick={() => alert(`${crop.name_hindi} के लिए सलाह खोली जाएगी`)}>
+                          सलाह देखें
+                        </Button>
+                      </Box>
                     </CardContent>
                   </Card>
                 </motion.div>
