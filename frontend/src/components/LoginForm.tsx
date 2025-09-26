@@ -127,8 +127,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
     setLoading(true);
     setError('');
 
+    // Normalize inputs
+    const email = (formData.email || '').trim();
+    const password = (formData.password || '').trim();
+
     // Basic validation
-    if (!formData.email || !formData.password) {
+    if (!email || !password) {
       setError(t('auth.errors.fillAllFields'));
       setLoading(false);
       return;
@@ -136,17 +140,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(email)) {
       setError(t('auth.errors.invalidEmail'));
       setLoading(false);
       return;
     }
 
     try {
+      // If user entered a known demo account, bypass API and login instantly
+      const demoUserEarly = tryDemoLogin(email, password);
+      if (demoUserEarly) {
+        if (onLogin) onLogin({ email, password });
+        return;
+      }
+
       // Try calling the real API first
       const response = await authAPI.login({
-        email: formData.email,
-        password: formData.password
+        email,
+        password
       });
       
       if (response && response.success) {
@@ -155,18 +166,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
         localStorage.setItem('user', JSON.stringify(response.user || {
           id: Date.now(),
           name: 'किसान जी',
-          email: formData.email,
+          email,
           role: 'farmer'
         }));
         
         if (onLogin) {
-          onLogin(response.user || { email: formData.email, password: formData.password });
+          onLogin(response.user || { email, password });
         }
       } else {
         // Backend responded but did not authenticate — try demo users
-        const demoUser = tryDemoLogin(formData.email, formData.password);
+        const demoUser = tryDemoLogin(email, password);
         if (demoUser) {
-          if (onLogin) onLogin({ email: formData.email, password: formData.password });
+          if (onLogin) onLogin({ email, password });
         } else {
           setError(response?.message || t('auth.errors.loginFailed'));
         }
@@ -175,9 +186,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
       console.warn('API call failed, using demo mode:', err.message);
       
       // Fallback: Demo login for development/demo purposes
-      const demoUser = tryDemoLogin(formData.email, formData.password);
+      const demoUser = tryDemoLogin(email, password);
       if (demoUser) {
-        if (onLogin) onLogin({ email: formData.email, password: formData.password });
+        if (onLogin) onLogin({ email, password });
       } else {
         setError(t('auth.errors.invalidCredentialsWithDemo'));
       }
