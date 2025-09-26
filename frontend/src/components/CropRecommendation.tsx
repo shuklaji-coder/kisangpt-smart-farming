@@ -668,6 +668,16 @@ const CropRecommendation: React.FC = () => {
       
       setRecommendations(topRecommendations);
     } finally {
+      // Ensure we never show 0 crops — final safety fallback
+      setRecommendations((prev) => {
+        if (prev && prev.length > 0) return prev;
+        const fallbackCrops = getLocationBasedCrops();
+        const scoredCrops = fallbackCrops.map(crop => ({
+          ...crop,
+          suitability_score: parseFloat(calculateSuitabilityScore(crop, formData).toFixed(1))
+        }));
+        return scoredCrops.sort((a, b) => b.suitability_score - a.suitability_score).slice(0, 6);
+      });
       setLoading(false);
       setAiProcessing(false);
     }
