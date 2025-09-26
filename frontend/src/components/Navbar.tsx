@@ -172,11 +172,17 @@ const Navbar: React.FC = () => {
             <Typography
               variant="h6"
               component="div"
+              noWrap
               sx={{
                 fontWeight: 800,
                 color: '#fff',
                 letterSpacing: '0.3px',
-                fontSize: { xs: '1.05rem', md: '1.25rem' }
+                fontSize: { xs: '1.05rem', md: '1.25rem' },
+                maxWidth: { xs: '50vw', md: 'auto' },
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                minWidth: 0
               }}
             >
               KisanGPT
@@ -233,11 +239,9 @@ const Navbar: React.FC = () => {
         {/* User Profile or Login */}
         {user ? (
           <>
-            {isMobile ? (
-              <IconButton color="inherit" onClick={handleUserMenuClick} aria-label="account">
-                <AccountCircle />
-              </IconButton>
-            ) : (
+            <IconButton color="inherit" onClick={handleUserMenuClick} aria-label="account" sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
+              <AccountCircle />
+            </IconButton>
             <Chip
               avatar={
                 <Avatar sx={{ 
@@ -278,8 +282,8 @@ const Navbar: React.FC = () => {
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
               }}
-/> 
-            )}
+              sx={{ display: { xs: 'none', md: 'inline-flex' } }}
+            />
             <Menu
               anchorEl={userMenuAnchorEl}
               open={Boolean(userMenuAnchorEl)}
