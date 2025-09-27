@@ -124,6 +124,8 @@ const WeatherForecast: React.FC = () => {
   const [selectedSavedName, setSelectedSavedName] = useState<string>('');
 
 useEffect(() => {
+    let hasInitialized = false;
+    
     // Try to use last known coordinates immediately for faster first paint
     try {
       const raw = localStorage.getItem('last_weather_coords');
@@ -134,12 +136,15 @@ useEffect(() => {
           if (parsed.name) setLocation(parsed.name);
           // Kick off a fetch optimistically with last-known coords
           fetchWeatherData(parsed.lat, parsed.lon, parsed.name || undefined);
+          hasInitialized = true;
         }
       }
     } catch {}
 
-    // Also try to get fresh geolocation in the background
-    getCurrentLocation();
+    // Only get fresh geolocation if we don't have cached data
+    if (!hasInitialized) {
+      getCurrentLocation();
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Persist units preference
@@ -166,7 +171,10 @@ useEffect(() => {
   }, [savedLocations]);
 
 const getCurrentLocation = () => {
-    setLoading(true);
+    // Don't set loading to true if we already have weather data
+    if (!currentWeather) {
+      setLoading(true);
+    }
     setLocationError('');
 
     if (!navigator.geolocation) {
@@ -299,7 +307,10 @@ const fetchWeatherData = async (lat?: number, lon?: number, locationName?: strin
     const currentLon = lon || coordinates.lon;
     const currentLocation = locationName || location;
     
-setLoading(true);
+    // Only show loading if we don't already have weather data (for better UX)
+    if (!currentWeather || options?.force) {
+      setLoading(true);
+    }
     setError(''); // Clear previous errors
     
     try {

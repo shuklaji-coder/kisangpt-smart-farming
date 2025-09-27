@@ -144,6 +144,7 @@ const Navbar: React.FC = () => {
     { path: '/government-subsidy', label: t('navbar.governmentSchemes'), icon: <AccountBalance /> },
     { path: '/disease-detection', label: t('navbar.diseaseDetection'), icon: <BugReport /> },
     { path: '/crop-recommendation', label: t('navbar.cropRecommendation'), icon: <Grass /> },
+    { path: '/advanced-crop-recommendation', label: 'Advanced AI Crops', icon: <SmartToy /> },
     { path: '/dream-visualization', label: t('navbar.dreamVisualization'), icon: <Visibility /> },
     { path: '/community', label: t('navbar.community'), icon: <Group /> },
     { path: '/satellite-view', label: t('navbar.satellite'), icon: <Satellite /> },

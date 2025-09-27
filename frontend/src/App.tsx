@@ -11,6 +11,7 @@ import CommunityNetwork from './components/CommunityNetwork';
 import DiseaseDetection from './components/DiseaseDetection';
 import CropRecommendation from './components/CropRecommendation';
 import EnhancedCropRecommendation from './components/EnhancedCropRecommendation';
+import AdvancedCropRecommendation from './components/AdvancedCropRecommendation';
 import WeatherForecast from './components/WeatherForecast';
 import MarketAnalysis from './components/MarketAnalysis';
 import GovernmentSubsidy from './components/GovernmentSubsidy';
@@ -168,6 +169,7 @@ const AppContent = () => {
           <Route path="/disease-detection" element={<DiseaseDetection />} />
           <Route path="/crop-recommendation" element={<CropRecommendation />} />
           <Route path="/enhanced-crop-recommendation" element={<EnhancedCropRecommendation />} />
+          <Route path="/advanced-crop-recommendation" element={<AdvancedCropRecommendation />} />
           <Route path="/government-subsidy" element={<GovernmentSubsidy />} />
           <Route path="/weather" element={<WeatherForecast />} />
           <Route path="/market-analysis" element={<MarketAnalysis />} />
