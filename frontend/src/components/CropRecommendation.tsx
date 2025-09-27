@@ -1348,7 +1348,7 @@ const CropRecommendation: React.FC = () => {
           
           <Grid container spacing={3}>
             {recommendations.map((crop, index) => (
-              <Grid item xs={12} sm={6} md={6} lg={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1361,7 +1361,8 @@ const CropRecommendation: React.FC = () => {
                       borderRadius: { xs: 3, md: 4 },
                       position: 'relative',
                       border: index === 0 ? '3px solid #4caf50' : '1px solid rgba(0,0,0,0.1)',
-                      minHeight: { xs: 400, md: 420 },
+                      minHeight: { xs: 350, sm: 380, md: 400 },
+                      maxHeight: { xs: 450, sm: 480, md: 500 },
                       display: 'flex',
                       flexDirection: 'column',
                       '&:hover': {
@@ -1388,13 +1389,13 @@ const CropRecommendation: React.FC = () => {
                     )}
                     
                     <CardContent sx={{ 
-                      p: { xs: 2, md: 3 },
+                      p: { xs: 1.5, md: 2 },
                       flex: 1,
                       display: 'flex',
                       flexDirection: 'column'
                     }}>
-                      {/* Header with checkbox and crop info */}
-                      <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+                      {/* Checkbox */}
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
                         <Checkbox
                           checked={compareSelected.includes(crop.name)}
                           onChange={(e)=>{
@@ -1406,75 +1407,51 @@ const CropRecommendation: React.FC = () => {
                             });
                           }}
                           size="small"
-                          sx={{ mt: 0.5, mr: 1 }}
                         />
+                      </Box>
+                      
+                      {/* Crop Header */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
                         <Avatar
                           sx={{
                             bgcolor: getSuitabilityColor(crop.suitability_score),
-                            width: 60,
-                            height: 60,
-                            mr: 2,
+                            width: { xs: 50, md: 60 },
+                            height: { xs: 50, md: 60 },
+                            mb: 1,
                             fontSize: '1.5rem',
                           }}
                         >
-                          <LocalFlorist sx={{ fontSize: 30 }} />
+                          <LocalFlorist sx={{ fontSize: { xs: 24, md: 30 } }} />
                         </Avatar>
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Typography variant="h5" sx={{ 
+                        
+                        <Typography variant="h6" sx={{ 
+                          fontWeight: 'bold', 
+                          mb: 0.5,
+                          fontSize: { xs: '1rem', md: '1.1rem' },
+                          textAlign: 'center',
+                          lineHeight: 1.2
+                        }}>
+                          {crop.name_hindi}
+                        </Typography>
+                        
+                        <Typography variant="body2" color="text.secondary" sx={{ 
+                          mb: 1,
+                          textAlign: 'center',
+                          fontSize: '0.8rem'
+                        }}>
+                          {crop.name}
+                        </Typography>
+                        
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <Rating value={crop.suitability_score / 2} readOnly size="small" />
+                          <Typography variant="body2" sx={{ 
+                            ml: 1, 
                             fontWeight: 'bold', 
-                            mb: 0.5,
-                            fontSize: { xs: '1.1rem', md: '1.25rem' },
-                            lineHeight: 1.3,
-                            wordBreak: 'break-word'
+                            color: getSuitabilityColor(crop.suitability_score),
+                            fontSize: '0.8rem'
                           }}>
-                            {crop.name_hindi}
+                            {crop.suitability_score}/10
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                            {crop.name}
-                          </Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                            <Rating value={crop.suitability_score / 2} readOnly size="small" />
-                            <Typography variant="body2" sx={{ 
-                              ml: 1, 
-                              fontWeight: 'bold', 
-                              color: getSuitabilityColor(crop.suitability_score)
-                            }}>
-                              {crop.suitability_score}/10
-                            </Typography>
-                          </Box>
-
-                          {/* NDVI/pH match chips */}
-                          {(() => {
-                            const ndviValue = fieldContext?.ndvi ?? satelliteData?.vegetation_indices?.ndvi;
-                            const phValue = fieldContext?.ph ?? satelliteData?.soil_properties?.ph;
-                            const { ph, ndvi } = getRangesForCrop(crop.name || crop.name_hindi);
-
-                            const ndviMatch = categorizeMatch(ndviValue, ndvi, 0.07);
-                            const phMatch = categorizeMatch(phValue, ph, 0.3);
-
-                            return (
-                              <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                                {typeof ndviValue === 'number' && (
-                                  <Chip
-                                    size="small"
-                                    label={`NDVI ${ndviMatch === 'unknown' ? '' : ndviMatch === 'good' ? '✔️' : ndviMatch === 'fair' ? '≈' : '⚠️'} ${ndviMatch.toUpperCase()}`.trim()}
-                                    color={getChipColor(ndviMatch)}
-                                    variant={ndviMatch === 'unknown' ? 'outlined' : 'filled'}
-                                    sx={{ fontSize: '0.7rem' }}
-                                  />
-                                )}
-                                {typeof phValue === 'number' && (
-                                  <Chip
-                                    size="small"
-                                    label={`pH ${phMatch === 'unknown' ? '' : phMatch === 'good' ? '✔️' : phMatch === 'fair' ? '≈' : '⚠️'} ${phMatch.toUpperCase()}`.trim()}
-                                    color={getChipColor(phMatch)}
-                                    variant={phMatch === 'unknown' ? 'outlined' : 'filled'}
-                                    sx={{ fontSize: '0.7rem' }}
-                                  />
-                                )}
-                              </Box>
-                            );
-                          })()}
                         </Box>
                       </Box>
 
@@ -1493,91 +1470,82 @@ const CropRecommendation: React.FC = () => {
                         }}
                       />
 
-                      <Grid container spacing={2} sx={{ mb: 2 }}>
-                        <Grid item xs={6}>
-                          <Box sx={{ 
-                            textAlign: 'center', 
-                            p: { xs: 1, md: 1.5 }, 
-                            bgcolor: '#e8f5e8', 
-                            borderRadius: 2,
-                            minHeight: { xs: 60, md: 70 },
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center'
+                      {/* Key Metrics - Stacked Layout */}
+                      <Box sx={{ mb: 2 }}>
+                        <Box sx={{ 
+                          textAlign: 'center', 
+                          p: 1, 
+                          bgcolor: '#e8f5e8', 
+                          borderRadius: 2,
+                          mb: 1
+                        }}>
+                          <TrendingUp sx={{ color: '#4caf50', mb: 0.5, fontSize: 18 }} />
+                          <Typography variant="caption" display="block" sx={{ fontSize: '0.7rem', mb: 0.5 }}>उत्पादन</Typography>
+                          <Typography variant="body2" sx={{ 
+                            fontWeight: 'bold',
+                            fontSize: '0.75rem',
+                            lineHeight: 1.2
                           }}>
-                            <TrendingUp sx={{ color: '#4caf50', mb: 0.5, fontSize: { xs: 18, md: 20 } }} />
-                            <Typography variant="caption" display="block" sx={{ fontSize: '0.7rem', mb: 0.5 }}>उत्पादन</Typography>
-                            <Typography variant="body2" sx={{ 
-                              fontWeight: 'bold',
-                              fontSize: { xs: '0.7rem', md: '0.8rem' },
-                              lineHeight: 1.2
-                            }}>
-                              {crop.expected_yield}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box sx={{ 
-                            textAlign: 'center', 
-                            p: { xs: 1, md: 1.5 }, 
-                            bgcolor: '#fff3e0', 
-                            borderRadius: 2,
-                            minHeight: { xs: 60, md: 70 },
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center'
+                            {crop.expected_yield}
+                          </Typography>
+                        </Box>
+                        
+                        <Box sx={{ 
+                          textAlign: 'center', 
+                          p: 1, 
+                          bgcolor: '#fff3e0', 
+                          borderRadius: 2
+                        }}>
+                          <AttachMoney sx={{ color: '#ff9800', mb: 0.5, fontSize: 18 }} />
+                          <Typography variant="caption" display="block" sx={{ fontSize: '0.7rem', mb: 0.5 }}>कीमत</Typography>
+                          <Typography variant="body2" sx={{ 
+                            fontWeight: 'bold',
+                            fontSize: '0.75rem',
+                            lineHeight: 1.2
                           }}>
-                            <AttachMoney sx={{ color: '#ff9800', mb: 0.5, fontSize: { xs: 18, md: 20 } }} />
-                            <Typography variant="caption" display="block" sx={{ fontSize: '0.7rem', mb: 0.5 }}>कीमत</Typography>
-                            <Typography variant="body2" sx={{ 
-                              fontWeight: 'bold',
-                              fontSize: { xs: '0.7rem', md: '0.8rem' },
-                              lineHeight: 1.2
-                            }}>
-                              {crop.market_price}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      </Grid>
+                            {crop.market_price}
+                          </Typography>
+                        </Box>
+                      </Box>
 
-                      {/* Information chips */}
-                      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 2 }}>
+                      {/* Key Info Chips */}
+                      <Box sx={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: '1fr 1fr', 
+                        gap: 0.5, 
+                        mb: 2 
+                      }}>
                         <Chip 
-                          label={`सीजन: ${crop.season}`} 
+                          label={`${crop.season}`} 
                           size="small" 
-                          sx={{ fontSize: '0.7rem' }}
+                          sx={{ fontSize: '0.65rem', height: 24 }}
                           color="primary" 
                           variant="outlined"
                         />
                         <Chip 
-                          label={`पानी: ${crop.water_requirement}`} 
+                          label={`${crop.water_requirement}`} 
                           size="small" 
-                          sx={{ fontSize: '0.7rem' }}
+                          sx={{ fontSize: '0.65rem', height: 24 }}
                           color="info" 
                           variant="outlined"
                         />
-                        {typeof crop.sustainability_score === 'number' && (
-                          <Chip 
-                            label={`स्थिरता: ${crop.sustainability_score}%`} 
-                            size="small" 
-                            sx={{ fontSize: '0.7rem' }}
-                            color={crop.sustainability_score >= 75 ? 'success' : crop.sustainability_score >= 55 ? 'warning' : 'default'} 
-                            variant="outlined"
-                          />
-                        )}
                         {crop.market_demand && (
                           <Chip 
                             label={`मांग: ${crop.market_demand === 'high' ? 'उच्च' : crop.market_demand === 'medium' ? 'मध्यम' : 'कम'}`} 
                             size="small" 
-                            sx={{ fontSize: '0.7rem' }}
+                            sx={{ fontSize: '0.65rem', height: 24, gridColumn: '1 / -1' }}
                             color={crop.market_demand === 'high' ? 'success' : crop.market_demand === 'low' ? 'error' : 'warning'} 
                             variant="outlined"
                           />
                         )}
+                      </Box>
+                      
+                      {/* Profit Chip */}
+                      <Box sx={{ textAlign: 'center', mb: 1 }}>
                         <Chip 
                           label={crop.profit_potential} 
                           size="small" 
-                          sx={{ fontSize: '0.7rem' }}
+                          sx={{ fontSize: '0.65rem' }}
                           color="success" 
                           variant="filled"
                         />
@@ -1586,59 +1554,34 @@ const CropRecommendation: React.FC = () => {
                       {/* Spacer to push buttons to bottom */}
                       <Box sx={{ flex: 1 }} />
                       
-                      <Accordion elevation={0} sx={{ bgcolor: 'transparent', mb: 1 }}>
-                        <AccordionSummary 
-                          expandIcon={<ExpandMore />}
-                          sx={{ minHeight: 40, py: 1 }}
-                        >
-                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', fontSize: '0.8rem' }}>
-                            विस्तृत जानकारी
-                          </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails sx={{ pt: 0, px: 1 }}>
-                          <Typography variant="body2" sx={{ mb: 1, fontSize: '0.75rem' }}>
-                            <strong>Why this crop:</strong> {crop.why_reason || 'आपके मौसम, मिट्टी और पानी की उपलब्धता के आधार पर उपयुक्त'}
-                          </Typography>
-                          <Typography variant="body2" sx={{ mb: 1, fontSize: '0.75rem' }}>
-                            <strong>अवधि:</strong> {crop.growth_duration}
-                          </Typography>
-                          <Typography variant="body2" sx={{ mb: 1, fontSize: '0.75rem' }}>
-                            <strong>पानी:</strong> {crop.water_requirement}
-                          </Typography>
-                          <Typography variant="body2" sx={{ mb: 1, fontSize: '0.75rem' }}>
-                            <strong>मुनाफा:</strong> {crop.profit_potential}
-                          </Typography>
-                          
-                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: '#4caf50', fontSize: '0.75rem' }}>
-                            ✅ फायदे:
-                          </Typography>
-                          {crop.benefits.map((benefit, idx) => (
-                            <Typography key={idx} variant="body2" sx={{ mb: 0.5, fontSize: '0.7rem' }}>
-                              • {benefit}
-                            </Typography>
-                          ))}
-                          
-                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mt: 2, mb: 1, color: '#f44336', fontSize: '0.75rem' }}>
-                            ⚠️ सावधानियां:
-                          </Typography>
-                          {crop.considerations.map((consideration, idx) => (
-                            <Typography key={idx} variant="body2" sx={{ mb: 0.5, fontSize: '0.7rem' }}>
-                              • {consideration}
-                            </Typography>
-                          ))}
-                        </AccordionDetails>
-                      </Accordion>
+                      {/* Simple Details Section */}
+                      <Box sx={{ 
+                        bgcolor: 'rgba(76, 175, 80, 0.05)', 
+                        p: 1, 
+                        borderRadius: 2, 
+                        mb: 1,
+                        border: '1px dashed rgba(76, 175, 80, 0.3)'
+                      }}>
+                        <Typography variant="body2" sx={{ 
+                          fontSize: '0.7rem', 
+                          color: '#2e7d32',
+                          textAlign: 'center',
+                          fontWeight: 'bold'
+                        }}>
+                          अवधि: {crop.growth_duration} | मुनाफा: {crop.profit_potential}
+                        </Typography>
+                      </Box>
 
                       {/* CTA Buttons */}
-                      <Box sx={{ display: 'flex', gap: 1, mt: 2, justifyContent: 'space-between' }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                         <Button 
                           variant="contained" 
                           size="small" 
                           onClick={() => addToPlan(crop.name)}
                           sx={{ 
-                            flex: 1,
                             fontSize: '0.7rem',
-                            py: 0.5
+                            py: 0.5,
+                            borderRadius: 2
                           }}
                         >
                           योजना में जोड़ें
@@ -1648,12 +1591,12 @@ const CropRecommendation: React.FC = () => {
                           size="small" 
                           onClick={() => alert(`${crop.name_hindi} के लिए सलाह खोली जाएगी`)}
                           sx={{ 
-                            flex: 1,
                             fontSize: '0.7rem',
-                            py: 0.5
+                            py: 0.5,
+                            borderRadius: 2
                           }}
                         >
-                          सलाह देखें
+                          विस्तार देखें
                         </Button>
                       </Box>
                     </CardContent>
