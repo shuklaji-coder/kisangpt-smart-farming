@@ -53,7 +53,7 @@ async function exportSectionAsPng(node: HTMLElement, filename: string) {
 }
 
 const DreamVisualization: React.FC = () => {
-const { t }: { t: TFunction } = useTranslation();
+const { t } = useTranslation();
   const theme = useTheme();
 
   // Advanced Builder state

@@ -446,6 +446,21 @@ const SatelliteFieldView: React.FC = () => {
     }
   };
 
+  // Refresh both analysis and location-based recommendations for current location
+  const refreshAll = async () => {
+    try {
+      setLoading(true);
+      if (currentLocation) {
+        await loadFieldData(currentLocation.lat, currentLocation.lng);
+        await getLocationBasedCropRecommendations(currentLocation.lat, currentLocation.lng);
+      } else {
+        getCurrentLocation();
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const initializeMap = async (lat: number, lng: number) => {
     try {
       // Ensure Leaflet has loaded before initializing
@@ -1232,7 +1247,17 @@ const SatelliteFieldView: React.FC = () => {
               </Card>
             )}
 
-            {analysis ? (
+          </motion.div>
+        </Grid>
+
+        {/* Advanced Satellite Analysis - full width */}
+        {analysis ? (
+          <Grid item xs={12}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
               <Card elevation={4} sx={{ borderRadius: 3, mb: 3, border: '1px solid #9c27b0', background: '#f8e5ff' }}>
                 <CardContent id="advanced-analysis-panel">
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1354,7 +1379,76 @@ const SatelliteFieldView: React.FC = () => {
                   </Box>
                 </CardContent>
               </Card>
-            ) : null}
+            </motion.div>
+          </Grid>
+        ) : null}
+
+        {/* Farm Overview banner above recommendations */}
+        <Grid item xs={12}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Paper
+              elevation={4}
+              sx={{
+                py: 2.5,
+                px: { xs: 2, md: 4 },
+                mb: 2,
+                borderRadius: { xs: 0, md: 3 },
+                color: 'white',
+                background: 'linear-gradient(135deg, #2e7d32 0%, #4caf50 50%, #81c784 100%)',
+                // Full-bleed horizontally across the viewport
+                position: 'relative',
+                left: '50%',
+                right: '50%',
+                marginLeft: '-50vw',
+                marginRight: '-50vw',
+                width: '100vw',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Your Farm Overview</Typography>
+                  <Chip
+                    icon={<LocationOn />}
+                    label={
+                      analysis?.soilData?.location?.district
+                        ? `${analysis.soilData.location.district}${analysis.soilData.location.state ? ', ' + analysis.soilData.location.state : ''}`
+                        : currentLocation
+                        ? `${currentLocation.lat.toFixed(2)}, ${currentLocation.lng.toFixed(2)}`
+                        : 'Detecting location...'
+                    }
+                    sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
+                  />
+                  {fieldData?.area && (
+                    <Chip label={`Area: ${fieldData.area} acres`} sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }} />
+                  )}
+                  {fieldData?.soilType && (
+                    <Chip label={`Soil: ${fieldData.soilType}`} sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }} />
+                  )}
+                  {typeof analysis?.ndviData?.ndvi === 'number' && (
+                    <Chip label={`NDVI: ${analysis.ndviData.ndvi.toFixed(2)}`} sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }} />
+                  )}
+                  {typeof analysis?.analysis?.cropHealthScore === 'number' && (
+                    <Chip label={`Health: ${analysis.analysis.cropHealthScore}%`} sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }} />
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                  {fieldData?.lastUpdated && (
+                    <Chip
+                      label={`Updated: ${new Date(fieldData.lastUpdated).toLocaleString()}`}
+                      sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }}
+                      variant="outlined"
+                    />
+                  )}
+                  <Button variant="outlined" color="inherit" onClick={refreshAll} startIcon={<Refresh />} sx={{ borderColor: 'rgba(255,255,255,0.6)' }}>
+                    Refresh
+                  </Button>
+                </Box>
+              </Box>
+            </Paper>
           </motion.div>
         </Grid>
 
