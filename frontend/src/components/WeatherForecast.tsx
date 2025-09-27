@@ -124,6 +124,21 @@ const WeatherForecast: React.FC = () => {
   const [selectedSavedName, setSelectedSavedName] = useState<string>('');
 
 useEffect(() => {
+    // Try to use last known coordinates immediately for faster first paint
+    try {
+      const raw = localStorage.getItem('last_weather_coords');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed.lat === 'number' && typeof parsed.lon === 'number') {
+          setCoordinates({ lat: parsed.lat, lon: parsed.lon });
+          if (parsed.name) setLocation(parsed.name);
+          // Kick off a fetch optimistically with last-known coords
+          fetchWeatherData(parsed.lat, parsed.lon, parsed.name || undefined);
+        }
+      }
+    } catch {}
+
+    // Also try to get fresh geolocation in the background
     getCurrentLocation();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -150,7 +165,7 @@ useEffect(() => {
     } catch {}
   }, [savedLocations]);
 
-  const getCurrentLocation = () => {
+const getCurrentLocation = () => {
     setLoading(true);
     setLocationError('');
 
@@ -159,6 +174,7 @@ useEffect(() => {
       // Fallback to default location (Delhi)
       setLocation('Delhi, India');
       setCoordinates({ lat: 28.6139, lon: 77.2090 });
+      try { localStorage.setItem('last_weather_coords', JSON.stringify({ lat: 28.6139, lon: 77.2090, name: 'Delhi, India' })); } catch {}
       fetchWeatherData(28.6139, 77.2090, 'Delhi, India');
       return;
     }
@@ -169,8 +185,19 @@ useEffect(() => {
       maximumAge: 300000 // 5 minutes
     };
 
+    // Safety fallback: if geolocation is slow or blocked, show default data after a short delay
+    const fallbackTimer = window.setTimeout(() => {
+      if (!currentWeather) {
+        setLocation('Delhi, India');
+        setCoordinates({ lat: 28.6139, lon: 77.2090 });
+        try { localStorage.setItem('last_weather_coords', JSON.stringify({ lat: 28.6139, lon: 77.2090, name: 'Delhi, India' })); } catch {}
+        fetchWeatherData(28.6139, 77.2090, 'Delhi, India');
+      }
+    }, 4000);
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
+        window.clearTimeout(fallbackTimer);
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
         
@@ -180,14 +207,19 @@ useEffect(() => {
           
           setCoordinates({ lat, lon });
           setLocation(locationName);
+          try { localStorage.setItem('last_weather_coords', JSON.stringify({ lat, lon, name: locationName })); } catch {}
           fetchWeatherData(lat, lon, locationName);
         } catch (error) {
           console.error('Error getting location name:', error);
-          setLocation(`${lat.toFixed(2)}, ${lon.toFixed(2)}`);
-          fetchWeatherData(lat, lon, `${lat.toFixed(2)}, ${lon.toFixed(2)}`);
+          const fallbackName = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+          setCoordinates({ lat, lon });
+          setLocation(fallbackName);
+          try { localStorage.setItem('last_weather_coords', JSON.stringify({ lat, lon, name: fallbackName })); } catch {}
+          fetchWeatherData(lat, lon, fallbackName);
         }
       },
       (error) => {
+        window.clearTimeout(fallbackTimer);
         console.error('Error getting location:', error);
         let errorMessage = '';
         
@@ -210,6 +242,7 @@ useEffect(() => {
         // Fallback to default location
         setLocation('Delhi, India');
         setCoordinates({ lat: 28.6139, lon: 77.2090 });
+        try { localStorage.setItem('last_weather_coords', JSON.stringify({ lat: 28.6139, lon: 77.2090, name: 'Delhi, India' })); } catch {}
         fetchWeatherData(28.6139, 77.2090, 'Delhi, India');
       },
       options
@@ -686,6 +719,13 @@ setForecast([
     };
     return iconMap[owmIcon] || 'partly-cloudy';
   };
+
+  // If coordinates become available and we still have no data, fetch once automatically
+  useEffect(() => {
+    if (!loading && !currentWeather && coordinates.lat && coordinates.lon) {
+      fetchWeatherData(coordinates.lat, coordinates.lon, location);
+    }
+  }, [coordinates.lat, coordinates.lon]);
 
 // Refresh handler
   const handleRefresh = () => {

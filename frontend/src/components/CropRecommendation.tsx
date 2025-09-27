@@ -1555,6 +1555,8 @@ const CropRecommendation: React.FC = () => {
                           सलाह देखें
                         </Button>
                       </Box>
+                      {/* Close flex header container */}
+                    </Box>
                     </CardContent>
                   </Card>
                 </motion.div>
