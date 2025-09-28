@@ -1,19 +1,33 @@
-/* KisanGPT - Farmer Friendly Styles */
+/* KisanGPT - Mobile-First Responsive Design */
 .App {
   background-color: #f1f8e9;
   min-height: 100vh;
   font-family: 'Roboto', 'Arial', sans-serif;
+  overflow-x: hidden;
 }
 
-/* Smooth transitions for all elements */
+/* Base styles for all elements */
 * {
   box-sizing: border-box;
   transition: all 0.3s ease-in-out;
 }
 
-/* Custom scrollbar */
+/* Mobile-first root font size */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom scrollbar - Mobile optimized */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
+}
+
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
 }
 
 ::-webkit-scrollbar-track {
@@ -30,16 +44,27 @@
   background: #2e7d32;
 }
 
-/* Farmer-friendly button styles */
+/* Mobile-first farmer button */
 .farmer-button {
   background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
   border: none;
   border-radius: 25px;
-  padding: 12px 24px;
+  padding: 14px 20px;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  font-size: 0.9rem;
+  min-height: 44px; /* Touch target size */
+  min-width: 44px;
   box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  touch-action: manipulation;
+}
+
+@media (min-width: 768px) {
+  .farmer-button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
 }
 
 .farmer-button:hover {
@@ -47,32 +72,170 @@
   box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
 }
 
-/* Card animations */
+.farmer-button:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+}
+
+/* Mobile-optimized cards */
 .farmer-card {
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  margin-bottom: 16px;
 }
 
 .farmer-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* Mobile responsive font sizes */
-@media (max-width: 600px) {
-  .App {
-    padding: 8px;
+@media (min-width: 768px) {
+  .farmer-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
-  
-  h1 {
+}
+
+/* Mobile Navigation Styles */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+}
+
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+/* Touch-friendly icon buttons */
+.touch-icon-button {
+  min-height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  touch-action: manipulation;
+}
+
+/* Mobile Typography Scale */
+.mobile-heading-1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.mobile-heading-2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.mobile-heading-3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 768px) {
+  .mobile-heading-1 {
+    font-size: 2.2rem;
+  }
+  .mobile-heading-2 {
     font-size: 1.8rem;
   }
-  
-  h2 {
+  .mobile-heading-3 {
     font-size: 1.5rem;
   }
+}
+
+/* Mobile Container */
+.mobile-container {
+  padding: 12px 16px;
+  margin-bottom: 80px; /* Space for bottom nav */
+}
+
+@media (min-width: 768px) {
+  .mobile-container {
+    padding: 16px 24px;
+    margin-bottom: 0;
+  }
+}
+
+/* Responsive Grid */
+.responsive-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 900px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+}
+
+/* Mobile responsive breakpoints */
+/* Extra small devices (phones, 600px and down) */
+@media (max-width: 600px) {
+  .App {
+    padding: 0;
+  }
   
-  h3 {
-    font-size: 1.3rem;
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  .full-width-mobile {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media (min-width: 600px) {
+  .show-mobile-only {
+    display: none !important;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media (min-width: 768px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media (min-width: 992px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .container-xl {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 }
 

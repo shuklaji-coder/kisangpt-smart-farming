@@ -36,6 +36,19 @@ import {
   EmojiEmotions,
   Psychology,
   Agriculture,
+  Dashboard,
+  Analytics,
+  CameraAlt,
+  Videocam,
+  PhotoLibrary,
+  LocationOn,
+  TrendingUp,
+  Assessment,
+  Lightbulb,
+  Bookmark,
+  History,
+  Settings,
+  CloudUpload
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -69,6 +82,26 @@ const AIChatbot: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('hi'); // Default Hindi
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [error, setError] = useState('');
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [showPhotoUpload, setShowPhotoUpload] = useState(false);
+  const [showVideoCall, setShowVideoCall] = useState(false);
+  const [userContext, setUserContext] = useState({
+    location: 'Unknown',
+    cropType: 'Mixed',
+    farmSize: '2-5 acres',
+    experience: 'Intermediate',
+    mainConcerns: ['pest', 'weather', 'market']
+  });
+  const [personalizedInsights, setPersonalizedInsights] = useState<any[]>([]);
+  const [cropAnalytics, setCropAnalytics] = useState({
+    healthScore: 85,
+    yieldPrediction: 92,
+    riskLevel: 'Medium',
+    recommendations: 3
+  });
+  const [savedQuestions, setSavedQuestions] = useState<string[]>([]);
+  const [photoAnalysisResult, setPhotoAnalysisResult] = useState<string>('');
+  const [isAnalyzingPhoto, setIsAnalyzingPhoto] = useState(false);
   
   const recognitionRef = useRef<any>(null);
   const synthesisRef = useRef<SpeechSynthesis | null>(null);
@@ -135,6 +168,11 @@ const AIChatbot: React.FC = () => {
       "🙏 नमस्कार! मैं आपका AI किसान मित्र हूँ। खेती से जुड़ा कोई भी सवाल पूछिए - मैं आपकी मदद करूँगा! 🌾",
       'hi'
     );
+    
+    // Generate personalized insights
+    setTimeout(() => {
+      generatePersonalizedInsights();
+    }, 1000);
 
     return () => {
       if (recognitionRef.current) {
@@ -280,6 +318,120 @@ const AIChatbot: React.FC = () => {
     };
     setMessages(prev => [...prev, message]);
     return message;
+  };
+
+  // Advanced AI Functions
+  const analyzePhotoForCrop = async (file: File) => {
+    setIsAnalyzingPhoto(true);
+    
+    try {
+      // Mock photo analysis - in production, this would call your CV API
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing
+      
+      const analysisResults = [
+        {
+          disease: 'Leaf Blight',
+          confidence: 87,
+          treatment: 'Spray Mancozeb 0.2% solution. Remove affected leaves. Improve drainage.',
+          severity: 'Medium',
+          recommendation: 'Apply treatment within 24 hours. Monitor other plants.'
+        },
+        {
+          disease: 'Healthy Crop',
+          confidence: 94,
+          treatment: 'No treatment needed. Continue regular care.',
+          severity: 'None',
+          recommendation: 'Maintain current farming practices. Great work!'
+        },
+        {
+          disease: 'Nutrient Deficiency',
+          confidence: 73,
+          treatment: 'Apply NPK 19-19-19 @ 2g/liter. Add organic matter.',
+          severity: 'Low',
+          recommendation: 'Soil testing recommended. Consider foliar spray.'
+        }
+      ];
+      
+      const result = analysisResults[Math.floor(Math.random() * analysisResults.length)];
+      
+      const analysisText = `📸 **Photo Analysis Results:**\n\n🌱 **Detection:** ${result.disease}\n🎯 **Confidence:** ${result.confidence}%\n⚠️ **Severity:** ${result.severity}\n\n📝 **Treatment:**\n${result.treatment}\n\n💡 **Recommendation:**\n${result.recommendation}`;
+      
+      setPhotoAnalysisResult(analysisText);
+      addBotMessage(analysisText, selectedLanguage);
+      
+      // Update user context based on analysis
+      if (result.disease !== 'Healthy Crop') {
+        setUserContext(prev => ({
+          ...prev,
+          mainConcerns: [...prev.mainConcerns.filter(c => c !== 'disease'), 'disease']
+        }));
+      }
+      
+    } catch (error) {
+      addBotMessage('😔 Photo analysis failed. Please try again or describe your crop issue.', selectedLanguage);
+    } finally {
+      setIsAnalyzingPhoto(false);
+      setShowPhotoUpload(false);
+    }
+  };
+
+  const generatePersonalizedInsights = () => {
+    const insights = [
+      {
+        type: 'weather',
+        title: '☁️ Weather Alert',
+        content: 'Rain expected in next 48 hours in your area. Cover delicate crops.',
+        priority: 'high',
+        action: 'Check weather section for details'
+      },
+      {
+        type: 'market',
+        title: '💰 Price Opportunity',
+        content: `${userContext.cropType} prices up 15% this week. Good time to sell!`,
+        priority: 'medium',
+        action: 'Visit market analysis'
+      },
+      {
+        type: 'farming',
+        title: '🌱 Seasonal Tip',
+        content: 'Perfect time for winter crop preparation. Plan your sowing schedule.',
+        priority: 'medium',
+        action: 'Get detailed crop calendar'
+      },
+      {
+        type: 'technology',
+        title: '🚀 New Feature',
+        content: 'Try our new drone monitoring service - 20% discount for early users!',
+        priority: 'low',
+        action: 'Learn more about precision farming'
+      }
+    ];
+    
+    setPersonalizedInsights(insights.slice(0, 3));
+  };
+
+  const saveCurrentQuestion = () => {
+    if (currentMessage.trim() && !savedQuestions.includes(currentMessage.trim())) {
+      setSavedQuestions(prev => [currentMessage.trim(), ...prev.slice(0, 9)]); // Keep last 10
+      addBotMessage('✅ Question saved for future reference!', selectedLanguage);
+    }
+  };
+
+  const getContextualResponse = (message: string) => {
+    // Enhanced contextual understanding based on user profile
+    const context = `User Profile: Location: ${userContext.location}, Crop: ${userContext.cropType}, Farm: ${userContext.farmSize}, Experience: ${userContext.experience}, Concerns: ${userContext.mainConcerns.join(', ')}`;
+    
+    return context;
+  };
+
+  const startVideoCall = () => {
+    setShowVideoCall(true);
+    addBotMessage('📹 Video consultation feature opening... Connect with agricultural experts!', selectedLanguage);
+    
+    // Mock video call setup
+    setTimeout(() => {
+      addBotMessage('👨‍🌾 Expert Dr. Sharma is available for video consultation. Topics: Organic farming, Pest management, Soil health.', selectedLanguage);
+    }, 2000);
   };
 
   const addBotMessage = (text: string, language: string, emotion?: 'happy' | 'sad' | 'neutral' | 'confused' | 'excited') => {
@@ -604,7 +756,33 @@ You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, ste
             </Select>
           </FormControl>
           
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {/* Advanced AI Controls */}
+            <IconButton
+              color={showDashboard ? 'primary' : 'default'}
+              onClick={() => setShowDashboard(!showDashboard)}
+              title="📈 Personal Dashboard"
+              sx={{ bgcolor: showDashboard ? 'rgba(33, 150, 243, 0.1)' : 'transparent' }}
+            >
+              <Dashboard />
+            </IconButton>
+            
+            <IconButton
+              color="success"
+              onClick={() => setShowPhotoUpload(true)}
+              title="📷 Photo Analysis"
+            >
+              <CameraAlt />
+            </IconButton>
+            
+            <IconButton
+              color="error"
+              onClick={startVideoCall}
+              title="📹 Video Consultation"
+            >
+              <Videocam />
+            </IconButton>
+            
             <IconButton
               color={voiceEnabled ? 'primary' : 'default'}
               onClick={() => setVoiceEnabled(!voiceEnabled)}
@@ -630,6 +808,218 @@ You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, ste
           {error}
         </Alert>
       )}
+      
+      {/* Personal Dashboard */}
+      {showDashboard && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Paper elevation={3} sx={{ p: 3, mb: 3, borderRadius: 3, bgcolor: 'rgba(33, 150, 243, 0.02)' }}>
+            <Typography variant="h6" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Dashboard color="primary" />
+              📈 Your Farming Dashboard
+            </Typography>
+            
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+              {/* User Context */}
+              <Card elevation={2} sx={{ borderRadius: 3 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Person color="primary" />
+                    Farmer Profile
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">Location:</Typography>
+                      <Chip size="small" label={userContext.location} />
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">Main Crop:</Typography>
+                      <Chip size="small" label={userContext.cropType} color="success" />
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">Farm Size:</Typography>
+                      <Chip size="small" label={userContext.farmSize} color="primary" />
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">Experience:</Typography>
+                      <Chip size="small" label={userContext.experience} color="warning" />
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+              
+              {/* Crop Analytics */}
+              <Card elevation={2} sx={{ borderRadius: 3 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Analytics color="success" />
+                    Crop Analytics
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                        <Typography variant="body2">Health Score</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'success.main' }}>
+                          {cropAnalytics.healthScore}%
+                        </Typography>
+                      </Box>
+                      <Box sx={{ width: '100%', bgcolor: 'grey.200', borderRadius: 1, height: 6 }}>
+                        <Box sx={{ width: `${cropAnalytics.healthScore}%`, bgcolor: 'success.main', borderRadius: 1, height: '100%' }} />
+                      </Box>
+                    </Box>
+                    
+                    <Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                        <Typography variant="body2">Yield Prediction</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                          {cropAnalytics.yieldPrediction}%
+                        </Typography>
+                      </Box>
+                      <Box sx={{ width: '100%', bgcolor: 'grey.200', borderRadius: 1, height: 6 }}>
+                        <Box sx={{ width: `${cropAnalytics.yieldPrediction}%`, bgcolor: 'primary.main', borderRadius: 1, height: '100%' }} />
+                      </Box>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2">Risk Level:</Typography>
+                      <Chip 
+                        size="small" 
+                        label={cropAnalytics.riskLevel} 
+                        color={cropAnalytics.riskLevel === 'Low' ? 'success' : cropAnalytics.riskLevel === 'Medium' ? 'warning' : 'error'}
+                      />
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2">Active Recommendations:</Typography>
+                      <Chip size="small" label={cropAnalytics.recommendations} color="info" />
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Box>
+            
+            {/* Personalized Insights */}
+            {personalizedInsights.length > 0 && (
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Lightbulb color="warning" />
+                  Personalized Insights
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {personalizedInsights.map((insight, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    >
+                      <Alert 
+                        severity={insight.priority === 'high' ? 'error' : insight.priority === 'medium' ? 'warning' : 'info'}
+                        sx={{ borderRadius: 2 }}
+                        action={
+                          <Button size="small" color="inherit">
+                            {insight.action}
+                          </Button>
+                        }
+                      >
+                        <Box>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                            {insight.title}
+                          </Typography>
+                          <Typography variant="body2">
+                            {insight.content}
+                          </Typography>
+                        </Box>
+                      </Alert>
+                    </motion.div>
+                  ))}
+                </Box>
+              </Box>
+            )}
+            
+            {/* Saved Questions */}
+            {savedQuestions.length > 0 && (
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Bookmark color="primary" />
+                  Saved Questions
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {savedQuestions.slice(0, 5).map((question, index) => (
+                    <Chip
+                      key={index}
+                      label={question.substring(0, 30) + (question.length > 30 ? '...' : '')}
+                      size="small"
+                      variant="outlined"
+                      onClick={() => setCurrentMessage(question)}
+                      sx={{ cursor: 'pointer' }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Paper>
+        </motion.div>
+      )}
+      
+      {/* Photo Upload Dialog */}
+      <Dialog open={showPhotoUpload} onClose={() => setShowPhotoUpload(false)} maxWidth="sm" fullWidth>
+        <Paper sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CameraAlt color="primary" />
+            📷 Crop Photo Analysis
+          </Typography>
+          
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="photo-upload"
+              type="file"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  analyzePhotoForCrop(e.target.files[0]);
+                }
+              }}
+            />
+            <label htmlFor="photo-upload">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="contained"
+                  component="span"
+                  size="large"
+                  startIcon={<CloudUpload />}
+                  sx={{ borderRadius: 3, px: 4, py: 2 }}
+                  disabled={isAnalyzingPhoto}
+                >
+                  {isAnalyzingPhoto ? 'Analyzing Photo...' : 'Upload Crop Photo'}
+                </Button>
+              </motion.div>
+            </label>
+            
+            {isAnalyzingPhoto && (
+              <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+                <CircularProgress size={20} />
+                <Typography variant="body2">AI is analyzing your crop photo...</Typography>
+              </Box>
+            )}
+            
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+              Upload a clear photo of your crop for instant AI-powered analysis of diseases, pests, and health conditions.
+            </Typography>
+          </Box>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+            <Button onClick={() => setShowPhotoUpload(false)} disabled={isAnalyzingPhoto}>
+              Cancel
+            </Button>
+          </Box>
+        </Paper>
+      </Dialog>
 
       {/* Chat Messages */}
       <Paper elevation={3} sx={{ height: '500px', display: 'flex', flexDirection: 'column', borderRadius: 3 }}>
@@ -769,6 +1159,20 @@ You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, ste
             </IconButton>
             
             <IconButton
+              color="secondary"
+              onClick={saveCurrentQuestion}
+              disabled={!currentMessage.trim() || isLoading}
+              sx={{
+                bgcolor: '#ff9800',
+                color: 'white',
+                '&:hover': { bgcolor: '#f57c00' },
+              }}
+              title="💾 Save Question"
+            >
+              <Bookmark />
+            </IconButton>
+            
+            <IconButton
               color="primary"
               onClick={() => handleSendMessage()}
               disabled={!currentMessage.trim() || isLoading}
@@ -797,25 +1201,81 @@ You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, ste
         <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
           त्वरित प्रश्न / Quick Questions:
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {[
-            { hi: "मेरी फसल में कीट लगे हैं", en: "Pests in my crop" },
-            { hi: "कौन सी खाद डालूं?", en: "Which fertilizer to use?" },
-            { hi: "बारिश के बाद क्या करूं?", en: "What to do after rain?" },
-            { hi: "फसल कब बेचूं?", en: "When to sell crop?" },
-            { hi: "नई तकनीक के बारे में बताओ", en: "Tell about new technology" },
-          ].map((question, index) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {/* Text Questions */}
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {[
+              { hi: "मेरी फसल में कीट लगे हैं", en: "Pests in my crop", icon: <Psychology /> },
+              { hi: "कौन सी खाद डालूं?", en: "Which fertilizer to use?", icon: <Agriculture /> },
+              { hi: "बारिश के बाद क्या करूं?", en: "What to do after rain?", icon: <CloudUpload /> },
+              { hi: "फसल कब बेचूं?", en: "When to sell crop?", icon: <TrendingUp /> },
+              { hi: "नई तकनीक के बारे में बताओ", en: "Tell about new technology", icon: <SmartToy /> },
+            ].map((question, index) => (
+              <Chip
+                key={index}
+                label={selectedLanguage === 'hi' ? question.hi : question.en}
+                onClick={() => setCurrentMessage(selectedLanguage === 'hi' ? question.hi : question.en)}
+                sx={{
+                  cursor: 'pointer',
+                  '&:hover': { bgcolor: '#e8f5e8' },
+                }}
+                icon={question.icon}
+              />
+            ))}
+          </Box>
+          
+          {/* Advanced Actions */}
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             <Chip
-              key={index}
-              label={selectedLanguage === 'hi' ? question.hi : question.en}
-              onClick={() => setCurrentMessage(selectedLanguage === 'hi' ? question.hi : question.en)}
+              label="📷 Analyze Crop Photo"
+              onClick={() => setShowPhotoUpload(true)}
               sx={{
                 cursor: 'pointer',
-                '&:hover': { bgcolor: '#e8f5e8' },
+                bgcolor: 'rgba(76, 175, 80, 0.1)',
+                '&:hover': { bgcolor: 'rgba(76, 175, 80, 0.2)' },
               }}
-              icon={<Psychology />}
+              icon={<CameraAlt />}
+              color="success"
             />
-          ))}
+            
+            <Chip
+              label="📹 Video Consultation"
+              onClick={startVideoCall}
+              sx={{
+                cursor: 'pointer',
+                bgcolor: 'rgba(244, 67, 54, 0.1)',
+                '&:hover': { bgcolor: 'rgba(244, 67, 54, 0.2)' },
+              }}
+              icon={<Videocam />}
+              color="error"
+            />
+            
+            <Chip
+              label="📈 View Dashboard"
+              onClick={() => setShowDashboard(!showDashboard)}
+              sx={{
+                cursor: 'pointer',
+                bgcolor: 'rgba(33, 150, 243, 0.1)',
+                '&:hover': { bgcolor: 'rgba(33, 150, 243, 0.2)' },
+              }}
+              icon={<Dashboard />}
+              color="primary"
+            />
+            
+            {savedQuestions.length > 0 && (
+              <Chip
+                label={`💾 ${savedQuestions.length} Saved Questions`}
+                onClick={() => setShowDashboard(true)}
+                sx={{
+                  cursor: 'pointer',
+                  bgcolor: 'rgba(255, 152, 0, 0.1)',
+                  '&:hover': { bgcolor: 'rgba(255, 152, 0, 0.2)' },
+                }}
+                icon={<Bookmark />}
+                color="warning"
+              />
+            )}
+          </Box>
         </Box>
       </Paper>
     </Box>

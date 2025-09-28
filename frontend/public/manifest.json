@@ -1,25 +1,95 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "name": "KisanGPT - AI Farming Assistant",
+  "short_name": "KisanGPT",
+  "description": "AI-powered agricultural assistant for Indian farmers with crop recommendations, disease detection, and market analysis",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f1f8e9",
+  "theme_color": "#2e7d32",
+  "orientation": "portrait-primary",
+  "categories": ["agriculture", "productivity", "education"],
+  "lang": "hi",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "purpose": "any"
     },
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "maskable any"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "maskable any"
     }
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "shortcuts": [
+    {
+      "name": "AI Chat",
+      "short_name": "चैट",
+      "description": "खेती के सवाल पूछें AI से",
+      "url": "/ai-chat",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Disease Detection",
+      "short_name": "रोग पहचान",
+      "description": "फसल की तस्वीर से रोग की पहचान",
+      "url": "/disease-detection",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Weather",
+      "short_name": "मौसम",
+      "description": "मौसम की जांच और अलर्ट",
+      "url": "/weather",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Market Prices",
+      "short_name": "मंडी भाव",
+      "description": "लाइव फसल की कीमतें",
+      "url": "/market-analysis",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/disease-detection",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "files": [
+        {
+          "name": "image",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  }
 }

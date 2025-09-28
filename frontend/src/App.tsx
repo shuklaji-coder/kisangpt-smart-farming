@@ -25,10 +25,20 @@ import RainAlertSettings from './components/RainAlertSettings';
 import AuthPage from './components/AuthPage';
 import TestPage from './components/TestPage';
 import Footer from './components/Footer';
+import MobileNavigation from './components/MobileNavigation';
 import { authAPI } from './services/api';
 
-// Farmer-friendly theme with green agricultural colors
+// Mobile-first farmer-friendly theme
 const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 768,
+      lg: 992,
+      xl: 1200,
+    },
+  },
   palette: {
     primary: {
       main: '#2e7d32', // Forest Green
@@ -51,44 +61,105 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '"Roboto", "Arial", sans-serif',
+    // Mobile-first typography
     h1: {
-      fontSize: '2.2rem',
+      fontSize: '1.75rem',
       fontWeight: 600,
       color: '#1b5e20',
+      lineHeight: 1.2,
+      '@media (min-width:600px)': {
+        fontSize: '2rem',
+      },
+      '@media (min-width:768px)': {
+        fontSize: '2.2rem',
+      },
     },
     h2: {
-      fontSize: '1.8rem',
-      fontWeight: 500,
-      color: '#1b5e20',
-    },
-    h3: {
       fontSize: '1.5rem',
       fontWeight: 500,
+      color: '#1b5e20',
+      lineHeight: 1.3,
+      '@media (min-width:600px)': {
+        fontSize: '1.75rem',
+      },
+      '@media (min-width:768px)': {
+        fontSize: '1.8rem',
+      },
+    },
+    h3: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
       color: '#2e7d32',
+      lineHeight: 1.4,
+      '@media (min-width:600px)': {
+        fontSize: '1.4rem',
+      },
+      '@media (min-width:768px)': {
+        fontSize: '1.5rem',
+      },
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: '0.95rem',
       lineHeight: 1.6,
+      '@media (min-width:600px)': {
+        fontSize: '1rem',
+      },
+    },
+    body2: {
+      fontSize: '0.875rem',
+      lineHeight: 1.5,
+      '@media (min-width:600px)': {
+        fontSize: '0.9rem',
+      },
+    },
+    button: {
+      fontSize: '0.9rem',
+      fontWeight: 600,
+      textTransform: 'none',
+      '@media (min-width:600px)': {
+        fontSize: '1rem',
+      },
     },
   },
   shape: {
-    borderRadius: 14,
+    borderRadius: 12,
   },
+  spacing: 8, // 8px base spacing
   components: {
+    // Mobile-first container
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          '@media (min-width: 600px)': {
+            paddingLeft: '24px',
+            paddingRight: '24px',
+          },
+        },
+      },
+    },
+    // Mobile-optimized cards
     MuiCard: {
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
           border: '1px solid rgba(0,0,0,0.06)',
           transition: 'transform .2s ease, box-shadow .2s ease',
+          marginBottom: '16px',
           '&:hover': {
             transform: 'translateY(-2px)',
-            boxShadow: '0 16px 36px rgba(0, 0, 0, 0.12)'
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
+            '@media (min-width: 768px)': {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 16px 36px rgba(0, 0, 0, 0.15)',
+            },
           }
         },
       },
     },
+    // Mobile-responsive paper
     MuiPaper: {
       styleOverrides: {
         root: {
@@ -97,6 +168,7 @@ const theme = createTheme({
         }
       }
     },
+    // Touch-friendly buttons
     MuiButton: {
       defaultProps: {
         disableElevation: true
@@ -104,23 +176,45 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          fontSize: '1rem',
+          fontSize: '0.9rem',
           fontWeight: 600,
-          borderRadius: 999,
-          padding: '10px 18px'
+          borderRadius: 25,
+          padding: '12px 20px',
+          minHeight: '44px', // Touch target
+          touchAction: 'manipulation',
+          '@media (min-width: 600px)': {
+            fontSize: '1rem',
+            padding: '10px 18px',
+          },
         },
         containedPrimary: {
           background: 'linear-gradient(45deg, #2e7d32, #66bb6a)',
-          color: '#fff'
+          color: '#fff',
+          '&:active': {
+            transform: 'scale(0.98)',
+          },
         },
         containedSecondary: {
           background: 'linear-gradient(45deg, #1e88e5, #64b5f6)',
-          color: '#fff'
+          color: '#fff',
+          '&:active': {
+            transform: 'scale(0.98)',
+          },
         },
         outlined: {
           borderColor: 'rgba(46, 125, 50, 0.35)'
         }
       }
+    },
+    // Touch-friendly icon buttons
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          minHeight: '48px',
+          minWidth: '48px',
+          touchAction: 'manipulation',
+        },
+      },
     },
     MuiChip: {
       styleOverrides: {
@@ -161,7 +255,14 @@ const AppContent = () => {
   return (
     <>
       <Navbar />
-      <Container maxWidth="lg" sx={{ mt: 2, mb: 4 }}>
+      <Container 
+        maxWidth="lg" 
+        sx={{ 
+          mt: { xs: 1, sm: 2 }, 
+          mb: { xs: 10, sm: 4 }, // Extra bottom margin for mobile nav
+          px: { xs: 2, sm: 3 },
+        }}
+      >
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/dream-visualization" element={<DreamVisualization />} />
@@ -181,9 +282,14 @@ const AppContent = () => {
           <Route path="/help" element={<QuickHelp />} />
         </Routes>
       </Container>
+      
+      {/* Mobile Navigation - Shows only on mobile */}
+      <MobileNavigation />
+      
       {/* Footer with Developer Credits */}
       <Footer />
-      {/* Floating Chatbot - Available on all pages except login */}
+      
+      {/* Floating Chatbot - Available on all pages except login, hidden on mobile */}
       <FloatingChatbot />
     </>
   );

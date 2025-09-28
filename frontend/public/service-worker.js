@@ -1,16 +1,31 @@
-// KisanGPT offline-first service worker (no build tooling)
-// Strategy: App-shell for navigation, cache-first for static, network-first for API GET with cache fallback.
+// KisanGPT Mobile-First PWA Service Worker
+// Enhanced for mobile experience with better caching and offline support
 
-const VERSION = 'v2';
+const VERSION = 'v3-mobile';
 const SHELL_CACHE = `kisangpt-shell-${VERSION}`;
 const RUNTIME_CACHE = `kisangpt-runtime-${VERSION}`;
+const IMAGE_CACHE = `kisangpt-images-${VERSION}`;
+const STATIC_CACHE = `kisangpt-static-${VERSION}`;
+
+// Essential app shell files for offline functionality
 const SHELL_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/favicon.ico',
   '/logo192.png',
-  '/logo512.png'
+  '/logo512.png',
+  '/offline.html' // Offline fallback page
+];
+
+// Critical routes for offline support
+const OFFLINE_PAGES = [
+  '/',
+  '/dashboard',
+  '/disease-detection',
+  '/ai-chat',
+  '/weather',
+  '/community'
 ];
 
 self.addEventListener('install', (event) => {
