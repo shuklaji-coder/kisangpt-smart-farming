@@ -132,21 +132,46 @@ const { t } = (useTranslation as any)();
     }
   }, []);
 
+  // Welcome greeting (speaks once per day). Waits for browser audio permission/user gesture.
   useEffect(() => {
-    const spokenFlag = 'welcome_spoken';
-    const alreadySpoken = localStorage.getItem(spokenFlag) === '1';
-    const speakWelcome = async () => {
-      try {
-        if (!alreadySpoken && userName && userName !== 'किसान जी' && ttsService.isAllowed()) {
-          const welcomeMessage = `नमस्कार ${userName}! किसान जीपीटी में आपका स्वागत है।`;
-          await ttsService.speak(welcomeMessage, 'hi');
-          localStorage.setItem(spokenFlag, '1');
+    const today = new Date().toISOString().split('T')[0];
+    const spokenKey = 'welcome_spoken_date';
+    const alreadySpokenToday = localStorage.getItem(spokenKey) === today;
+
+    if (alreadySpokenToday) return;
+
+    let attempts = 0;
+    let cancelled = false;
+
+    const trySpeak = async () => {
+      if (cancelled) return;
+      const allowed = ttsService.isAllowed();
+      if (!allowed) {
+        // Retry for up to ~10 seconds (20 x 500ms), waiting for user gesture/visibility
+        attempts += 1;
+        if (attempts < 20) {
+          setTimeout(trySpeak, 500);
         }
-      } catch (e) {
-        // ignore TTS errors
+        return;
+      }
+
+      const name = userName && userName.trim() ? userName.trim() : 'किसान जी';
+      const msg = `नमस्कार ${name}! किसान जीपीटी में आपका स्वागत है।`;
+      try {
+        await ttsService.speak(msg, 'hi');
+        try { localStorage.setItem(spokenKey, today); } catch {}
+      } catch {
+        // no-op
       }
     };
-    speakWelcome();
+
+    // Start the attempt loop (slight delay lets voices load)
+    const startId = setTimeout(trySpeak, 600);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(startId);
+    };
   }, [userName]);
 
   // Auto news voice: speak one headline every 60s
