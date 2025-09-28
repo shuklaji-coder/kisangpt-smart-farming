@@ -21,6 +21,8 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  GlobalStyles,
+  useMediaQuery,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -92,6 +94,7 @@ const Dashboard: React.FC = () => {
 const { t } = (useTranslation as any)();
   const tt = getTranslation(t);
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [userName, setUserName] = useState('किसान जी');
@@ -750,6 +753,18 @@ const { t } = (useTranslation as any)();
 
   return (
     <Box>
+      <GlobalStyles
+        styles={{
+          '@keyframes glow': {
+            '0%': {
+              filter: 'drop-shadow(0 2px 4px rgba(255,193,7,0.3))'
+            },
+            '100%': {
+              filter: 'drop-shadow(0 4px 8px rgba(255,193,7,0.6)) drop-shadow(0 0 12px rgba(255,193,7,0.4))'
+            }
+          }
+        }}
+      />
       {/* Breaking News Ticker */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -952,88 +967,287 @@ const { t } = (useTranslation as any)();
         transition={{ duration: 0.6, delay: 0.3 }}
       >
         <Paper
-          elevation={6}
+          elevation={8}
           sx={{
             p: 4,
             mb: 4,
-            borderRadius: 4,
-            background: 'linear-gradient(135deg, #fff3e0 0%, #fffde7 50%, #f9fbe7 100%)',
-            border: '2px solid rgba(255, 193, 7, 0.2)',
+            borderRadius: 6,
+            background: 'linear-gradient(145deg, #fef7e0 0%, #fff8e1 30%, #f9fbe7 70%, #f3e5f5 100%)',
+            border: '2px solid rgba(255, 193, 7, 0.15)',
             position: 'relative',
             overflow: 'hidden',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 16px rgba(255,193,7,0.15)',
             '&::before': {
               content: '""',
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
-              height: '4px',
-              background: 'linear-gradient(90deg, #ff9800, #ffc107, #ffeb3b)',
+              height: '6px',
+              background: 'linear-gradient(90deg, #ff6f00, #ff8f00, #ffb300, #ffc107)',
+              boxShadow: '0 2px 8px rgba(255,193,7,0.3)',
+            },
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(255,193,7,0.1) 0%, rgba(255,193,7,0.05) 50%, transparent 100%)',
+              pointerEvents: 'none',
             },
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#f57c00', mb: 3, display: 'flex', alignItems: 'center' }}>
-            🌅 आज का सारांश • Today's Summary
-          </Typography>
-          
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={3}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                {weatherLoading ? (
-                  <Typography variant="h4" sx={{ color: '#757575' }}>...</Typography>
-                ) : (
-                  <Typography variant="h2" sx={{ color: '#4caf50', fontWeight: 'bold', mb: 1 }}>
-                    {weatherData ? Math.round(weatherData.main.temp) : 28}°C
-                  </Typography>
-                )}
-                <Typography variant="body1" color="text.secondary">
-                  ☀️ आज का तापमान
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+            <Box 
+              sx={{ 
+                fontSize: '2rem', 
+                mr: 2,
+                filter: 'drop-shadow(0 2px 4px rgba(255,193,7,0.3))',
+                animation: 'glow 2s ease-in-out infinite alternate'
+              }}
+            >
+              🌅
+            </Box>
+            <Box>
+              {isMobile ? (
+                <Typography 
+                  variant="h5" 
+                  sx={{ 
+                    fontWeight: 800, 
+                    color: '#f57c00', 
+                    lineHeight: 1.2,
+                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  आज का सारांश
                 </Typography>
-                {location && (
-                  <Typography variant="caption" color="text.secondary">
-                    📍 {location.name}
+              ) : (
+                <>
+                  <Typography 
+                    variant="h4" 
+                    sx={{ 
+                      fontWeight: 800, 
+                      color: '#f57c00', 
+                      lineHeight: 1.2,
+                      textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }}
+                  >
+                    आज का सारांश
                   </Typography>
+                  <Typography 
+                    variant="h5" 
+                    sx={{ 
+                      fontWeight: 500, 
+                      color: '#ff8f00', 
+                      opacity: 0.8,
+                      letterSpacing: '0.5px'
+                    }}
+                  >
+                    Today's Summary
+                  </Typography>
+                </>
+              )}
+            </Box>
+          </Box>
+          
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={6} md={3}>
+              <Box 
+                sx={{ 
+                  textAlign: 'center', 
+                  p: 3,
+                  borderRadius: 4,
+                  background: 'rgba(76, 175, 80, 0.08)',
+                  border: '2px solid rgba(76, 175, 80, 0.12)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 8px 25px rgba(76, 175, 80, 0.15)'
+                  }
+                }}
+              >
+                {weatherLoading ? (
+                  <Box sx={{ py: 3 }}>
+                    <Typography variant="h4" sx={{ color: '#757575', mb: 2 }}>...</Typography>
+                    <Typography variant="body2" sx={{ color: '#757575' }}>लोड हो रहा है</Typography>
+                  </Box>
+                ) : (
+                  <>
+                    <Typography 
+                      variant="h1" 
+                      sx={{ 
+                        color: '#2e7d32', 
+                        fontWeight: 900, 
+                        mb: 1.5,
+                        textShadow: '0 2px 8px rgba(46, 125, 50, 0.2)',
+                        fontSize: { xs: '2.5rem', md: '3.5rem' }
+                      }}
+                    >
+                      {weatherData ? Math.round(weatherData.main.temp) : 28}°C
+                    </Typography>
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        color: '#388e3c', 
+                        fontWeight: 600, 
+                        mb: 1,
+                        fontSize: '1.1rem'
+                      }}
+                    >
+                      ☀️ आज का तापमान
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#4caf50', opacity: 0.8, display: { xs: 'none', md: 'block' } }}>
+                      Your Location
+                    </Typography>
+                    {location && (
+                      <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'center', mt: 1 }}>
+                        <Box sx={{ fontSize: '0.9rem', mr: 0.5, color: '#ff5722' }}>📍</Box>
+                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                          {location.name}
+                        </Typography>
+                      </Box>
+                    )}
+                  </>
                 )}
               </Box>
             </Grid>
             
-            <Grid item xs={12} md={3}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h2" sx={{ color: '#2196f3', fontWeight: 'bold', mb: 1 }}>
+            <Grid item xs={6} sm={6} md={3}>
+              <Box 
+                sx={{ 
+                  textAlign: 'center', 
+                  p: 3,
+                  borderRadius: 4,
+                  background: 'rgba(33, 150, 243, 0.08)',
+                  border: '2px solid rgba(33, 150, 243, 0.12)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 8px 25px rgba(33, 150, 243, 0.15)'
+                  }
+                }}
+              >
+                <Typography 
+                  variant="h1" 
+                  sx={{ 
+                    color: '#1565c0', 
+                    fontWeight: 900, 
+                    mb: 1.5,
+                    textShadow: '0 2px 8px rgba(21, 101, 192, 0.2)',
+                    fontSize: { xs: '2.5rem', md: '3.5rem' }
+                  }}
+                >
                   {weatherData ? weatherData.main.humidity : 65}%
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    color: '#1976d2', 
+                    fontWeight: 600, 
+                    mb: 1,
+                    fontSize: '1.1rem'
+                  }}
+                >
                   💧 हवा में नमी
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="body2" sx={{ color: '#2196f3', opacity: 0.8, display: { xs: 'none', md: 'block' } }}>
                   Humidity
                 </Typography>
               </Box>
             </Grid>
             
-            <Grid item xs={12} md={3}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h2" sx={{ color: '#ff5722', fontWeight: 'bold', mb: 1 }}>
-                  {weatherData ? weatherData.weather[0].main : 'Good'}
+            <Grid item xs={6} sm={6} md={3}>
+              <Box 
+                sx={{ 
+                  textAlign: 'center', 
+                  p: 3,
+                  borderRadius: 4,
+                  background: 'rgba(244, 67, 54, 0.08)',
+                  border: '2px solid rgba(244, 67, 54, 0.12)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 8px 25px rgba(244, 67, 54, 0.15)'
+                  }
+                }}
+              >
+                <Typography 
+                  variant="h2" 
+                  sx={{ 
+                    color: '#c62828', 
+                    fontWeight: 800, 
+                    mb: 1.5,
+                    textShadow: '0 2px 8px rgba(198, 40, 40, 0.2)',
+                    fontSize: { xs: '1.8rem', md: '2.2rem' },
+                    textTransform: 'capitalize'
+                  }}
+                >
+                  {weatherData ? (
+                    weatherData.weather[0].main === 'Clear' ? 'Clear' : 
+                    weatherData.weather[0].main === 'Clouds' ? 'Cloudy' :
+                    weatherData.weather[0].main === 'Rain' ? 'Rainy' :
+                    weatherData.weather[0].main
+                  ) : 'Clear'}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    color: '#d32f2f', 
+                    fontWeight: 600, 
+                    mb: 1,
+                    fontSize: '1.1rem'
+                  }}
+                >
                   🌤️ मौसम स्थिति
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {weatherData ? weatherData.weather[0].description : 'Clear sky'}
+                <Typography variant="body2" sx={{ color: '#f44336', opacity: 0.8, textTransform: 'capitalize', display: { xs: 'none', md: 'block' } }}>
+                  {weatherData ? weatherData.weather[0].description : 'clear sky'}
                 </Typography>
               </Box>
             </Grid>
             
-            <Grid item xs={12} md={3}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h2" sx={{ color: '#9c27b0', fontWeight: 'bold', mb: 1 }}>
-                  {weatherData ? Math.round(weatherData.wind.speed * 3.6) : 15}
+            <Grid item xs={6} sm={6} md={3}>
+              <Box 
+                sx={{ 
+                  textAlign: 'center', 
+                  p: 3,
+                  borderRadius: 4,
+                  background: 'rgba(156, 39, 176, 0.08)',
+                  border: '2px solid rgba(156, 39, 176, 0.12)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 8px 25px rgba(156, 39, 176, 0.15)'
+                  }
+                }}
+              >
+                <Typography 
+                  variant="h1" 
+                  sx={{ 
+                    color: '#6a1b9a', 
+                    fontWeight: 900, 
+                    mb: 1.5,
+                    textShadow: '0 2px 8px rgba(106, 27, 154, 0.2)',
+                    fontSize: { xs: '2.5rem', md: '3.5rem' }
+                  }}
+                >
+                  {weatherData ? Math.round(weatherData.wind.speed * 3.6) : 13}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    color: '#7b1fa2', 
+                    fontWeight: 600, 
+                    mb: 1,
+                    fontSize: '1.1rem'
+                  }}
+                >
                   🌬️ हवा की गति
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="body2" sx={{ color: '#9c27b0', opacity: 0.8 }}>
                   km/h
                 </Typography>
               </Box>
