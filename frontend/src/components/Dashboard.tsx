@@ -193,7 +193,7 @@ const { t } = (useTranslation as any)();
           await ttsService.speak(item.title, 'hi');
           newsIndexRef.current = (newsIndexRef.current + 1) % farmingNews.length;
         } catch {}
-      }, 60000); // every 60s
+      }, 20000); // every 20s
     }, 10000);
 
     return () => {
