@@ -276,6 +276,9 @@ const AppContent = () => {
           <Route path="/weather" element={<WeatherForecast />} />
           <Route path="/market-analysis" element={<MarketAnalysis />} />
           <Route path="/ai-chat" element={<ErrorBoundary><AIChatbot /></ErrorBoundary>} />
+          {/* Route aliases for convenience */}
+          <Route path="/ai-assistant" element={<ErrorBoundary><AIChatbot /></ErrorBoundary>} />
+          <Route path="/assistant" element={<ErrorBoundary><AIChatbot /></ErrorBoundary>} />
           <Route path="/satellite-view" element={<SatelliteFieldView />} />
           <Route path="/ar-visualization" element={<ARPlantVisualization />} />
           <Route path="/rain-alerts" element={<RainAlertSettings />} />
