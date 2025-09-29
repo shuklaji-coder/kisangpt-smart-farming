@@ -19,6 +19,7 @@ import LoanApplication from './components/LoanApplication';
 import QuickHelp from './components/QuickHelp';
 import AIChatbot from './components/AIChatbot';
 import FloatingChatbot from './components/FloatingChatbot';
+import ErrorBoundary from './components/ErrorBoundary';
 import SatelliteFieldView from './components/SatelliteFieldView';
 import ARPlantVisualization from './components/ARPlantVisualization';
 import RainAlertSettings from './components/RainAlertSettings';
@@ -274,7 +275,7 @@ const AppContent = () => {
           <Route path="/government-subsidy" element={<GovernmentSubsidy />} />
           <Route path="/weather" element={<WeatherForecast />} />
           <Route path="/market-analysis" element={<MarketAnalysis />} />
-          <Route path="/ai-chat" element={<AIChatbot />} />
+          <Route path="/ai-chat" element={<ErrorBoundary><AIChatbot /></ErrorBoundary>} />
           <Route path="/satellite-view" element={<SatelliteFieldView />} />
           <Route path="/ar-visualization" element={<ARPlantVisualization />} />
           <Route path="/rain-alerts" element={<RainAlertSettings />} />
