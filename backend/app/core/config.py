@@ -65,6 +65,12 @@ class Settings(BaseSettings):
     RATE_LIMIT_REQUESTS: int = 100
     RATE_LIMIT_PERIOD: int = 60
     
+    # AWS S3 Settings
+    AWS_ACCESS_KEY_ID: Optional[str] = None
+    AWS_SECRET_ACCESS_KEY: Optional[str] = None
+    AWS_REGION: str = "ap-south-1"
+    AWS_S3_BUCKET_NAME: str = "kisangpttt"
+    
     # Community AI Settings
     ENABLE_COMMUNITY_SHARING: bool = True
     ANONYMIZE_DATA: bool = True

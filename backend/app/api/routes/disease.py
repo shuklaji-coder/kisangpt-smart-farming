@@ -13,6 +13,7 @@ from loguru import logger
 from app.services.disease_service import DiseasePredictionService
 from app.services.disease_ml_service import DiseaseMLService
 from app.services.disease_database import DiseaseDatabase
+from app.services.s3_service import s3_service
 
 router = APIRouter(tags=["disease"])
 
@@ -165,6 +166,11 @@ async def upload_disease_image(
             "file_size_bytes": len(image_content),
             "upload_timestamp": datetime.now().isoformat()
         }
+        
+        # Upload to S3 if enabled
+        s3_url = await s3_service.upload_file(image_content, file.filename)
+        if s3_url:
+            result["upload_info"]["s3_url"] = s3_url
         
         return result
         

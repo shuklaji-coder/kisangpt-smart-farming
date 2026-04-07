@@ -146,6 +146,9 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
+// S3 Upload configuration
+const { upload: s3Upload, saveUserDataToS3 } = require('./services/s3Service');
+
 // Routes
 
 // Health Check
@@ -222,6 +225,13 @@ app.post('/api/auth/register', async (req, res) => {
     // Remove password from response
     const userResponse = newUser.toJSON();
     delete userResponse.password;
+
+    // Save user data to S3 (fire-and-forget)
+    saveUserDataToS3(newUser.id, {
+      ...userResponse,
+      event: 'registered',
+      savedAt: new Date().toISOString()
+    }).catch(err => console.error('S3 save error on register:', err));
     
     res.status(201).json({
       success: true,
@@ -280,6 +290,13 @@ app.post('/api/auth/login', async (req, res) => {
     // Remove password from response
     const userResponse = user.toJSON();
     delete userResponse.password;
+
+    // Save updated user data to S3 on each login (fire-and-forget)
+    saveUserDataToS3(user.id, {
+      ...userResponse,
+      event: 'login',
+      savedAt: new Date().toISOString()
+    }).catch(err => console.error('S3 save error on login:', err));
     
     res.json({
       success: true,
@@ -373,6 +390,50 @@ app.put('/api/auth/profile', verifyToken, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'सर्वर त्रुटि / Server error'
+    });
+  }
+});
+
+// Profile Picture Upload Route
+app.post('/api/auth/profile/upload', verifyToken, (req, res, next) => {
+  req.uploadFolder = 'profiles';
+  next();
+}, s3Upload.single('profilePicture'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+    }
+
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Update user's profile picture URL
+    user.profilePicture = req.file.location;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'प्रोफ़ाइल चित्र अपडेट हो गया / Profile picture updated successfully',
+      imageUrl: req.file.location,
+      user: {
+        id: user.id,
+        name: user.name,
+        profilePicture: user.profilePicture
+      }
+    });
+  } catch (error) {
+    console.error('Upload Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Upload failed'
     });
   }
 });
