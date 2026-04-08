@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -33,6 +33,7 @@ import {
   Logout,
   Person,
   AccountBalance,
+  PhotoCamera,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -53,6 +54,8 @@ const Navbar: React.FC = () => {
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [modulesMenuAnchorEl, setModulesMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [user, setUser] = useState<any>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Get user data from localStorage
   useEffect(() => {
@@ -130,6 +133,30 @@ const Navbar: React.FC = () => {
       window.location.reload();
     } catch (error) {
       console.error('Logout error:', error);
+    }
+  };
+
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+      
+      const response = await authAPI.uploadProfilePicture(formData);
+      // Wait, 'authAPI.uploadProfilePicture' might not be in the imported type if 'api.js' has no types, 
+      // but assuming it works.
+      if (response && response.success && response.user) {
+        setUser(response.user); // Update UI
+      }
+    } catch (error) {
+      console.error('Photo upload error:', error);
+      alert('Photo upload failed. Please try again.');
+    } finally {
+      setIsUploading(false);
+      handleUserMenuClose();
     }
   };
 
@@ -250,7 +277,9 @@ const Navbar: React.FC = () => {
                 </IconButton>
                 <Chip
                   avatar={
-                    <Avatar sx={{
+                    <Avatar 
+                      src={user.profilePicture || ''}
+                      sx={{
                       bgcolor: '#fff',
                       color: '#2e7d32',
                       width: 35,
@@ -258,7 +287,7 @@ const Navbar: React.FC = () => {
                       border: '2px solid rgba(255,255,255,0.3)',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                     }}>
-                      <Person sx={{ fontSize: 20 }} />
+                      {!user.profilePicture && <Person sx={{ fontSize: 20 }} />}
                     </Avatar>
                   }
                   label={`🙏 ${user.name || t('navbar.farmerJi')}`}
@@ -290,6 +319,13 @@ const Navbar: React.FC = () => {
                     cursor: 'pointer',
                   }}
                 />
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  ref={fileInputRef}
+                  onChange={handlePhotoUpload}
+                />
                 <Menu
                   anchorEl={userMenuAnchorEl}
                   open={Boolean(userMenuAnchorEl)}
@@ -297,6 +333,10 @@ const Navbar: React.FC = () => {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
+                  <MenuItem onClick={() => { fileInputRef.current?.click(); }}>
+                    <PhotoCamera sx={{ mr: 2 }} />
+                    {isUploading ? 'Uploading...' : 'Upload Photo'}
+                  </MenuItem>
                   <MenuItem onClick={handleUserMenuClose}>
                     <Person sx={{ mr: 2 }} />
                     {t('navbar.profile')}

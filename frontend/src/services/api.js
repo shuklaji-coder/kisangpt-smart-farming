@@ -156,6 +156,23 @@ export const authAPI = {
     return !!(token && user);
   },
 
+  // Upload Profile Picture
+  uploadProfilePicture: async (formData) => {
+    try {
+      const response = await api.post('/api/auth/profile/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (response.data.success && response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { success: false, message: 'Network error' };
+    }
+  },
+
   // Get stored user data
   getStoredUser: () => {
     try {
