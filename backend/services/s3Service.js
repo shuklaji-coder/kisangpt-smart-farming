@@ -21,7 +21,6 @@ const upload = multer({
   storage: multerS3({
     s3: s3Client,
     bucket: process.env.AWS_S3_BUCKET_NAME || "kisangpttt",
-    acl: "public-read", // Optional: depends on bucket policy
     key: function (req, file, cb) {
       const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
       const ext = path.extname(file.originalname);
