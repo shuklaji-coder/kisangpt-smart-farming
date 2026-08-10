@@ -48,10 +48,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
   // Demo users helper (used when backend is unavailable OR returns non-success)
   const tryDemoLogin = (email: string, password: string) => {
     const defaultDemoUsers = [
-      { email: 'farmer@example.com', password: 'farmer123', name: 'Ã Â¤Â°Ã Â¤Â®Ã Â¥â€¡Ã Â¤Â¶ Ã Â¤â€¢Ã Â¥ÂÃ Â¤Â®Ã Â¤Â¾Ã Â¤Â°', role: 'farmer' },
-      { email: 'test@example.com', password: 'test123', name: 'Ã Â¤Å¸Ã Â¥â€¡Ã Â¤Â¸Ã Â¥ÂÃ Â¤Å¸ Ã Â¤Â¯Ã Â¥â€šÃ Â¤Å“Ã Â¤Â°', role: 'farmer' },
-      { email: 'demo@kisangpt.com', password: 'demo123', name: 'Ã Â¤Â¡Ã Â¥â€¡Ã Â¤Â®Ã Â¥â€¹ Ã Â¤â€¢Ã Â¤Â¿Ã Â¤Â¸Ã Â¤Â¾Ã Â¤Â¨', role: 'farmer' },
-      { email: 'admin@kisangpt.com', password: 'admin123', name: 'Ã Â¤ÂÃ Â¤Â¡Ã Â¤Â®Ã Â¤Â¿Ã Â¤Â¨', role: 'admin' }
+      { email: 'farmer@example.com', password: 'farmer123', name: 'रमेश कुमार', role: 'farmer' },
+      { email: 'test@example.com', password: 'test123', name: 'टेस्ट यूजर', role: 'farmer' },
+      { email: 'demo@kisangpt.com', password: 'demo123', name: 'डेमो किसान', role: 'farmer' },
+      { email: 'admin@kisangpt.com', password: 'admin123', name: 'एडमिन', role: 'admin' }
     ];
     const registeredDemoUsers = JSON.parse(localStorage.getItem('demoUsers') || '[]');
     const demoUsers = [...defaultDemoUsers, ...registeredDemoUsers];
@@ -62,7 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      avatar: 'Ã°Å¸Â§â€˜Ã¢â‚¬ÂÃ°Å¸Å’Â¾',
+      avatar: '👨‍🌾',
       location: 'Delhi, India',
       joinDate: new Date().toISOString().split('T')[0]
     };
@@ -74,9 +74,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
   // Create floating farming elements to match field image
   useEffect(() => {
     const elements: Array<{ id: number; x: number; y: number; icon: string; delay: number }> = [];
-    const fieldIcons = ['Ã°Å¸Å’Â¾', 'Ã°Å¸Å’Â±', 'Ã°Å¸Å’Â½', 'Ã°Å¸Ââ€¦', 'Ã°Å¸Â¥â€¢', 'Ã°Å¸Å’Â»', 'Ã°Å¸Ââ‚¬'];
-    const farmIcons = ['Ã°Å¸Å¡Å“', 'Ã°Å¸Ââ€ž', 'Ã°Å¸Ââ€', 'Ã°Å¸ÂÂ¡', 'Ã°Å¸Å’Â³'];
-    const weatherIcons = ['Ã¢Ëœâ‚¬Ã¯Â¸Â', 'Ã°Å¸Å’Â§Ã¯Â¸Â', 'Ã¢ËœÂÃ¯Â¸Â'];
+    const fieldIcons = ['🌾', '🌱', '🌽', '🍅', '🥕', '🌻', '🍀'];
+    const farmIcons = ['🚜', '🐄', '🐓', '🏡', '🌳'];
+    const weatherIcons = ['☀️', '🌧️', '☁️'];
     
     // Add field crop elements (more frequent, like crop rows)
     for (let i = 0; i < 15; i++) {
@@ -165,7 +165,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
         localStorage.setItem('authToken', response.token || 'demo-token');
         localStorage.setItem('user', JSON.stringify(response.user || {
           id: Date.now(),
-          name: 'Ã Â¤â€¢Ã Â¤Â¿Ã Â¤Â¸Ã Â¤Â¾Ã Â¤Â¨ Ã Â¤Å“Ã Â¥â‚¬',
+          name: 'किसान जी',
           email,
           role: 'farmer'
         }));
@@ -174,7 +174,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           onLogin(response.user || { email, password });
         }
       } else {
-        // Backend responded but did not authenticate Ã¢â‚¬â€ try demo users
+        // Backend responded but did not authenticate — try demo users
         const demoUser = tryDemoLogin(email, password);
         if (demoUser) {
           if (onLogin) onLogin({ email, password });
@@ -323,7 +323,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 mb: 1,
               }}
             >
-              Ã°Å¸Å’Â¾ KisanGPT
+              🌾 KisanGPT
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {t('app.tagline')}
@@ -347,12 +347,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           {/* Demo Credentials Info */}
           <Alert severity="info" sx={{ mb: 2, borderRadius: 3 }}>
               <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
-              Ã°Å¸â€œÂ {t('auth.demoCredentials')}
+              📝 {t('auth.demoCredentials')}
             </Typography>
             <Typography variant="body2" component="div" sx={{ mb: 1 }}>
-              Ã¢â‚¬Â¢ <strong>farmer@example.com</strong> / farmer123<br/>
-              Ã¢â‚¬Â¢ <strong>test@example.com</strong> / test123<br/>
-              Ã¢â‚¬Â¢ <strong>demo@kisangpt.com</strong> / demo123
+              • <strong>farmer@example.com</strong> / farmer123<br/>
+              • <strong>test@example.com</strong> / test123<br/>
+              • <strong>demo@kisangpt.com</strong> / demo123
             </Typography>
             <Button 
               size="small" 
@@ -485,7 +485,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
 
           <Divider sx={{ my: 2, '&::before, &::after': { borderColor: '#e0e0e0' } }}>
             <Typography variant="body2" color="text.secondary">
-              Ã Â¤Â¯Ã Â¤Â¾
+              या
             </Typography>
           </Divider>
 

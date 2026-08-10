@@ -904,7 +904,7 @@ const { t } = (useTranslation as any)();
 
       {/* Stats Cards */}
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main, display: 'flex', alignItems: 'center' }}>
-        {`📈 ${tt('dashboard.yourFarmStats')} • Your Farm Stats`}
+        {`📈 ${tt('dashboard.yourFarmStats')}`}
       </Typography>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {statsCards.map((stat, index) => (
@@ -941,32 +941,40 @@ const { t } = (useTranslation as any)();
                 }}
               >
                 <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, mb: 0.5 }}>
+                        {stat.title}
+                      </Typography>
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          fontWeight: 800,
+                          color: stat.color,
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {stat.value}
+                      </Typography>
+                    </Box>
                     <Avatar
                       sx={{
-                        bgcolor: stat.color,
-                        mr: 2,
-                        width: 56,
-                        height: 56,
-                        boxShadow: `0 4px 12px ${stat.color}40`,
-                        background: `linear-gradient(135deg, ${stat.color}, ${stat.color}cc)`,
+                        bgcolor: `${stat.color}18`,
+                        ml: 1,
+                        width: 48,
+                        height: 48,
+                        flexShrink: 0,
+                        color: stat.color,
+                        border: `2px solid ${stat.color}30`,
                       }}
                     >
                       {stat.icon}
                     </Avatar>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="h3" sx={{ fontWeight: 'bold', color: stat.color, mb: 0.5 }}>
-                        {stat.value}
-                      </Typography>
-                      <Typography variant="h6" color="text.primary" sx={{ fontWeight: 'medium', mb: 1 }}>
-                        {stat.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                        {stat.description}
-                      </Typography>
-                    </Box>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
                     <Chip
                       label={stat.change}
                       size="small"
@@ -981,6 +989,9 @@ const { t } = (useTranslation as any)();
                       {tt('dashboard.updatedToday')}
                     </Typography>
                   </Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem', mt: 1, opacity: 0.75 }}>
+                    {stat.description}
+                  </Typography>
                 </CardContent>
               </Card>
             </motion.div>

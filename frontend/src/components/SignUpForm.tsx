@@ -61,7 +61,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
   // Create floating farming elements
   useEffect(() => {
     const elements: Array<{ id: number; x: number; y: number; icon: string; delay: number }> = [];
-    const icons = ['Ã°Å¸Å’Â¾', 'Ã°Å¸Å¡Å“', 'Ã°Å¸Å’Â±', 'Ã°Å¸Å’Â½', 'Ã°Å¸Ââ€¦', 'Ã°Å¸Â¥â€¢', 'Ã°Å¸Å’Â»', 'Ã°Å¸Ââ€ž', 'Ã°Å¸Ââ€', 'Ã°Å¸Ââ‚¬', 'Ã¢Ëœâ‚¬Ã¯Â¸Â', 'Ã°Å¸Å’Â§Ã¯Â¸Â', 'Ã°Å¸ÂÂ¡', 'Ã°Å¸Å’Â³'];
+    const icons = ['🌾', '🚜', '🌱', '🌽', '🍅', '🥕', '🌻', '🐄', '🐓', '🍀', '☀️', '🌧️', '🏡', '🌳'];
     
     for (let i = 0; i < 15; i++) {
       elements.push({
@@ -151,7 +151,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
         farmSize: formData.farmSize || '1-2 acres',
         cropType: formData.cropType || 'Mixed Crops',
         role: 'farmer',
-        avatar: 'Ã°Å¸Â§â€˜Ã¢â‚¬ÂÃ°Å¸Å’Â¾',
+        avatar: '👨‍🌾',
         joinDate: new Date().toISOString().split('T')[0],
         verified: true
       };
@@ -179,16 +179,16 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
   };
 
   const cropTypes = [
-    'Ã Â¤â€”Ã Â¥â€¡Ã Â¤Â¹Ã Â¥â€šÃ Â¤â€š / Wheat',
-    'Ã Â¤Å¡Ã Â¤Â¾Ã Â¤ÂµÃ Â¤Â² / Rice', 
-    'Ã Â¤Â®Ã Â¤â€¢Ã Â¥ÂÃ Â¤â€¢Ã Â¤Â¾ / Corn',
-    'Ã Â¤Å¸Ã Â¤Â®Ã Â¤Â¾Ã Â¤Å¸Ã Â¤Â° / Tomato',
-    'Ã Â¤â€ Ã Â¤Â²Ã Â¥â€š / Potato',
-    'Ã Â¤ÂªÃ Â¥ÂÃ Â¤Â¯Ã Â¤Â¾Ã Â¤Å“ / Onion',
-    'Ã Â¤â€”Ã Â¤Â¨Ã Â¥ÂÃ Â¤Â¨Ã Â¤Â¾ / Sugarcane',
-    'Ã Â¤â€¢Ã Â¤ÂªÃ Â¤Â¾Ã Â¤Â¸ / Cotton',
-    'Ã Â¤Â¸Ã Â¥â€¹Ã Â¤Â¯Ã Â¤Â¾Ã Â¤Â¬Ã Â¥â‚¬Ã Â¤Â¨ / Soybean',
-    'Ã Â¤â€¦Ã Â¤Â¨Ã Â¥ÂÃ Â¤Â¯ / Other'
+    'गेहूं / Wheat',
+    'चावल / Rice', 
+    'मक्का / Corn',
+    'टमाटर / Tomato',
+    'आलू / Potato',
+    'प्याज / Onion',
+    'गन्ना / Sugarcane',
+    'कपास / Cotton',
+    'सोयाबीन / Soybean',
+    'अन्य / Other'
   ];
 
   return (
@@ -327,10 +327,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 mb: 1,
               }}
             >
-              Ã°Å¸Å’Â± Ã Â¤Â¨Ã Â¤Â¯Ã Â¤Â¾ Ã Â¤â€¦Ã Â¤â€¢Ã Â¤Â¾Ã Â¤â€°Ã Â¤â€šÃ Â¤Å¸ Ã Â¤Â¬Ã Â¤Â¨Ã Â¤Â¾Ã Â¤ÂÃ Â¤â€š
+              🌱 नया अकाउंट बनाएं
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              KisanGPT Ã Â¤Â®Ã Â¥â€¡Ã Â¤â€š Ã Â¤â€ Ã Â¤ÂªÃ Â¤â€¢Ã Â¤Â¾ Ã Â¤Â¸Ã Â¥ÂÃ Â¤ÂµÃ Â¤Â¾Ã Â¤â€”Ã Â¤Â¤ Ã Â¤Â¹Ã Â¥Ë†
+              KisanGPT में आपका स्वागत है
             </Typography>
           </Box>
 
@@ -358,7 +358,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
             >
               <TextField
                 fullWidth
-                label="Ã Â¤ÂªÃ Â¥â€šÃ Â¤Â°Ã Â¤Â¾ Ã Â¤Â¨Ã Â¤Â¾Ã Â¤Â® / Full Name *"
+                label="पूरा नाम / Full Name *"
                 value={formData.name}
                 onChange={handleInputChange('name')}
                 InputProps={{
@@ -390,7 +390,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
             >
               <TextField
                 fullWidth
-                label="Ã Â¤Ë†Ã Â¤Â®Ã Â¥â€¡Ã Â¤Â² / Email *"
+                label="ईमेल / Email *"
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange('email')}
@@ -425,7 +425,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
               >
                 <TextField
                   fullWidth
-                  label="Ã Â¤Â«Ã Â¥â€¹Ã Â¤Â¨ / Phone"
+                  label="फोन / Phone"
                   value={formData.phone}
                   onChange={handleInputChange('phone')}
                   InputProps={{
@@ -490,7 +490,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
               >
                 <TextField
                   fullWidth
-                  label="Ã Â¤â€“Ã Â¥â€¡Ã Â¤Â¤ Ã Â¤â€¢Ã Â¤Â¾ Ã Â¤â€ Ã Â¤â€¢Ã Â¤Â¾Ã Â¤Â° / Farm Size (acres)"
+                  label="खेत का आकार / Farm Size (acres)"
                   value={formData.farmSize}
                   onChange={handleInputChange('farmSize')}
                   sx={{
@@ -688,7 +688,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
           >
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary">
-                Ã Â¤ÂªÃ Â¤Â¹Ã Â¤Â²Ã Â¥â€¡ Ã Â¤Â¸Ã Â¥â€¡ Ã Â¤â€¦Ã Â¤â€¢Ã Â¤Â¾Ã Â¤â€°Ã Â¤â€šÃ Â¤Å¸ Ã Â¤Â¹Ã Â¥Ë†?{' '}
+                पहले से अकाउंट है?{' '}
                 <Link
                   href="#"
                   onClick={(e) => {
@@ -704,7 +704,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                     },
                   }}
                 >
-                  Ã Â¤Â²Ã Â¥â€°Ã Â¤â€” Ã Â¤â€¡Ã Â¤Â¨ Ã Â¤â€¢Ã Â¤Â°Ã Â¥â€¡Ã Â¤â€š
+                  लॉग इन करें
                 </Link>
               </Typography>
             </Box>
