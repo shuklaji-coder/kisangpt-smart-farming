@@ -805,97 +805,66 @@ const { t } = (useTranslation as any)();
       </motion.div>
 
       <Box sx={{ p: { xs: 1, md: 3 } }}>
-      {/* Welcome Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
         <Paper
-          elevation={8}
+          className="glass-card-dark"
           sx={{
-            background: 'linear-gradient(120deg, #0f6d2b 0%, #1e8f3f 40%, #4caf50 75%, #8bd17c 100%)',
-            backgroundSize: '200% auto',
-            animation: 'gradientShift 10s ease infinite',
-            color: 'white',
-            p: { xs: 2, md: 4 },
-            mb: { xs: 2, md: 4 },
-            borderRadius: 4,
+            p: { xs: 3, md: 5 },
+            mb: { xs: 3, md: 5 },
+            borderRadius: '32px',
             position: 'relative',
             overflow: 'hidden',
-            border: '1px solid rgba(255,255,255,0.18)',
-            boxShadow: '0 24px 60px rgba(20, 87, 45, 0.4)',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'linear-gradient(45deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.06) 55%, transparent 100%)',
-              zIndex: 1,
-            },
-            '&::after': {
-              content: '"🌾"',
-              position: 'absolute',
-              top: 24,
-              right: 36,
-              fontSize: '72px',
-              opacity: 0.22,
-              zIndex: 1,
-              animation: 'floatY 6s ease-in-out infinite',
-            },
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 4,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, position: 'relative', zIndex: 2 }}>
+          {/* Background animated blob inside the card */}
+          <Box sx={{
+            position: 'absolute', top: '-50%', right: '-10%', width: '400px', height: '400px', 
+            background: 'radial-gradient(circle, rgba(16,185,129,0.3) 0%, transparent 70%)',
+            filter: 'blur(40px)', zIndex: 0, animation: 'levitate 8s infinite'
+          }} />
+
+          <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', zIndex: 2, flex: 1 }}>
             <Avatar
               sx={{
-                bgcolor: 'rgba(255, 255, 255, 0.2)',
-                mr: { xs: 2, md: 3 },
-                width: { xs: 56, md: 70 },
-                height: { xs: 56, md: 70 },
-                boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-                border: '3px solid rgba(255,255,255,0.3)',
+                bgcolor: 'rgba(255, 255, 255, 0.1)',
+                color: '#10b981',
+                mr: { xs: 2.5, md: 4 },
+                width: { xs: 72, md: 96 },
+                height: { xs: 72, md: 96 },
+                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                border: '1px solid rgba(255,255,255,0.15)',
               }}
             >
-              <Agriculture sx={{ fontSize: 35 }} />
+              <Agriculture sx={{ fontSize: { xs: 40, md: 50 } }} />
             </Avatar>
-            <Box sx={{ flex: 1 }}>
-<Typography variant="h3" sx={{ fontWeight: 'bold', mb: 0.5, color: '#ffffff', textShadow: '2px 2px 4px rgba(0,0,0,0.3)', fontSize: { xs: '1.6rem', md: '2.2rem' } }}>
-                {/* @ts-ignore */}
+            <Box>
+              <Typography variant="h2" sx={{ fontWeight: 800, mb: 1, color: '#ffffff', letterSpacing: '-0.03em' }}>
                 {t('dashboard.welcome', { name: userName })}
               </Typography>
-              {/* Visible name chip to ensure the farmer name is clearly shown */}
-              <Chip label={userName} sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: '#fff', fontWeight: 'bold', mr: 1, mb: 1 }} />
-              <Typography variant="h6" sx={{ opacity: 0.9, mb: 1 }}>
-                {/* @ts-ignore */}
+              <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.7)', fontWeight: 400, mb: 2 }}>
                 {t('dashboard.futureVision')}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-                {userEmail && (
-                  <Typography variant="body2" sx={{ opacity: 0.9, display: 'flex', alignItems: 'center' }}>
-                    📫 {userEmail}
-                  </Typography>
-                )}
-                <Typography variant="body2" sx={{ opacity: 0.9, display: 'flex', alignItems: 'center' }}>
-                  📅 {new Intl.DateTimeFormat('hi-IN', {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata'
-                  }).format(now)}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.95, display: 'flex', alignItems: 'center', fontWeight: 700 }}>
-                  ⏰ {now.toLocaleTimeString('hi-IN', {
-                    hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Kolkata'
-                  })}
-                </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                <Chip icon={<LocationOn fontSize="small" sx={{ color: '#fff !important' }}/>} label={userEmail || 'India'} sx={{ bgcolor: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }} />
+                <Chip label={new Intl.DateTimeFormat('hi-IN', { weekday: 'long', month: 'short', day: 'numeric' }).format(now)} sx={{ bgcolor: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }} />
               </Box>
             </Box>
           </Box>
-          <Box sx={{ position: 'relative', zIndex: 2, mt: 2, p: 3, bgcolor: 'rgba(255,255,255,0.14)', borderRadius: 2, border: '1px solid rgba(255,255,255,0.22)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
-            <Typography variant="body1" sx={{ opacity: 0.95, mb: 1, fontWeight: 600 }}>
-              {/* @ts-ignore */}
+          
+          <Box sx={{ position: 'relative', zIndex: 2, minWidth: { xs: '100%', md: '320px' }, p: 3, bgcolor: 'rgba(255,255,255,0.08)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(16px)' }}>
+            <Typography variant="subtitle2" sx={{ color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, mb: 1 }}>
               {t('dashboard.personalizedAdvice')}
             </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.9, fontStyle: 'italic' }}>
+            <Typography variant="body1" sx={{ color: '#f8fafc', fontWeight: 500, lineHeight: 1.6 }}>
               {getWeatherBasedAdvice()}
             </Typography>
           </Box>
@@ -906,92 +875,78 @@ const { t } = (useTranslation as any)();
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main, display: 'flex', alignItems: 'center' }}>
         {`📈 ${tt('dashboard.yourFarmStats')}`}
       </Typography>
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={4} sx={{ mb: 6 }}>
         {statsCards.map((stat, index) => (
           <Grid item xs={12} sm={6} lg={3} key={index}>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
               <Card
-                elevation={6}
+                className="glass-card"
                 sx={{
-                  borderRadius: 4,
-                  overflow: 'hidden',
+                  borderRadius: '24px',
                   position: 'relative',
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
                   '&:hover': {
-                    transform: 'translateY(-12px) scale(1.03)',
-                    boxShadow: `0 25px 50px ${stat.color}40, 0 8px 16px rgba(0,0,0,0.15)`,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.98) 100%)',
+                    transform: 'translateY(-8px)',
                   },
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '4px',
-                    background: `linear-gradient(90deg, ${stat.color}, ${stat.color}aa)`,
-                  },
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, mb: 0.5 }}>
+                {/* Colored accent line on top */}
+                <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: stat.color }} />
+                
+                <CardContent sx={{ p: 3.5, pb: "28px !important" }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
+                    <Box sx={{ flex: 1, pr: 2 }}>
+                      <Typography variant="subtitle2" sx={{ color: '#475569', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', mb: 1 }}>
                         {stat.title}
                       </Typography>
                       <Typography
-                        variant="h4"
+                        variant="h3"
                         sx={{
                           fontWeight: 800,
-                          color: stat.color,
+                          color: '#022c22',
                           whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          lineHeight: 1.2,
+                          lineHeight: 1.1,
+                          textShadow: '0 2px 10px rgba(0,0,0,0.03)'
                         }}
                       >
                         {stat.value}
                       </Typography>
                     </Box>
-                    <Avatar
-                      sx={{
-                        bgcolor: `${stat.color}18`,
-                        ml: 1,
-                        width: 48,
-                        height: 48,
-                        flexShrink: 0,
-                        color: stat.color,
-                        border: `2px solid ${stat.color}30`,
-                      }}
-                    >
-                      {stat.icon}
-                    </Avatar>
+                    <div className="pulse-ring">
+                      <Avatar
+                        sx={{
+                          bgcolor: '#ffffff',
+                          color: stat.color,
+                          width: 56,
+                          height: 56,
+                          boxShadow: '0 8px 16px rgba(0,0,0,0.08)',
+                        }}
+                      >
+                        {stat.icon}
+                      </Avatar>
+                    </div>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid rgba(15,23,42,0.06)' }}>
                     <Chip
                       label={stat.change}
                       size="small"
                       sx={{
                         bgcolor: `${stat.color}15`,
                         color: stat.color,
-                        fontWeight: 'bold',
-                        border: `1px solid ${stat.color}30`,
+                        fontWeight: 700,
+                        border: 'none',
+                        px: 1,
                       }}
                     />
-                    <Typography variant="caption" color="text.secondary">
-                      {tt('dashboard.updatedToday')}
+                    <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 500 }}>
+                      {stat.description}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem', mt: 1, opacity: 0.75 }}>
-                    {stat.description}
-                  </Typography>
                 </CardContent>
               </Card>
             </motion.div>

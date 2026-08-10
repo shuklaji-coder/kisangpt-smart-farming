@@ -91,7 +91,7 @@ const Navbar: React.FC = () => {
   const handleLanguageChange = (languageCode: string) => {
     try {
       localStorage.setItem('appLanguage', languageCode);
-    } catch {}
+    } catch { }
     i18n.changeLanguage(languageCode);
     handleLanguageClose();
   };
@@ -187,38 +187,37 @@ const Navbar: React.FC = () => {
       position="sticky"
       elevation={0}
       sx={{
-        background: 'rgba(21, 93, 46, 0.88)',
-        backdropFilter: 'blur(16px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(16px) saturate(1.4)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-        boxShadow: '0 8px 32px rgba(20, 87, 45, 0.25)',
+        top: 24,
+        margin: '0 auto',
+        maxWidth: { xs: 'calc(100% - 32px)', xl: '1240px' },
+        borderRadius: '999px',
+        background: 'rgba(255, 255, 255, 0.18)',
+        backdropFilter: 'blur(28px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+        border: '1px solid rgba(255, 255, 255, 0.75)',
+        boxShadow: '0 28px 80px rgba(15, 23, 42, 0.12)',
+        py: 0.5,
+        px: { xs: 1, md: 2 },
         zIndex: 1200,
       }}
     >
-      <Toolbar disableGutters sx={{ minHeight: 62, px: { xs: 1, md: 2 } }}>
-        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'nowrap' }}>
-          {/* Left: Logo and App Name */}
-          <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0, cursor: 'pointer' }} onClick={() => handleNavigation('/')}>
+      <Toolbar disableGutters sx={{ minHeight: 68, px: { xs: 1.5, md: 2.5 } }}>
+        <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, cursor: 'pointer' }} onClick={() => handleNavigation('/')}>
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: { xs: 38, md: 44 },
-                height: { xs: 38, md: 44 },
-                mr: 1,
-                borderRadius: '14px',
-                background: 'linear-gradient(135deg, #8bc34a, #4caf50)',
-                boxShadow: '0 6px 18px rgba(139, 195, 74, 0.45)',
-                border: '1px solid rgba(255,255,255,0.3)',
-                animation: 'logoPulse 3s ease-in-out infinite',
-                '@keyframes logoPulse': {
-                  '0%, 100%': { transform: 'scale(1)' },
-                  '50%': { transform: 'scale(1.06)' },
-                },
+                width: { xs: 40, md: 48 },
+                height: { xs: 40, md: 48 },
+                borderRadius: '18px',
+                background: 'linear-gradient(135deg, rgba(22, 163, 74, 0.95), rgba(15, 118, 110, 0.95))',
+                boxShadow: '0 12px 28px rgba(22, 163, 74, 0.28)',
+                border: '1px solid rgba(255, 255, 255, 0.45)',
               }}
             >
-              <Agriculture sx={{ fontSize: { xs: 24, md: 28 }, color: '#fff' }} />
+              <Agriculture sx={{ fontSize: { xs: 22, md: 26 }, color: '#fff' }} />
             </Box>
             <Box sx={{ lineHeight: 1 }}>
               <Typography
@@ -227,69 +226,49 @@ const Navbar: React.FC = () => {
                 noWrap
                 sx={{
                   fontWeight: 800,
-                  fontFamily: "'Poppins', 'Noto Sans Devanagari', sans-serif",
-                  color: '#fff',
-                  letterSpacing: '0.3px',
-                  fontSize: { xs: '1.05rem', md: '1.25rem' },
-                  maxWidth: { xs: '42vw', md: 'max-content' },
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  minWidth: 0,
-                  textShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                  color: '#0f172a',
+                  letterSpacing: '0.2px',
+                  fontSize: { xs: '1rem', md: '1.2rem' },
                 }}
               >
-                Kisan<span style={{ color: '#c5e1a5' }}>GPT</span>
+                <Box component="span" sx={{ color: '#0f766e' }}>Kisan</Box>GPT
               </Typography>
               <Typography
                 sx={{
-                  fontSize: { xs: '0.55rem', md: '0.6rem' },
-                  color: 'rgba(255,255,255,0.75)',
-                  fontWeight: 500,
-                  letterSpacing: '1px',
+                  fontSize: '0.65rem',
+                  color: 'rgba(15, 23, 42, 0.72)',
+                  fontWeight: 600,
                   textTransform: 'uppercase',
+                  letterSpacing: '0.16em',
                   display: { xs: 'none', sm: 'block' },
                 }}
               >
-                Smart Farming Assistant
+                Premium Farming Hub
               </Typography>
             </Box>
           </Box>
 
-          {/* Middle: Desktop Navigation */}
-          <Box sx={{
-            display: { xs: 'none', md: 'flex' },
-            alignItems: 'center',
-            gap: 0.5,
-            ml: 2,
-            overflowX: 'auto',
-            whiteSpace: 'nowrap',
-            flexGrow: 1,
-            minWidth: 0,
-            scrollbarWidth: 'none',
-            '&::-webkit-scrollbar': { display: 'none' },
-          }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.75, ml: 2, overflowX: 'auto', whiteSpace: 'nowrap', flexGrow: 1, minWidth: 0, scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
             {primaryNav.map((item) => {
               const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
               return (
                 <Button
                   key={item.path}
-                  color="inherit"
-                  startIcon={item.icon}
                   onClick={() => handleNavigation(item.path)}
+                  startIcon={item.icon}
                   sx={{
-                    color: '#ffffff',
-                    borderRadius: '12px',
-                    px: 1.5,
-                    py: 1,
+                    color: isActive ? '#fff' : 'rgba(15, 23, 42, 0.88)',
+                    background: isActive ? 'linear-gradient(135deg, rgba(22, 163, 74, 0.95), rgba(15, 118, 110, 0.95))' : 'rgba(255,255,255,0.7)',
+                    borderRadius: '999px',
+                    px: 2,
+                    py: 1.05,
                     textTransform: 'none',
+                    fontWeight: 700,
                     fontSize: '0.92rem',
-                    backgroundColor: isActive ? 'rgba(255,255,255,0.16)' : 'transparent',
-                    border: isActive ? '1px solid rgba(255,255,255,0.25)' : '1px solid transparent',
-                    boxShadow: isActive ? 'inset 0 1px 0 rgba(255,255,255,0.2)' : 'none',
-                    backdropFilter: isActive ? 'blur(4px)' : 'none',
+                    boxShadow: isActive ? '0 18px 28px rgba(22, 163, 74, 0.22)' : '0 10px 24px rgba(15, 23, 42, 0.08)',
                     '&:hover': {
-                      backgroundColor: 'rgba(255,255,255,0.14)',
+                      color: '#fff',
+                      background: 'linear-gradient(135deg, rgba(22, 163, 74, 1), rgba(15, 118, 110, 1))',
                       transform: 'translateY(-1px)',
                     },
                     transition: 'all 0.25s ease',
@@ -301,170 +280,65 @@ const Navbar: React.FC = () => {
               );
             })}
             <Button
-              color="inherit"
               onClick={handleModulesMenuClick}
               startIcon={<Dashboard />}
               sx={{
-                color: '#ffffff',
-                borderRadius: '12px',
-                px: 1.5,
-                py: 1,
+                color: 'rgba(15, 23, 42, 0.88)',
+                background: 'rgba(255,255,255,0.7)',
+                borderRadius: '999px',
+                px: 2,
+                py: 1.05,
                 textTransform: 'none',
+                fontWeight: 700,
                 fontSize: '0.92rem',
-                '&:hover': { backgroundColor: 'rgba(255,255,255,0.14)' },
-                flexShrink: 0,
+                '&:hover': { background: 'rgba(16, 185, 129, 0.14)', transform: 'translateY(-1px)' },
               }}
             >
               {t('navbar.modules', 'More')}
             </Button>
           </Box>
 
-          {/* Right: Language + User + Mobile menu */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexShrink: 0, ml: 'auto' }}>
-            {/* Language icon (phones) */}
-            <Box sx={{ display: { xs: 'inline-flex', md: 'none' } }}>
-              <IconButton
-                color="inherit"
-                onClick={handleLanguageClick}
-                aria-label="language"
-                sx={{ color: '#fff' }}
-              >
-                <Language />
-              </IconButton>
-            </Box>
-
-            {/* User Profile or Login (desktop) */}
-            {user ? (
-              <>
-                <IconButton color="inherit" onClick={handleUserMenuClick} aria-label="account" sx={{ display: { xs: 'inline-flex', md: 'none' }, color: '#fff' }}>
-                  <AccountCircle />
-                </IconButton>
-                <Chip
-                  avatar={
-                    <Avatar
-                      src={user.profilePicture || ''}
-                      sx={{
-                        bgcolor: 'rgba(255,255,255,0.9)',
-                        color: '#2e7d32',
-                        width: 34,
-                        height: 34,
-                        border: '2px solid rgba(255,255,255,0.5)',
-                      }}>
-                      {!user.profilePicture && <Person sx={{ fontSize: 20 }} />}
-                    </Avatar>
-                  }
-                  label={`🙏 ${user.name || t('navbar.farmerJi')}`}
-                  onClick={handleUserMenuClick}
-                  sx={{
-                    display: { xs: 'none', md: 'inline-flex' },
-                    ml: 1,
-                    pl: 1,
-                    pr: 2,
-                    py: 0.5,
-                    color: '#ffffff',
-                    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                    borderRadius: 5,
-                    backdropFilter: 'blur(10px)',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.22)',
-                      transform: 'scale(1.04)',
-                    },
-                    '& .MuiChip-label': {
-                      color: '#fff',
-                      fontWeight: 700,
-                      fontSize: '0.95rem',
-                    },
-                    transition: 'all 0.25s ease',
-                    cursor: 'pointer',
-                  }}
-                />
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  ref={fileInputRef}
-                  onChange={handlePhotoUpload}
-                />
-                <Menu
-                  anchorEl={userMenuAnchorEl}
-                  open={Boolean(userMenuAnchorEl)}
-                  onClose={handleUserMenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  PaperProps={{
-                    sx: {
-                      mt: 1,
-                      borderRadius: '16px',
-                      boxShadow: '0 18px 50px rgba(0,0,0,0.2)',
-                    },
-                  }}
-                >
-                  <MenuItem onClick={() => { fileInputRef.current?.click(); }}>
-                    <PhotoCamera sx={{ mr: 2 }} />
-                    {isUploading ? 'Uploading...' : 'Upload Photo'}
-                  </MenuItem>
-                  <MenuItem onClick={handleUserMenuClose}>
-                    <Person sx={{ mr: 2 }} />
-                    {t('navbar.profile')}
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>
-                    <Logout sx={{ mr: 2 }} />
-                    {t('navbar.logout')}
-                  </MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <Button
-                color="inherit"
-                startIcon={<Login />}
-                onClick={() => handleNavigation('/login')}
-                sx={{
-                  display: { xs: 'none', md: 'inline-flex' },
-                  ml: 1,
-                  color: '#fff',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.4)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                    borderColor: 'rgba(255, 255, 255, 0.7)',
-                    transform: 'translateY(-1px)',
-                  },
-                  transition: 'all 0.25s ease',
-                }}
-              >
-                {t('navbar.login')}
-              </Button>
-            )}
-
-            {/* Language (desktop) */}
-            <Box sx={{ display: { xs: 'none', md: 'inline-flex' } }}>
-              <Button
-                color="inherit"
-                onClick={handleLanguageClick}
-                startIcon={<Language />}
-                sx={{ ml: 0.5, textTransform: 'none', color: 'rgba(255,255,255,0.95)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.12)' } }}
-              >
-                {currentLang.name}
-              </Button>
-            </Box>
-
-            {/* Mobile Menu Button */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
+            <Button
+              onClick={handleLanguageClick}
+              sx={{
+                textTransform: 'none',
+                color: 'rgba(15, 23, 42, 0.92)',
+                background: 'rgba(255,255,255,0.7)',
+                border: '1px solid rgba(15,23,42,0.08)',
+                borderRadius: '999px',
+                px: 2,
+                py: 0.9,
+                boxShadow: '0 10px 24px rgba(15, 23, 42, 0.08)',
+                '&:hover': { background: 'rgba(16, 185, 129, 0.12)' },
+              }}
+              startIcon={<Language sx={{ color: '#14b8a6' }} />}
+            >
+              {currentLang.flag}
+            </Button>
+            <IconButton
+              onClick={handleUserMenuClick}
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.88)',
+                border: '1px solid rgba(15, 23, 42, 0.1)',
+                boxShadow: '0 14px 25px rgba(15, 23, 42, 0.08)',
+                '&:hover': { background: 'rgba(16, 185, 129, 0.12)' },
+              }}
+            >
+              {user?.name ? <Avatar sx={{ width: 32, height: 32, fontSize: 14 }}>{user.name[0]}</Avatar> : <AccountCircle sx={{ color: '#0f766e' }} />}
+            </IconButton>
             {isMobile && (
-              <IconButton color="inherit" onClick={handleMobileMenuClick} sx={{ ml: 0.5, color: '#fff' }}>
+              <IconButton
+                onClick={handleMobileMenuClick}
+                sx={{ color: 'rgba(15, 23, 42, 0.88)' }}
+              >
                 <MenuIcon />
               </IconButton>
             )}
           </Box>
         </Container>
 
-        {/* Language Menu */}
-        <Menu
-          anchorEl={languageAnchorEl}
-          open={Boolean(languageAnchorEl)}
-          onClose={handleLanguageClose}
-          PaperProps={{ sx: { mt: 1, borderRadius: '16px' } }}
-        >
+        <Menu anchorEl={languageAnchorEl} open={Boolean(languageAnchorEl)} onClose={handleLanguageClose} PaperProps={{ sx: { mt: 1, borderRadius: '18px', px: 0.5 } }}>
           {languages.map((language) => (
             <MenuItem key={language.code} onClick={() => handleLanguageChange(language.code)} selected={i18n.language === language.code}>
               <Typography sx={{ mr: 1 }}>{language.flag}</Typography>
@@ -473,13 +347,7 @@ const Navbar: React.FC = () => {
           ))}
         </Menu>
 
-        {/* Mobile Navigation Menu */}
-        <Menu
-          anchorEl={mobileMenuAnchorEl}
-          open={Boolean(mobileMenuAnchorEl)}
-          onClose={handleMobileMenuClose}
-          PaperProps={{ sx: { mt: 1, borderRadius: '16px' } }}
-        >
+        <Menu anchorEl={mobileMenuAnchorEl} open={Boolean(mobileMenuAnchorEl)} onClose={handleMobileMenuClose} PaperProps={{ sx: { mt: 1, borderRadius: '18px', px: 0.5 } }}>
           {navigationItems.map((item) => (
             <MenuItem key={item.path} onClick={() => handleNavigation(item.path)}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -490,13 +358,7 @@ const Navbar: React.FC = () => {
           ))}
         </Menu>
 
-        {/* More Menu */}
-        <Menu
-          anchorEl={modulesMenuAnchorEl}
-          open={Boolean(modulesMenuAnchorEl)}
-          onClose={handleModulesMenuClose}
-          PaperProps={{ sx: { mt: 1, borderRadius: '16px' } }}
-        >
+        <Menu anchorEl={modulesMenuAnchorEl} open={Boolean(modulesMenuAnchorEl)} onClose={handleModulesMenuClose} PaperProps={{ sx: { mt: 1, borderRadius: '18px', px: 0.5 } }}>
           {secondaryNav.map((item) => (
             <MenuItem key={item.path} onClick={() => { handleNavigation(item.path); handleModulesMenuClose(); }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
