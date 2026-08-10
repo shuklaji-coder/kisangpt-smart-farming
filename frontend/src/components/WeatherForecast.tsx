@@ -80,7 +80,7 @@ interface FarmingConditions {
 
 interface HourlyPoint {
   time: string; // e.g., '09:00'
-  temp: number; // in °C (metric internal)
+  temp: number; // in Â°C (metric internal)
   pop: number; // precipitation probability in %
   wind_kmh: number; // wind speed in km/h
 }
@@ -97,7 +97,7 @@ interface SavedFarmLocation {
 }
 
 const WeatherForecast: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const theme = useTheme();
   const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData[]>([]);
@@ -580,10 +580,10 @@ if (forecastResponse.ok) {
             newAdvisories.push(`Possible rain in next 24h (${maxPopNext24}%). Consider irrigation scheduling and protect harvested produce.`);
           }
           if (windKmh >= 20) {
-            newAdvisories.push('Windy conditions — avoid spraying and secure lightweight materials.');
+            newAdvisories.push('Windy conditions â€” avoid spraying and secure lightweight materials.');
           }
           if (tempC >= 38 || feelsC >= 40) {
-            newAdvisories.push('Heat alert — schedule field work early morning/evening and ensure irrigation for sensitive crops.');
+            newAdvisories.push('Heat alert â€” schedule field work early morning/evening and ensure irrigation for sensitive crops.');
           }
 
           // Crop-specific advisories
@@ -600,13 +600,13 @@ if (forecastResponse.ok) {
             newAdvisories.push(`${crop}: Avoid spraying (wind > ${th.maxSprayWindKmh} km/h).`);
           }
           if (maxPopNext24 > th.maxSprayRainPopPct) {
-            newAdvisories.push(`${crop}: Rain likely — defer spraying (POP > ${th.maxSprayRainPopPct}%).`);
+            newAdvisories.push(`${crop}: Rain likely â€” defer spraying (POP > ${th.maxSprayRainPopPct}%).`);
           }
           if (tempC >= th.heatStressC) {
-            newAdvisories.push(`${crop}: Heat stress risk — consider shade/mulch and irrigate during cool hours.`);
+            newAdvisories.push(`${crop}: Heat stress risk â€” consider shade/mulch and irrigate during cool hours.`);
           }
           if ((weatherData.main?.humidity ?? 0) < th.irrigationHumidityMinPct && maxPopNext24 < 30) {
-            newAdvisories.push(`${crop}: Irrigation recommended — humidity < ${th.irrigationHumidityMinPct}% and low rain chance.`);
+            newAdvisories.push(`${crop}: Irrigation recommended â€” humidity < ${th.irrigationHumidityMinPct}% and low rain chance.`);
           }
 
           setAdvisories(newAdvisories);
@@ -700,7 +700,7 @@ setForecast([
         { date: 'Fri', temperature: 29, description: 'partly cloudy', icon: 'partly-cloudy', precipitation: 15 },
         { date: 'Sat', temperature: 31, description: 'sunny', icon: 'sunny', precipitation: 5 }
       ]);
-      setAdvisories(['Weather data unavailable — showing default recommendations.']);
+      setAdvisories(['Weather data unavailable â€” showing default recommendations.']);
     } finally {
       setLoading(false);
     }
@@ -788,7 +788,7 @@ const getConditionColor = (condition?: string) => {
   const toF = (c: number) => Math.round((c * 9) / 5 + 32);
   const kmhToMph = (k: number) => Math.round(k * 0.621371);
   const kmToMiles = (k: number) => Math.round(k * 0.621371);
-  const formatTemp = (c: number) => (units === 'metric' ? `${c}°C` : `${toF(c)}°F`);
+  const formatTemp = (c: number) => (units === 'metric' ? `${c}Â°C` : `${toF(c)}Â°F`);
   const formatWind = (kmh: number) => (units === 'metric' ? `${kmh} km/h` : `${kmhToMph(kmh)} mph`);
   const formatVisibility = (km: number) => (units === 'metric' ? `${km} km` : `${kmToMiles(km)} mi`);
 
@@ -878,10 +878,10 @@ const getConditionColor = (condition?: string) => {
         >
           <WbSunny sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            🌤️ {t('weather.title', 'Weather Forecast')}
+            ðŸŒ¤ï¸ {t('weather.title', 'Weather Forecast')}
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9, mb: 2 }}>
-            {t('weather.subtitle', 'मौसम की जानकारी और खेती की सलाह')}
+            {t('weather.subtitle', 'à¤®à¥Œà¤¸à¤® à¤•à¥€ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤”à¤° à¤–à¥‡à¤¤à¥€ à¤•à¥€ à¤¸à¤²à¤¾à¤¹')}
           </Typography>
 
           {/* Saved farm locations controls */}
@@ -959,7 +959,7 @@ const getConditionColor = (condition?: string) => {
               <Card elevation={3} sx={{ borderRadius: 3, height: '100%' }}>
                 <CardContent sx={{ p: 3 }}>
 <Typography variant="h5" sx={{ mb: 1.5, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                    📍 Current Weather
+                    ðŸ“ Current Weather
                   </Typography>
 
                   {/* Units toggle */}
@@ -969,13 +969,13 @@ const getConditionColor = (condition?: string) => {
                         variant={units === 'metric' ? 'contained' : 'outlined'}
                         onClick={() => setUnits('metric')}
                       >
-                        °C / km/h
+                        Â°C / km/h
                       </Button>
                       <Button
                         variant={units === 'imperial' ? 'contained' : 'outlined'}
                         onClick={() => setUnits('imperial')}
                       >
-                        °F / mph
+                        Â°F / mph
                       </Button>
                     </ButtonGroup>
                   </Box>
@@ -1066,7 +1066,7 @@ const getConditionColor = (condition?: string) => {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                      🌾 Farming Conditions
+                      ðŸŒ¾ Farming Conditions
                     </Typography>
                     <FormControl size="small" sx={{ minWidth: 160 }}>
                       <InputLabel id="crop-select-label">Crop</InputLabel>
@@ -1158,7 +1158,7 @@ const getConditionColor = (condition?: string) => {
                       </Grid>
 
                       <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                        🌱 Recommendations
+                        ðŸŒ± Recommendations
                       </Typography>
                       <List dense>
                         {farmingConditions.recommendations.map((recommendation, index) => (
@@ -1187,7 +1187,7 @@ const getConditionColor = (condition?: string) => {
               <Card elevation={3} sx={{ borderRadius: 3, mb: 3 }}>
                 <CardContent sx={{ p: 3 }}>
                   <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                    ⏱️ Hourly Forecast (Next 48h)
+                    â±ï¸ Hourly Forecast (Next 48h)
                   </Typography>
                   <Grid container spacing={3}>
                     {hourlyBlocks.map((blk, idx) => (
@@ -1247,7 +1247,7 @@ const getConditionColor = (condition?: string) => {
               <Card elevation={3} sx={{ borderRadius: 3 }}>
                 <CardContent sx={{ p: 3 }}>
                   <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                    📅 5-Day Forecast
+                    ðŸ“… 5-Day Forecast
                   </Typography>
                   
                   <Grid container spacing={2}>

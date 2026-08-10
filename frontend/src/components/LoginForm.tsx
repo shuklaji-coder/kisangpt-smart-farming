@@ -34,7 +34,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -48,10 +48,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
   // Demo users helper (used when backend is unavailable OR returns non-success)
   const tryDemoLogin = (email: string, password: string) => {
     const defaultDemoUsers = [
-      { email: 'farmer@example.com', password: 'farmer123', name: 'रमेश कुमार', role: 'farmer' },
-      { email: 'test@example.com', password: 'test123', name: 'टेस्ट यूजर', role: 'farmer' },
-      { email: 'demo@kisangpt.com', password: 'demo123', name: 'डेमो किसान', role: 'farmer' },
-      { email: 'admin@kisangpt.com', password: 'admin123', name: 'एडमिन', role: 'admin' }
+      { email: 'farmer@example.com', password: 'farmer123', name: 'Ã Â¤Â°Ã Â¤Â®Ã Â¥â€¡Ã Â¤Â¶ Ã Â¤â€¢Ã Â¥ÂÃ Â¤Â®Ã Â¤Â¾Ã Â¤Â°', role: 'farmer' },
+      { email: 'test@example.com', password: 'test123', name: 'Ã Â¤Å¸Ã Â¥â€¡Ã Â¤Â¸Ã Â¥ÂÃ Â¤Å¸ Ã Â¤Â¯Ã Â¥â€šÃ Â¤Å“Ã Â¤Â°', role: 'farmer' },
+      { email: 'demo@kisangpt.com', password: 'demo123', name: 'Ã Â¤Â¡Ã Â¥â€¡Ã Â¤Â®Ã Â¥â€¹ Ã Â¤â€¢Ã Â¤Â¿Ã Â¤Â¸Ã Â¤Â¾Ã Â¤Â¨', role: 'farmer' },
+      { email: 'admin@kisangpt.com', password: 'admin123', name: 'Ã Â¤ÂÃ Â¤Â¡Ã Â¤Â®Ã Â¤Â¿Ã Â¤Â¨', role: 'admin' }
     ];
     const registeredDemoUsers = JSON.parse(localStorage.getItem('demoUsers') || '[]');
     const demoUsers = [...defaultDemoUsers, ...registeredDemoUsers];
@@ -62,7 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      avatar: '🧑‍🌾',
+      avatar: 'Ã°Å¸Â§â€˜Ã¢â‚¬ÂÃ°Å¸Å’Â¾',
       location: 'Delhi, India',
       joinDate: new Date().toISOString().split('T')[0]
     };
@@ -73,10 +73,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
 
   // Create floating farming elements to match field image
   useEffect(() => {
-    const elements = [];
-    const fieldIcons = ['🌾', '🌱', '🌽', '🍅', '🥕', '🌻', '🍀'];
-    const farmIcons = ['🚜', '🐄', '🐔', '🏡', '🌳'];
-    const weatherIcons = ['☀️', '🌧️', '☁️'];
+    const elements: Array<{ id: number; x: number; y: number; icon: string; delay: number }> = [];
+    const fieldIcons = ['Ã°Å¸Å’Â¾', 'Ã°Å¸Å’Â±', 'Ã°Å¸Å’Â½', 'Ã°Å¸Ââ€¦', 'Ã°Å¸Â¥â€¢', 'Ã°Å¸Å’Â»', 'Ã°Å¸Ââ‚¬'];
+    const farmIcons = ['Ã°Å¸Å¡Å“', 'Ã°Å¸Ââ€ž', 'Ã°Å¸Ââ€', 'Ã°Å¸ÂÂ¡', 'Ã°Å¸Å’Â³'];
+    const weatherIcons = ['Ã¢Ëœâ‚¬Ã¯Â¸Â', 'Ã°Å¸Å’Â§Ã¯Â¸Â', 'Ã¢ËœÂÃ¯Â¸Â'];
     
     // Add field crop elements (more frequent, like crop rows)
     for (let i = 0; i < 15; i++) {
@@ -165,7 +165,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
         localStorage.setItem('authToken', response.token || 'demo-token');
         localStorage.setItem('user', JSON.stringify(response.user || {
           id: Date.now(),
-          name: 'किसान जी',
+          name: 'Ã Â¤â€¢Ã Â¤Â¿Ã Â¤Â¸Ã Â¤Â¾Ã Â¤Â¨ Ã Â¤Å“Ã Â¥â‚¬',
           email,
           role: 'farmer'
         }));
@@ -174,7 +174,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           onLogin(response.user || { email, password });
         }
       } else {
-        // Backend responded but did not authenticate — try demo users
+        // Backend responded but did not authenticate Ã¢â‚¬â€ try demo users
         const demoUser = tryDemoLogin(email, password);
         if (demoUser) {
           if (onLogin) onLogin({ email, password });
@@ -206,35 +206,65 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
+        padding: { xs: 2, sm: 3 },
         background: `url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2332&q=80')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(160deg, rgba(11, 43, 21, 0.72) 0%, rgba(27, 94, 32, 0.6) 45%, rgba(8, 32, 16, 0.78) 100%)',
+          zIndex: 1,
+        },
       }}
     >
+      {/* Floating animated particles */}
+      {floatingElements.map((el) => (
+        <Box
+          key={el.id}
+          sx={{
+            position: 'absolute',
+            left: `${el.x}%`,
+            top: `${el.y}%`,
+            fontSize: { xs: '1rem', sm: '1.3rem' },
+            opacity: 0.35,
+            zIndex: 2,
+            pointerEvents: 'none',
+            animation: 'floatY 7s ease-in-out infinite',
+            animationDelay: `${el.delay}s`,
+            filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.4))',
+          }}
+        >
+          {el.icon}
+        </Box>
+      ))}
 
       {/* Main Login Form */}
       <motion.div
         initial={{ opacity: 0, y: 50, rotateX: -15 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        style={{ zIndex: 10, perspective: '1000px' }}
+        style={{ zIndex: 10, perspective: '1000px', width: '100%', maxWidth: 440 }}
       >
         <Paper
           elevation={24}
           sx={{
-            p: 4,
-            maxWidth: 420,
-            width: '90vw',
-            borderRadius: 3,
-            background: 'rgba(255, 255, 255, 0.98)',
-            backdropFilter: 'blur(25px)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
+            p: { xs: 3, sm: 4 },
+            maxWidth: 440,
+            width: '100%',
+            mx: 'auto',
+            borderRadius: '26px',
+            background: 'rgba(255, 255, 255, 0.92)',
+            backdropFilter: 'blur(24px) saturate(1.3)',
+            WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+            border: '1px solid rgba(255, 255, 255, 0.5)',
             boxShadow: `
-              0 12px 40px rgba(0, 0, 0, 0.15),
-              0 2px 10px rgba(85, 139, 47, 0.1),
-              inset 0 1px 0 rgba(255, 255, 255, 0.6)
+              0 24px 70px rgba(0, 0, 0, 0.35),
+              0 4px 20px rgba(27, 94, 32, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.7)
             `,
             position: 'relative',
             '&::before': {
@@ -243,31 +273,25 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
               top: 0,
               left: 0,
               right: 0,
-              height: '4px',
-              background: 'linear-gradient(90deg, #4CAF50, #8BC34A, #4CAF50)',
-              borderRadius: '3px 3px 0 0',
+              height: '5px',
+              background: 'linear-gradient(90deg, #4CAF50, #8BC34A, #4CAF50, #8BC34A)',
+              backgroundSize: '300% auto',
+              borderRadius: '26px 26px 0 0',
+              animation: 'gradientShift 5s ease infinite',
             },
             transform: 'translateZ(0)',
-            '&:hover': {
-              transform: 'translateY(-2px)',
-              boxShadow: `
-                0 16px 50px rgba(0, 0, 0, 0.2),
-                0 4px 15px rgba(85, 139, 47, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.7)
-              `,
-            },
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <motion.div
               animate={{
-                scale: [1, 1.1, 1],
+                scale: [1, 1.08, 1],
                 rotateY: [0, 360],
               }}
               transition={{
-                duration: 4,
+                duration: 5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -276,28 +300,30 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 sx={{
                   mx: 'auto',
                   mb: 2,
-                  width: 64,
-                  height: 64,
-                  background: 'linear-gradient(45deg, #4CAF50, #8BC34A)',
-                  boxShadow: '0 8px 16px rgba(76, 175, 80, 0.3)',
+                  width: 72,
+                  height: 72,
+                  background: 'linear-gradient(135deg, #4CAF50, #8BC34A)',
+                  boxShadow: '0 12px 30px rgba(76, 175, 80, 0.45)',
+                  border: '2px solid rgba(255,255,255,0.6)',
                 }}
               >
-                <Agriculture sx={{ fontSize: 32, color: 'white' }} />
+                <Agriculture sx={{ fontSize: 36, color: 'white' }} />
               </Avatar>
             </motion.div>
-            
+
             <Typography
               variant="h4"
               sx={{
-                fontWeight: 'bold',
-                background: 'linear-gradient(45deg, #2E7D32, #388E3C, #4CAF50)',
+                fontWeight: 800,
+                fontFamily: "'Poppins', 'Noto Sans Devanagari', sans-serif",
+                background: 'linear-gradient(90deg, #2E7D32, #43A047, #4CAF50)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 color: 'transparent',
                 mb: 1,
               }}
             >
-              🌾 KisanGPT
+              Ã°Å¸Å’Â¾ KisanGPT
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {t('app.tagline')}
@@ -311,7 +337,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
               >
-                <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+                <Alert severity="error" sx={{ mb: 2, borderRadius: 3 }}>
                   {error}
                 </Alert>
               </motion.div>
@@ -319,14 +345,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
           )}
 
           {/* Demo Credentials Info */}
-          <Alert severity="info" sx={{ mb: 2, borderRadius: 2 }}>
+          <Alert severity="info" sx={{ mb: 2, borderRadius: 3 }}>
               <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
-              📝 {t('auth.demoCredentials')}
+              Ã°Å¸â€œÂ {t('auth.demoCredentials')}
             </Typography>
             <Typography variant="body2" component="div" sx={{ mb: 1 }}>
-              • <strong>farmer@example.com</strong> / farmer123<br/>
-              • <strong>test@example.com</strong> / test123<br/>
-              • <strong>demo@kisangpt.com</strong> / demo123
+              Ã¢â‚¬Â¢ <strong>farmer@example.com</strong> / farmer123<br/>
+              Ã¢â‚¬Â¢ <strong>test@example.com</strong> / test123<br/>
+              Ã¢â‚¬Â¢ <strong>demo@kisangpt.com</strong> / demo123
             </Typography>
             <Button 
               size="small" 
@@ -364,19 +390,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                     </InputAdornment>
                   ),
                 }}
-                sx={{
-                  mb: 2,
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '&:hover fieldset': {
-                      borderColor: '#4CAF50',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#4CAF50',
-                      boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
-                    },
-                  },
-                }}
+                sx={{ mb: 2 }}
               />
             </motion.div>
 
@@ -408,19 +422,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                     </InputAdornment>
                   ),
                 }}
-                sx={{
-                  mb: 2,
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '&:hover fieldset': {
-                      borderColor: '#4CAF50',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#4CAF50',
-                      boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
-                    },
-                  },
-                }}
+                sx={{ mb: 2 }}
               />
             </motion.div>
 
@@ -443,7 +445,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 <Link
                   href="#"
                   variant="body2"
-                  sx={{ color: '#4CAF50', textDecoration: 'none' }}
+                  sx={{ color: '#4CAF50', textDecoration: 'none', fontWeight: 600 }}
                 >
                   {t('auth.forgotPassword')}
                 </Link>
@@ -462,15 +464,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 fullWidth
                 variant="contained"
                 disabled={loading}
+                className="shine-btn"
                 sx={{
-                  py: 1.5,
+                  py: 1.6,
                   mb: 2,
-                  borderRadius: 2,
-                  background: 'linear-gradient(45deg, #4CAF50, #8BC34A)',
-                  boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)',
+                  borderRadius: '16px',
+                  fontSize: '1rem',
+                  background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                  boxShadow: '0 12px 32px rgba(46, 125, 50, 0.4)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #45a049, #7cb342)',
-                    boxShadow: '0 6px 20px rgba(76, 175, 80, 0.4)',
+                    background: 'linear-gradient(135deg, #43a047, #1b5e20)',
+                    boxShadow: '0 16px 40px rgba(46, 125, 50, 0.5)',
                   },
                 }}
               >
@@ -481,7 +485,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
 
           <Divider sx={{ my: 2, '&::before, &::after': { borderColor: '#e0e0e0' } }}>
             <Typography variant="body2" color="text.secondary">
-              या
+              Ã Â¤Â¯Ã Â¤Â¾
             </Typography>
           </Divider>
 
@@ -498,13 +502,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 startIcon={<Google />}
                 onClick={() => googleAuthAPI.redirectToGoogle()}
                 sx={{
-                  borderRadius: 2,
+                  borderRadius: 3,
                   borderColor: '#db4437',
                   color: '#db4437',
+                  py: 1.3,
                   '&:hover': {
                     borderColor: '#db4437',
-                    backgroundColor: 'rgba(219, 68, 55, 0.04)',
+                    backgroundColor: 'rgba(219, 68, 55, 0.06)',
+                    transform: 'translateY(-2px)',
                   },
+                  transition: 'all 0.25s ease',
                 }}
               >
                 Google
@@ -514,13 +521,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 variant="outlined"
                 startIcon={<Facebook />}
                 sx={{
-                  borderRadius: 2,
+                  borderRadius: 3,
                   borderColor: '#4267B2',
                   color: '#4267B2',
+                  py: 1.3,
                   '&:hover': {
                     borderColor: '#4267B2',
-                    backgroundColor: 'rgba(66, 103, 178, 0.04)',
+                    backgroundColor: 'rgba(66, 103, 178, 0.06)',
+                    transform: 'translateY(-2px)',
                   },
+                  transition: 'all 0.25s ease',
                 }}
               >
                 Facebook

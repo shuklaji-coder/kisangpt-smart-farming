@@ -105,7 +105,7 @@ interface CropRecommendation {
 }
 
 const SatelliteFieldView: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const mapRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [fieldData, setFieldData] = useState<FieldData | null>(null);
@@ -535,11 +535,11 @@ const SatelliteFieldView: React.FC = () => {
           season: 'Rabi',
           waterRequirement: 'Medium',
           soilSuitability: 'Excellent',
-          marketPrice: '₹2,200/quintal',
+          marketPrice: 'â‚¹2,200/quintal',
           roi: '145%',
           pros: ['High market demand', 'Good storage life', 'Government procurement'],
           cons: ['Requires good water management', 'Pest susceptible'],
-          icon: '🌾'
+          icon: 'ðŸŒ¾'
         },
         {
           crop: 'Mustard',
@@ -548,11 +548,11 @@ const SatelliteFieldView: React.FC = () => {
           season: 'Rabi',
           waterRequirement: 'Low',
           soilSuitability: 'Very Good',
-          marketPrice: '₹5,500/quintal',
+          marketPrice: 'â‚¹5,500/quintal',
           roi: '165%',
           pros: ['Less water requirement', 'Oil seed crop', 'High price'],
           cons: ['Market fluctuation', 'Processing required'],
-          icon: '🌻'
+          icon: 'ðŸŒ»'
         },
         {
           crop: 'Potato',
@@ -561,11 +561,11 @@ const SatelliteFieldView: React.FC = () => {
           season: 'Rabi',
           waterRequirement: 'High',
           soilSuitability: 'Good',
-          marketPrice: '₹1,200/quintal',
+          marketPrice: 'â‚¹1,200/quintal',
           roi: '125%',
           pros: ['High yield', 'Short duration', 'Multiple uses'],
           cons: ['High water requirement', 'Storage issues', 'Price volatile'],
-          icon: '🥔'
+          icon: 'ðŸ¥”'
         },
         {
           crop: 'Barley',
@@ -574,11 +574,11 @@ const SatelliteFieldView: React.FC = () => {
           season: 'Rabi',
           waterRequirement: 'Low',
           soilSuitability: 'Good',
-          marketPrice: '₹1,800/quintal',
+          marketPrice: 'â‚¹1,800/quintal',
           roi: '110%',
           pros: ['Drought tolerant', 'Multi-purpose crop', 'Low input cost'],
           cons: ['Lower market price', 'Limited demand'],
-          icon: '🌾'
+          icon: 'ðŸŒ¾'
         }
       ];
 
@@ -754,10 +754,10 @@ const SatelliteFieldView: React.FC = () => {
         >
           <Satellite sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            🛰️ Satellite Field View
+            ðŸ›°ï¸ Satellite Field View
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
-            अपने खेत को satellite से देखें और बेहतर फसल के लिए AI recommendations पाएं
+            à¤…à¤ªà¤¨à¥‡ à¤–à¥‡à¤¤ à¤•à¥‹ satellite à¤¸à¥‡ à¤¦à¥‡à¤–à¥‡à¤‚ à¤”à¤° à¤¬à¥‡à¤¹à¤¤à¤° à¤«à¤¸à¤² à¤•à¥‡ à¤²à¤¿à¤ AI recommendations à¤ªà¤¾à¤à¤‚
           </Typography>
         </Paper>
       </motion.div>
@@ -1262,7 +1262,7 @@ const SatelliteFieldView: React.FC = () => {
                 <CardContent id="advanced-analysis-panel">
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 'bold', color: '#6a1b9a', display: 'flex', alignItems: 'center' }}>
-                      🧠 Advanced Satellite Analysis {ndviDate ? `(for ${ndviDate})` : ''}
+                      ðŸ§  Advanced Satellite Analysis {ndviDate ? `(for ${ndviDate})` : ''}
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <Button size="small" variant="contained" onClick={exportAnalysisAsPng}>Export PNG</Button>
@@ -1323,13 +1323,13 @@ const SatelliteFieldView: React.FC = () => {
                       </Box>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <Typography variant="caption">Temperature Trend (°C)</Typography>
+                      <Typography variant="caption">Temperature Trend (Â°C)</Typography>
                       <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 80, p: 0.5, borderRadius: 1, background: 'rgba(255,255,255,0.7)', mt: 0.5 }}>
                         {Array.from({ length: 7 }, (_, i) => {
                           const base = (analysis.weatherData.temperature.min + analysis.weatherData.temperature.max) / 2;
                           const variation = Math.sin((i / 6) * Math.PI) * 4;
                           const temp = Math.round(base + variation);
-                          return <Box key={i} sx={{ width: 12, height: `${Math.min(100, (temp / (analysis.weatherData.temperature.max + 10)) * 100)}%`, bgcolor: '#ff7043', borderRadius: '2px 2px 0 0' }} title={`${temp}°C`} />
+                          return <Box key={i} sx={{ width: 12, height: `${Math.min(100, (temp / (analysis.weatherData.temperature.max + 10)) * 100)}%`, bgcolor: '#ff7043', borderRadius: '2px 2px 0 0' }} title={`${temp}Â°C`} />
                         })}
                       </Box>
                     </Grid>
@@ -1463,7 +1463,7 @@ const SatelliteFieldView: React.FC = () => {
               <CardContent>
                 <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
                   <TrendingUp sx={{ mr: 1 }} />
-                  🌾 Location-based Crop Recommendations
+                  ðŸŒ¾ Location-based Crop Recommendations
                   <Chip
                     icon={<LocationOn />}
                     label="Based on your location & climate"
@@ -1556,7 +1556,7 @@ const SatelliteFieldView: React.FC = () => {
 
       {/* Captured Satellite Photo Dialog */}
       <Dialog open={!!photoUrl} onClose={() => setPhotoUrl('')} maxWidth="md" fullWidth>
-        <DialogTitle>📸 Satellite Photo</DialogTitle>
+        <DialogTitle>ðŸ“¸ Satellite Photo</DialogTitle>
         <DialogContent>
           {photoUrl && (
             <Box sx={{ textAlign: 'center' }}>
@@ -1576,7 +1576,7 @@ const SatelliteFieldView: React.FC = () => {
 
       {/* Moisture Analysis Dialog */}
       <Dialog open={moistureOpen} onClose={() => setMoistureOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>💧 Surface Moisture Analysis (heuristic)</DialogTitle>
+        <DialogTitle>ðŸ’§ Surface Moisture Analysis (heuristic)</DialogTitle>
         <DialogContent>
           {moistureReport ? (
             <Grid container spacing={2}>
@@ -1649,7 +1649,7 @@ const SatelliteFieldView: React.FC = () => {
                   <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
                       <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                        📊 Key Metrics
+                        ðŸ“Š Key Metrics
                       </Typography>
                       
                       <List>
@@ -1700,7 +1700,7 @@ const SatelliteFieldView: React.FC = () => {
                     
                     <Grid item xs={12} md={6}>
                       <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', color: 'success.main' }}>
-                        ✅ Advantages
+                        âœ… Advantages
                       </Typography>
                       <List dense>
                         {crop.pros.map((pro, index) => (
@@ -1714,7 +1714,7 @@ const SatelliteFieldView: React.FC = () => {
                       </List>
                       
                       <Typography variant="h6" sx={{ mb: 2, mt: 3, fontWeight: 'bold', color: 'warning.main' }}>
-                        ⚠️ Considerations
+                        âš ï¸ Considerations
                       </Typography>
                       <List dense>
                         {crop.cons.map((con, index) => (
@@ -1888,7 +1888,7 @@ async function addBaseImageryLayer(L: any, mapRefInst: any, imageryLayerRefObj: 
           return `https://ecn.t${sub}.tiles.virtualearth.net/tiles/a${qk}.jpeg?g=1&key=${apiKey}`;
         }
       });
-      return new Bing(undefined, { attribution: '© Bing', crossOrigin: true });
+      return new Bing(undefined, { attribution: 'Â© Bing', crossOrigin: true });
     };
 
     const lib = {
@@ -1897,7 +1897,7 @@ async function addBaseImageryLayer(L: any, mapRefInst: any, imageryLayerRefObj: 
       osm: { name: 'OSM', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', options: { attribution: '&copy; OSM', crossOrigin: true } },
       mapbox: mapboxUrl ? { name: 'Mapbox', url: mapboxUrl, options: { tileSize: 512, zoomOffset: -1, attribution: '&copy; Mapbox', crossOrigin: true } } : null,
       custom: customUrl ? { name: 'Custom', url: customUrl, options: { crossOrigin: true } } : null,
-      bing: preferred?.key ? { name: 'Bing', factory: () => createBingLayer(preferred.key), options: { attribution: '© Bing' } } : null,
+      bing: preferred?.key ? { name: 'Bing', factory: () => createBingLayer(preferred.key as string), options: { attribution: 'Â© Bing' } } : null,
     } as any;
 
     const order = [preferred?.type, 'esri', 'esriAlt', 'osm', 'mapbox', 'bing', 'custom'].filter(Boolean) as string[];

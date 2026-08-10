@@ -125,7 +125,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const CommunityNetwork: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
   const [farmers, setFarmers] = useState<FarmerProfile[]>([]);
@@ -140,10 +140,10 @@ const CommunityNetwork: React.FC = () => {
   const [joinedEvents, setJoinedEvents] = useState<Set<string>>(new Set());
   const [showSuccessToast, setShowSuccessToast] = useState('');
   const [pollResults, setPollResults] = useState({
-    'धान': 45,
-    'गेहूं': 32,
-    'मक्का': 28,
-    'कपास': 15
+    'à¤§à¤¾à¤¨': 45,
+    'à¤—à¥‡à¤¹à¥‚à¤‚': 32,
+    'à¤®à¤•à¥à¤•à¤¾': 28,
+    'à¤•à¤ªà¤¾à¤¸': 15
   });
   const [showVideoCall, setShowVideoCall] = useState(false);
   const [showPhotoShare, setShowPhotoShare] = useState(false);
@@ -174,7 +174,7 @@ const CommunityNetwork: React.FC = () => {
       setFarmers([
         {
           id: '1',
-          name: 'राहुल शर्मा',
+          name: 'à¤°à¤¾à¤¹à¥à¤² à¤¶à¤°à¥à¤®à¤¾',
           location: 'Delhi, India',
           crops: ['Wheat', 'Rice', 'Sugarcane'],
           experience: 15,
@@ -185,7 +185,7 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: '2',
-          name: 'प्रिया पटेल',
+          name: 'à¤ªà¥à¤°à¤¿à¤¯à¤¾ à¤ªà¤Ÿà¥‡à¤²',
           location: 'Gujarat, India',
           crops: ['Cotton', 'Groundnut'],
           experience: 8,
@@ -196,7 +196,7 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: '3',
-          name: 'अमित कुमार',
+          name: 'à¤…à¤®à¤¿à¤¤ à¤•à¥à¤®à¤¾à¤°',
           location: 'Punjab, India',
           crops: ['Wheat', 'Mustard'],
           experience: 12,
@@ -207,7 +207,7 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: '4',
-          name: 'सुनीता देवी',
+          name: 'à¤¸à¥à¤¨à¥€à¤¤à¤¾ à¤¦à¥‡à¤µà¥€',
           location: 'Haryana, India',
           crops: ['Rice', 'Vegetables'],
           experience: 10,
@@ -221,8 +221,8 @@ const CommunityNetwork: React.FC = () => {
       setPosts([
         {
           id: '1',
-          author: 'राहुल शर्मा',
-          content: 'मेरे गेहूं के पौधों में कुछ पीले धब्बे दिख रहे हैं। क्या यह कोई बीमारी है? कोई सलाह दे सकता है?',
+          author: 'à¤°à¤¾à¤¹à¥à¤² à¤¶à¤°à¥à¤®à¤¾',
+          content: 'à¤®à¥‡à¤°à¥‡ à¤—à¥‡à¤¹à¥‚à¤‚ à¤•à¥‡ à¤ªà¥Œà¤§à¥‹à¤‚ à¤®à¥‡à¤‚ à¤•à¥à¤› à¤ªà¥€à¤²à¥‡ à¤§à¤¬à¥à¤¬à¥‡ à¤¦à¤¿à¤– à¤°à¤¹à¥‡ à¤¹à¥ˆà¤‚à¥¤ à¤•à¥à¤¯à¤¾ à¤¯à¤¹ à¤•à¥‹à¤ˆ à¤¬à¥€à¤®à¤¾à¤°à¥€ à¤¹à¥ˆ? à¤•à¥‹à¤ˆ à¤¸à¤²à¤¾à¤¹ à¤¦à¥‡ à¤¸à¤•à¤¤à¤¾ à¤¹à¥ˆ?',
           type: 'question',
           timestamp: '2 hours ago',
           likes: 12,
@@ -232,8 +232,8 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: 'weather-alert',
-          author: '🌦️ Weather Alert System',
-          content: '⚠️ भारी बारिश की चेतावनी! अगले 48 घंटों में दिल्ली-NCR में तेज बारिश संभव। फसल की सुरक्षा के लिए तुरंत कार्रवाई करें। ड्रेनेज चेक करें!',
+          author: 'ðŸŒ¦ï¸ Weather Alert System',
+          content: 'âš ï¸ à¤­à¤¾à¤°à¥€ à¤¬à¤¾à¤°à¤¿à¤¶ à¤•à¥€ à¤šà¥‡à¤¤à¤¾à¤µà¤¨à¥€! à¤…à¤—à¤²à¥‡ 48 à¤˜à¤‚à¤Ÿà¥‹à¤‚ à¤®à¥‡à¤‚ à¤¦à¤¿à¤²à¥à¤²à¥€-NCR à¤®à¥‡à¤‚ à¤¤à¥‡à¤œ à¤¬à¤¾à¤°à¤¿à¤¶ à¤¸à¤‚à¤­à¤µà¥¤ à¤«à¤¸à¤² à¤•à¥€ à¤¸à¥à¤°à¤•à¥à¤·à¤¾ à¤•à¥‡ à¤²à¤¿à¤ à¤¤à¥à¤°à¤‚à¤¤ à¤•à¤¾à¤°à¥à¤°à¤µà¤¾à¤ˆ à¤•à¤°à¥‡à¤‚à¥¤ à¤¡à¥à¤°à¥‡à¤¨à¥‡à¤œ à¤šà¥‡à¤• à¤•à¤°à¥‡à¤‚!',
           type: 'announcement',
           timestamp: '1 hour ago',
           likes: 89,
@@ -243,8 +243,8 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: '2',
-          author: 'प्रिया पटेल',
-          content: '🎉 आज बाज़ार में कपास का भाव ₹5,200 प्रति क्विंटल है। अच्छा समय है बेचने का! मैंने 50 क्विंटल बेची - शानदार दाम मिला!',
+          author: 'à¤ªà¥à¤°à¤¿à¤¯à¤¾ à¤ªà¤Ÿà¥‡à¤²',
+          content: 'ðŸŽ‰ à¤†à¤œ à¤¬à¤¾à¤œà¤¼à¤¾à¤° à¤®à¥‡à¤‚ à¤•à¤ªà¤¾à¤¸ à¤•à¤¾ à¤­à¤¾à¤µ â‚¹5,200 à¤ªà¥à¤°à¤¤à¤¿ à¤•à¥à¤µà¤¿à¤‚à¤Ÿà¤² à¤¹à¥ˆà¥¤ à¤…à¤šà¥à¤›à¤¾ à¤¸à¤®à¤¯ à¤¹à¥ˆ à¤¬à¥‡à¤šà¤¨à¥‡ à¤•à¤¾! à¤®à¥ˆà¤‚à¤¨à¥‡ 50 à¤•à¥à¤µà¤¿à¤‚à¤Ÿà¤² à¤¬à¥‡à¤šà¥€ - à¤¶à¤¾à¤¨à¤¦à¤¾à¤° à¤¦à¤¾à¤® à¤®à¤¿à¤²à¤¾!',
           type: 'announcement',
           timestamp: '4 hours ago',
           likes: 25,
@@ -254,8 +254,8 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: 'success-story',
-          author: 'विजय सिंह',
-          content: '🏆 सफलता की कहानी: पिछले साल मैंने जैविक खेती शुरू की थी। आज मेरी आमदनी 40% बढ़ गई है! किसी को सलाह चाहिए तो संपर्क करें। मुफ्त में मदद करूंगा। 📞 98765-11111',
+          author: 'à¤µà¤¿à¤œà¤¯ à¤¸à¤¿à¤‚à¤¹',
+          content: 'ðŸ† à¤¸à¤«à¤²à¤¤à¤¾ à¤•à¥€ à¤•à¤¹à¤¾à¤¨à¥€: à¤ªà¤¿à¤›à¤²à¥‡ à¤¸à¤¾à¤² à¤®à¥ˆà¤‚à¤¨à¥‡ à¤œà¥ˆà¤µà¤¿à¤• à¤–à¥‡à¤¤à¥€ à¤¶à¥à¤°à¥‚ à¤•à¥€ à¤¥à¥€à¥¤ à¤†à¤œ à¤®à¥‡à¤°à¥€ à¤†à¤®à¤¦à¤¨à¥€ 40% à¤¬à¤¢à¤¼ à¤—à¤ˆ à¤¹à¥ˆ! à¤•à¤¿à¤¸à¥€ à¤•à¥‹ à¤¸à¤²à¤¾à¤¹ à¤šà¤¾à¤¹à¤¿à¤ à¤¤à¥‹ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤‚à¥¤ à¤®à¥à¤«à¥à¤¤ à¤®à¥‡à¤‚ à¤®à¤¦à¤¦ à¤•à¤°à¥‚à¤‚à¤—à¤¾à¥¤ ðŸ“ž 98765-11111',
           type: 'tip',
           timestamp: '6 hours ago',
           likes: 156,
@@ -265,8 +265,8 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: '3',
-          author: 'अमित कुमार',
-          content: '💡 जैविक खाद बनाने का आसान तरीका: गोबर + नीम की पत्ती + हल्दी। 30 दिन में तैयार! वीडियो ट्यूटोरियल भेज सकता हूं।',
+          author: 'à¤…à¤®à¤¿à¤¤ à¤•à¥à¤®à¤¾à¤°',
+          content: 'ðŸ’¡ à¤œà¥ˆà¤µà¤¿à¤• à¤–à¤¾à¤¦ à¤¬à¤¨à¤¾à¤¨à¥‡ à¤•à¤¾ à¤†à¤¸à¤¾à¤¨ à¤¤à¤°à¥€à¤•à¤¾: à¤—à¥‹à¤¬à¤° + à¤¨à¥€à¤® à¤•à¥€ à¤ªà¤¤à¥à¤¤à¥€ + à¤¹à¤²à¥à¤¦à¥€à¥¤ 30 à¤¦à¤¿à¤¨ à¤®à¥‡à¤‚ à¤¤à¥ˆà¤¯à¤¾à¤°! à¤µà¥€à¤¡à¤¿à¤¯à¥‹ à¤Ÿà¥à¤¯à¥‚à¤Ÿà¥‹à¤°à¤¿à¤¯à¤² à¤­à¥‡à¤œ à¤¸à¤•à¤¤à¤¾ à¤¹à¥‚à¤‚à¥¤',
           type: 'tip',
           timestamp: '1 day ago',
           likes: 45,
@@ -276,8 +276,8 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: 'marketplace',
-          author: 'लोकल फ़ार्म मार्केट',
-          content: '🛒 इस हफ्ते के बेस्ट रेट्स:\n• टमाटर: ₹35/kg\n• प्याज: ₹22/kg\n• आलू: ₹18/kg\n• हरी मिर्च: ₹45/kg\n\n📍 मंडी में सीधे संपर्क करें!',
+          author: 'à¤²à¥‹à¤•à¤² à¤«à¤¼à¤¾à¤°à¥à¤® à¤®à¤¾à¤°à¥à¤•à¥‡à¤Ÿ',
+          content: 'ðŸ›’ à¤‡à¤¸ à¤¹à¤«à¥à¤¤à¥‡ à¤•à¥‡ à¤¬à¥‡à¤¸à¥à¤Ÿ à¤°à¥‡à¤Ÿà¥à¤¸:\nâ€¢ à¤Ÿà¤®à¤¾à¤Ÿà¤°: â‚¹35/kg\nâ€¢ à¤ªà¥à¤¯à¤¾à¤œ: â‚¹22/kg\nâ€¢ à¤†à¤²à¥‚: â‚¹18/kg\nâ€¢ à¤¹à¤°à¥€ à¤®à¤¿à¤°à¥à¤š: â‚¹45/kg\n\nðŸ“ à¤®à¤‚à¤¡à¥€ à¤®à¥‡à¤‚ à¤¸à¥€à¤§à¥‡ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤‚!',
           type: 'announcement',
           timestamp: '1 day ago',
           likes: 67,
@@ -287,8 +287,8 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: '4',
-          author: 'सुनीता देवी',
-          content: '❓ क्या कोई ड्रिप इरिगेशन सिस्टम के बारे में बता सकता है? मैं अपने 5 एकड़ खेत में लगवाना चाहती हूं। बजट और सब्सिडी की जानकारी चाहिए।',
+          author: 'à¤¸à¥à¤¨à¥€à¤¤à¤¾ à¤¦à¥‡à¤µà¥€',
+          content: 'â“ à¤•à¥à¤¯à¤¾ à¤•à¥‹à¤ˆ à¤¡à¥à¤°à¤¿à¤ª à¤‡à¤°à¤¿à¤—à¥‡à¤¶à¤¨ à¤¸à¤¿à¤¸à¥à¤Ÿà¤® à¤•à¥‡ à¤¬à¤¾à¤°à¥‡ à¤®à¥‡à¤‚ à¤¬à¤¤à¤¾ à¤¸à¤•à¤¤à¤¾ à¤¹à¥ˆ? à¤®à¥ˆà¤‚ à¤…à¤ªà¤¨à¥‡ 5 à¤à¤•à¤¡à¤¼ à¤–à¥‡à¤¤ à¤®à¥‡à¤‚ à¤²à¤—à¤µà¤¾à¤¨à¤¾ à¤šà¤¾à¤¹à¤¤à¥€ à¤¹à¥‚à¤‚à¥¤ à¤¬à¤œà¤Ÿ à¤”à¤° à¤¸à¤¬à¥à¤¸à¤¿à¤¡à¥€ à¤•à¥€ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤šà¤¾à¤¹à¤¿à¤à¥¤',
           type: 'help',
           timestamp: '2 days ago',
           likes: 18,
@@ -298,8 +298,8 @@ const CommunityNetwork: React.FC = () => {
         },
         {
           id: 'knowledge-share',
-          author: 'डॉ. रमेश कुमार (कृषि वैज्ञानिक)',
-          content: '📚 मुफ्त ज्ञान: इस सीजन में फसल की पैदावार बढ़ाने के 5 आसान तरीके:\n1. सही समय पर बीज बोना\n2. मिट्टी की जांच कराना\n3. जैविक खाद का उपयोग\n4. ड्रिप इरिगेशन\n5. नियमित निगरानी\n\nऔर जानकारी के लिए comment करें!',
+          author: 'à¤¡à¥‰. à¤°à¤®à¥‡à¤¶ à¤•à¥à¤®à¤¾à¤° (à¤•à¥ƒà¤·à¤¿ à¤µà¥ˆà¤œà¥à¤žà¤¾à¤¨à¤¿à¤•)',
+          content: 'ðŸ“š à¤®à¥à¤«à¥à¤¤ à¤œà¥à¤žà¤¾à¤¨: à¤‡à¤¸ à¤¸à¥€à¤œà¤¨ à¤®à¥‡à¤‚ à¤«à¤¸à¤² à¤•à¥€ à¤ªà¥ˆà¤¦à¤¾à¤µà¤¾à¤° à¤¬à¤¢à¤¼à¤¾à¤¨à¥‡ à¤•à¥‡ 5 à¤†à¤¸à¤¾à¤¨ à¤¤à¤°à¥€à¤•à¥‡:\n1. à¤¸à¤¹à¥€ à¤¸à¤®à¤¯ à¤ªà¤° à¤¬à¥€à¤œ à¤¬à¥‹à¤¨à¤¾\n2. à¤®à¤¿à¤Ÿà¥à¤Ÿà¥€ à¤•à¥€ à¤œà¤¾à¤‚à¤š à¤•à¤°à¤¾à¤¨à¤¾\n3. à¤œà¥ˆà¤µà¤¿à¤• à¤–à¤¾à¤¦ à¤•à¤¾ à¤‰à¤ªà¤¯à¥‹à¤—\n4. à¤¡à¥à¤°à¤¿à¤ª à¤‡à¤°à¤¿à¤—à¥‡à¤¶à¤¨\n5. à¤¨à¤¿à¤¯à¤®à¤¿à¤¤ à¤¨à¤¿à¤—à¤°à¤¾à¤¨à¥€\n\nà¤”à¤° à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤•à¥‡ à¤²à¤¿à¤ comment à¤•à¤°à¥‡à¤‚!',
           type: 'tip',
           timestamp: '3 days ago',
           likes: 234,
@@ -345,7 +345,7 @@ const CommunityNetwork: React.FC = () => {
   // Interactive functions
   const handleSendMessage = () => {
     if (chatMessage.trim()) {
-      setShowSuccessToast('💬 Message sent to village group!');
+      setShowSuccessToast('ðŸ’¬ Message sent to village group!');
       setChatMessage('');
       setTimeout(() => setShowSuccessToast(''), 3000);
     }
@@ -355,10 +355,10 @@ const CommunityNetwork: React.FC = () => {
     const newLiked = new Set(likedPosts);
     if (newLiked.has(postId)) {
       newLiked.delete(postId);
-      setShowSuccessToast('💔 Like removed');
+      setShowSuccessToast('ðŸ’” Like removed');
     } else {
       newLiked.add(postId);
-      setShowSuccessToast('👍 Post liked!');
+      setShowSuccessToast('ðŸ‘ Post liked!');
     }
     setLikedPosts(newLiked);
     setTimeout(() => setShowSuccessToast(''), 2000);
@@ -368,10 +368,10 @@ const CommunityNetwork: React.FC = () => {
     const newSaved = new Set(savedPosts);
     if (newSaved.has(postId)) {
       newSaved.delete(postId);
-      setShowSuccessToast('💾 Post removed from saved');
+      setShowSuccessToast('ðŸ’¾ Post removed from saved');
     } else {
       newSaved.add(postId);
-      setShowSuccessToast('💾 Post saved!');
+      setShowSuccessToast('ðŸ’¾ Post saved!');
     }
     setSavedPosts(newSaved);
     setTimeout(() => setShowSuccessToast(''), 2000);
@@ -384,7 +384,7 @@ const CommunityNetwork: React.FC = () => {
         ...prev,
         [option]: prev[option] + 1
       }));
-      setShowSuccessToast(`🗳️ Vote cast for ${option}!`);
+      setShowSuccessToast(`ðŸ—³ï¸ Vote cast for ${option}!`);
       setTimeout(() => setShowSuccessToast(''), 2000);
     }
   };
@@ -393,34 +393,34 @@ const CommunityNetwork: React.FC = () => {
     const newJoined = new Set(joinedEvents);
     if (newJoined.has(eventTitle)) {
       newJoined.delete(eventTitle);
-      setShowSuccessToast(`❌ Left event: ${eventTitle}`);
+      setShowSuccessToast(`âŒ Left event: ${eventTitle}`);
     } else {
       newJoined.add(eventTitle);
-      setShowSuccessToast(`🎉 Joined event: ${eventTitle}!`);
+      setShowSuccessToast(`ðŸŽ‰ Joined event: ${eventTitle}!`);
     }
     setJoinedEvents(newJoined);
     setTimeout(() => setShowSuccessToast(''), 3000);
   };
 
   const handleCallFarmer = (name: string, phone: string) => {
-    setShowSuccessToast(`📞 Calling ${name} at ${phone}...`);
+    setShowSuccessToast(`ðŸ“ž Calling ${name} at ${phone}...`);
     setTimeout(() => setShowSuccessToast(''), 3000);
   };
 
   const handleEmergencyAction = (action: string) => {
-    setShowSuccessToast(`⚡ ${action} initiated! Help is on the way.`);
+    setShowSuccessToast(`âš¡ ${action} initiated! Help is on the way.`);
     setTimeout(() => setShowSuccessToast(''), 4000);
   };
 
   const handleMarketplaceAction = (action: string) => {
-    setShowSuccessToast(`🛒 ${action} - Connecting you now...`);
+    setShowSuccessToast(`ðŸ›’ ${action} - Connecting you now...`);
     setTimeout(() => setShowSuccessToast(''), 3000);
   };
 
   const handleVideoCall = (farmerName: string) => {
     setActiveVideoCall(farmerName);
     setShowVideoCall(true);
-    setShowSuccessToast(`📹 Starting video call with ${farmerName}...`);
+    setShowSuccessToast(`ðŸ“¹ Starting video call with ${farmerName}...`);
     setTimeout(() => setShowSuccessToast(''), 3000);
   };
 
@@ -430,11 +430,11 @@ const CommunityNetwork: React.FC = () => {
       name: file.name,
       url: URL.createObjectURL(file),
       timestamp: new Date(),
-      author: 'आप', // You
-      description: 'मेरी फसल की तस्वीर देखिए' // See my crop photo
+      author: 'à¤†à¤ª', // You
+      description: 'à¤®à¥‡à¤°à¥€ à¤«à¤¸à¤² à¤•à¥€ à¤¤à¤¸à¥à¤µà¥€à¤° à¤¦à¥‡à¤–à¤¿à¤' // See my crop photo
     };
     setSharedPhotos(prev => [newPhoto, ...prev]);
-    setShowSuccessToast('📷 Photo shared with village community!');
+    setShowSuccessToast('ðŸ“· Photo shared with village community!');
     setTimeout(() => setShowSuccessToast(''), 3000);
     setShowPhotoShare(false);
   };
@@ -454,7 +454,7 @@ const CommunityNetwork: React.FC = () => {
       status: 'scheduled'
     };
     setScheduledCalls(prev => [...prev, newCall]);
-    setShowSuccessToast(`📅 Call scheduled with ${selectedExpert?.name} on ${date} at ${time}!`);
+    setShowSuccessToast(`ðŸ“… Call scheduled with ${selectedExpert?.name} on ${date} at ${time}!`);
     setTimeout(() => setShowSuccessToast(''), 4000);
     setShowScheduleCall(false);
     setSelectedExpert(null);
@@ -490,7 +490,7 @@ const CommunityNetwork: React.FC = () => {
               boxShadow: '0 8px 32px rgba(76, 175, 80, 0.4)'
             }}
           >
-            <Typography sx={{ fontSize: 20 }}>✓</Typography>
+            <Typography sx={{ fontSize: 20 }}>âœ“</Typography>
             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
               {showSuccessToast}
             </Typography>
@@ -516,7 +516,7 @@ const CommunityNetwork: React.FC = () => {
         >
           <Group sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            👥 {(t as any)('community.title')}
+            ðŸ‘¥ {(t as any)('community.title')}
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
             {(t as any)('community.subtitle')}
@@ -533,7 +533,7 @@ const CommunityNetwork: React.FC = () => {
           </Box>
           <Box sx={{ display:'flex', gap:1, overflowX:'auto', pb:1 }}>
             {mentors.map(m => (
-              <Chip key={m.id} avatar={<Avatar sx={{ bgcolor:'success.main' }}>{m.name.charAt(0)}</Avatar>} label={`${m.name} • ⭐ ${m.rating}`} sx={{ bgcolor:'rgba(76,175,80,0.08)' }} />
+              <Chip key={m.id} avatar={<Avatar sx={{ bgcolor:'success.main' }}>{m.name.charAt(0)}</Avatar>} label={`${m.name} â€¢ â­ ${m.rating}`} sx={{ bgcolor:'rgba(76,175,80,0.08)' }} />
             ))}
           </Box>
         </Paper>
@@ -594,7 +594,7 @@ const CommunityNetwork: React.FC = () => {
                         </Box>
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                           <LocationOn sx={{ fontSize: 14, mr: 0.5 }} />
-                          {post.location} • {post.timestamp}
+                          {post.location} â€¢ {post.timestamp}
                         </Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>
                           {post.content}
@@ -608,7 +608,7 @@ const CommunityNetwork: React.FC = () => {
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                           {/* Reaction Emojis */}
                           <Box sx={{ display: 'flex', gap: 0.5 }}>
-                            {['👍', '❤️', '😮', '💪', '🔥'].map((emoji, idx) => (
+                            {['ðŸ‘', 'â¤ï¸', 'ðŸ˜®', 'ðŸ’ª', 'ðŸ”¥'].map((emoji, idx) => (
                               <motion.div
                                 key={emoji}
                                 whileHover={{ scale: 1.3 }}
@@ -657,7 +657,7 @@ const CommunityNetwork: React.FC = () => {
                               startIcon={<Comment />}
                               size="small"
                               variant="outlined"
-                              onClick={() => setShowSuccessToast(`💬 Reply to ${post.author} opened!`)}
+                              onClick={() => setShowSuccessToast(`ðŸ’¬ Reply to ${post.author} opened!`)}
                               sx={{ 
                                 borderRadius: 3, 
                                 textTransform: 'none',
@@ -675,10 +675,10 @@ const CommunityNetwork: React.FC = () => {
                                 variant="contained"
                                 color="success"
                                 startIcon={<Call />}
-                                onClick={() => setShowSuccessToast('📞 Expert help called! Someone will contact you soon.')}
+                                onClick={() => setShowSuccessToast('ðŸ“ž Expert help called! Someone will contact you soon.')}
                                 sx={{ borderRadius: 3, textTransform: 'none' }}
                               >
-                                📞 Call Help
+                                ðŸ“ž Call Help
                               </Button>
                             )}
                             {post.type === 'tip' && (
@@ -690,7 +690,7 @@ const CommunityNetwork: React.FC = () => {
                                 onClick={() => handleSavePost(post.id)}
                                 sx={{ borderRadius: 3, textTransform: 'none' }}
                               >
-                                {savedPosts.has(post.id) ? '✓ Saved' : '💾 Save Tip'}
+                                {savedPosts.has(post.id) ? 'âœ“ Saved' : 'ðŸ’¾ Save Tip'}
                               </Button>
                             )}
                             <IconButton
@@ -708,7 +708,7 @@ const CommunityNetwork: React.FC = () => {
                         {post.id === 'weather-alert' && (
                           <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(244, 67, 54, 0.05)', borderRadius: 2, border: '1px solid rgba(244, 67, 54, 0.2)' }}>
                             <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'error.main', mb: 1 }}>
-                              ⚡ Quick Actions:
+                              âš¡ Quick Actions:
                             </Typography>
                             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                               <Button 
@@ -719,7 +719,7 @@ const CommunityNetwork: React.FC = () => {
                                 onClick={() => handleEmergencyAction('Weather Forecast Check')}
                                 sx={{ borderRadius: 2 }}
                               >
-                                🌧️ Check Forecast
+                                ðŸŒ§ï¸ Check Forecast
                               </Button>
                               <Button 
                                 size="small" 
@@ -729,7 +729,7 @@ const CommunityNetwork: React.FC = () => {
                                 onClick={() => handleEmergencyAction('Emergency Helpline Called')}
                                 sx={{ borderRadius: 2 }}
                               >
-                                📞 Emergency Helpline
+                                ðŸ“ž Emergency Helpline
                               </Button>
                               <Button 
                                 size="small" 
@@ -738,7 +738,7 @@ const CommunityNetwork: React.FC = () => {
                                 onClick={() => handleEmergencyAction('Insurance Claim Process')}
                                 sx={{ borderRadius: 2 }}
                               >
-                                📝 Insurance Claim
+                                ðŸ“ Insurance Claim
                               </Button>
                             </Box>
                           </Box>
@@ -747,7 +747,7 @@ const CommunityNetwork: React.FC = () => {
                         {post.id === 'marketplace' && (
                           <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(76, 175, 80, 0.05)', borderRadius: 2, border: '1px solid rgba(76, 175, 80, 0.2)' }}>
                             <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'success.main', mb: 1 }}>
-                              🛒 Marketplace Actions:
+                              ðŸ›’ Marketplace Actions:
                             </Typography>
                             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                               <Button 
@@ -758,7 +758,7 @@ const CommunityNetwork: React.FC = () => {
                                 onClick={() => handleMarketplaceAction('Mandi Visit Scheduled')}
                                 sx={{ borderRadius: 2 }}
                               >
-                                📍 Visit Mandi
+                                ðŸ“ Visit Mandi
                               </Button>
                               <Button 
                                 size="small" 
@@ -768,7 +768,7 @@ const CommunityNetwork: React.FC = () => {
                                 onClick={() => handleMarketplaceAction('Price Alert Activated')}
                                 sx={{ borderRadius: 2 }}
                               >
-                                💱 Get Price Alert
+                                ðŸ’± Get Price Alert
                               </Button>
                               <Button 
                                 size="small" 
@@ -778,7 +778,7 @@ const CommunityNetwork: React.FC = () => {
                                 onClick={() => handleMarketplaceAction('Transport Booking')}
                                 sx={{ borderRadius: 2 }}
                               >
-                                🚚 Book Transport
+                                ðŸšš Book Transport
                               </Button>
                             </Box>
                           </Box>
@@ -858,10 +858,10 @@ const CommunityNetwork: React.FC = () => {
                       {farmer.location}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      🌾 {farmer.crops.join(', ')}
+                      ðŸŒ¾ {farmer.crops.join(', ')}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {farmer.experience} years • ⭐ {farmer.rating}
+                      {farmer.experience} years â€¢ â­ {farmer.rating}
                     </Typography>
                     <Chip
                       label={farmer.specialization}
@@ -887,7 +887,7 @@ const CommunityNetwork: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <Chat sx={{ mr: 1, color: theme.palette.primary.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                    🌾 Live Village Discussion
+                    ðŸŒ¾ Live Village Discussion
                   </Typography>
                   <Chip label="24 Active" color="success" size="small" />
                 </Box>
@@ -896,10 +896,10 @@ const CommunityNetwork: React.FC = () => {
                 <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2, p: 1, bgcolor: '#f8f9fa', borderRadius: 2 }}>
                   {/* Mock live messages */}
                   {[
-                    { user: 'राम सिंह', msg: 'कल बारिश का अनुमान है, क्या धान की बुआई कर सकते हैं?', time: '2 min ago', online: true },
-                    { user: 'सीता देवी', msg: 'हां राम भाई, अभी बुआई का सही समय है। मैंने कल ही की है।', time: '1 min ago', online: true },
-                    { user: 'मोहन कुमार', msg: 'मेरे पास अच्छे बीज हैं अगर किसी को चाहिए। व्हाट्सऐप: 98765-43210', time: '30 sec ago', online: true },
-                    { user: 'गीता शर्मा', msg: '🎉 आज मेरी फसल बेची - ₹45/किलो मिला टमाटर का!', time: 'just now', online: true }
+                    { user: 'à¤°à¤¾à¤® à¤¸à¤¿à¤‚à¤¹', msg: 'à¤•à¤² à¤¬à¤¾à¤°à¤¿à¤¶ à¤•à¤¾ à¤…à¤¨à¥à¤®à¤¾à¤¨ à¤¹à¥ˆ, à¤•à¥à¤¯à¤¾ à¤§à¤¾à¤¨ à¤•à¥€ à¤¬à¥à¤†à¤ˆ à¤•à¤° à¤¸à¤•à¤¤à¥‡ à¤¹à¥ˆà¤‚?', time: '2 min ago', online: true },
+                    { user: 'à¤¸à¥€à¤¤à¤¾ à¤¦à¥‡à¤µà¥€', msg: 'à¤¹à¤¾à¤‚ à¤°à¤¾à¤® à¤­à¤¾à¤ˆ, à¤…à¤­à¥€ à¤¬à¥à¤†à¤ˆ à¤•à¤¾ à¤¸à¤¹à¥€ à¤¸à¤®à¤¯ à¤¹à¥ˆà¥¤ à¤®à¥ˆà¤‚à¤¨à¥‡ à¤•à¤² à¤¹à¥€ à¤•à¥€ à¤¹à¥ˆà¥¤', time: '1 min ago', online: true },
+                    { user: 'à¤®à¥‹à¤¹à¤¨ à¤•à¥à¤®à¤¾à¤°', msg: 'à¤®à¥‡à¤°à¥‡ à¤ªà¤¾à¤¸ à¤…à¤šà¥à¤›à¥‡ à¤¬à¥€à¤œ à¤¹à¥ˆà¤‚ à¤…à¤—à¤° à¤•à¤¿à¤¸à¥€ à¤•à¥‹ à¤šà¤¾à¤¹à¤¿à¤à¥¤ à¤µà¥à¤¹à¤¾à¤Ÿà¥à¤¸à¤à¤ª: 98765-43210', time: '30 sec ago', online: true },
+                    { user: 'à¤—à¥€à¤¤à¤¾ à¤¶à¤°à¥à¤®à¤¾', msg: 'ðŸŽ‰ à¤†à¤œ à¤®à¥‡à¤°à¥€ à¤«à¤¸à¤² à¤¬à¥‡à¤šà¥€ - â‚¹45/à¤•à¤¿à¤²à¥‹ à¤®à¤¿à¤²à¤¾ à¤Ÿà¤®à¤¾à¤Ÿà¤° à¤•à¤¾!', time: 'just now', online: true }
                   ].map((chat, idx) => (
                     <motion.div
                       key={idx}
@@ -931,7 +931,7 @@ const CommunityNetwork: React.FC = () => {
                   <TextField
                     fullWidth
                     size="small"
-                    placeholder="अपना सवाल या सलाह लिखें..."
+                    placeholder="à¤…à¤ªà¤¨à¤¾ à¤¸à¤µà¤¾à¤² à¤¯à¤¾ à¤¸à¤²à¤¾à¤¹ à¤²à¤¿à¤–à¥‡à¤‚..."
                     variant="outlined"
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
@@ -968,17 +968,17 @@ const CommunityNetwork: React.FC = () => {
             <Card elevation={2} sx={{ borderRadius: 3, mb: 3 }}>
               <CardContent>
                 <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center' }}>
-                  📊 Village Poll
+                  ðŸ“Š Village Poll
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 2 }}>
-                  "इस साल कौन सी फसल सबसे फायदेमंद रहेगी?"
+                  "à¤‡à¤¸ à¤¸à¤¾à¤² à¤•à¥Œà¤¨ à¤¸à¥€ à¤«à¤¸à¤² à¤¸à¤¬à¤¸à¥‡ à¤«à¤¾à¤¯à¤¦à¥‡à¤®à¤‚à¤¦ à¤°à¤¹à¥‡à¤—à¥€?"
                 </Typography>
                 
                 {[
-                  { crop: 'धान', votes: pollResults['धान'], color: '#4caf50' },
-                  { crop: 'गेहूं', votes: pollResults['गेहूं'], color: '#2196f3' },
-                  { crop: 'मक्का', votes: pollResults['मक्का'], color: '#ff9800' },
-                  { crop: 'कपास', votes: pollResults['कपास'], color: '#9c27b0' }
+                  { crop: 'à¤§à¤¾à¤¨', votes: pollResults['à¤§à¤¾à¤¨'], color: '#4caf50' },
+                  { crop: 'à¤—à¥‡à¤¹à¥‚à¤‚', votes: pollResults['à¤—à¥‡à¤¹à¥‚à¤‚'], color: '#2196f3' },
+                  { crop: 'à¤®à¤•à¥à¤•à¤¾', votes: pollResults['à¤®à¤•à¥à¤•à¤¾'], color: '#ff9800' },
+                  { crop: 'à¤•à¤ªà¤¾à¤¸', votes: pollResults['à¤•à¤ªà¤¾à¤¸'], color: '#9c27b0' }
                 ].map((option) => {
                   const totalVotes = Object.values(pollResults).reduce((a, b) => a + b, 0);
                   const percentage = Math.round((option.votes / totalVotes) * 100);
@@ -1009,7 +1009,7 @@ const CommunityNetwork: React.FC = () => {
                             <Typography variant="body2" sx={{ fontWeight: isSelected ? 'bold' : 'normal' }}>
                               {option.crop}
                             </Typography>
-                            {isSelected && <Typography sx={{ fontSize: 16 }}>✓</Typography>}
+                            {isSelected && <Typography sx={{ fontSize: 16 }}>âœ“</Typography>}
                           </Box>
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                             {percentage}% ({option.votes})
@@ -1044,7 +1044,7 @@ const CommunityNetwork: React.FC = () => {
                     '&:disabled': { opacity: 0.7 }
                   }}
                 >
-                  {votedPoll ? `✓ Voted for ${votedPoll}` : '🗳️ Vote Now'}
+                  {votedPoll ? `âœ“ Voted for ${votedPoll}` : 'ðŸ—³ï¸ Vote Now'}
                 </Button>
               </CardContent>
             </Card>
@@ -1053,13 +1053,13 @@ const CommunityNetwork: React.FC = () => {
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent>
                 <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center' }}>
-                  📅 Village Events
+                  ðŸ“… Village Events
                 </Typography>
                 
                 {[
-                  { title: 'कृषि मेला', date: 'Tomorrow', time: '10:00 AM', attendees: 45 },
-                  { title: 'जैविक खाद वर्कशॉप', date: 'Dec 30', time: '2:00 PM', attendees: 23 },
-                  { title: 'सामुदायिक बीज बैंक', date: 'Jan 5', time: '9:00 AM', attendees: 67 }
+                  { title: 'à¤•à¥ƒà¤·à¤¿ à¤®à¥‡à¤²à¤¾', date: 'Tomorrow', time: '10:00 AM', attendees: 45 },
+                  { title: 'à¤œà¥ˆà¤µà¤¿à¤• à¤–à¤¾à¤¦ à¤µà¤°à¥à¤•à¤¶à¥‰à¤ª', date: 'Dec 30', time: '2:00 PM', attendees: 23 },
+                  { title: 'à¤¸à¤¾à¤®à¥à¤¦à¤¾à¤¯à¤¿à¤• à¤¬à¥€à¤œ à¤¬à¥ˆà¤‚à¤•', date: 'Jan 5', time: '9:00 AM', attendees: 67 }
                 ].map((event, idx) => (
                   <motion.div
                     key={idx}
@@ -1072,11 +1072,11 @@ const CommunityNetwork: React.FC = () => {
                         {event.title}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {event.date} • {event.time}
+                        {event.date} â€¢ {event.time}
                       </Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
                         <Typography variant="caption" color="text.secondary">
-                          👥 {event.attendees} interested
+                          ðŸ‘¥ {event.attendees} interested
                         </Typography>
                         <Button 
                           size="small" 
@@ -1086,7 +1086,7 @@ const CommunityNetwork: React.FC = () => {
                           onClick={() => handleJoinEvent(event.title)}
                           sx={{ borderRadius: 2 }}
                         >
-                          {joinedEvents.has(event.title) ? '✓ Joined' : 'Join'}
+                          {joinedEvents.has(event.title) ? 'âœ“ Joined' : 'Join'}
                         </Button>
                       </Box>
                     </Paper>
@@ -1268,7 +1268,7 @@ const CommunityNetwork: React.FC = () => {
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
             <PhotoCamera color="success" />
-            📷 Share Crop Photo
+            ðŸ“· Share Crop Photo
           </Typography>
           
           <Box sx={{ textAlign: 'center', py: 4 }}>
@@ -1360,13 +1360,13 @@ const CommunityNetwork: React.FC = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Videocam sx={{ color: '#4caf50' }} />
               <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
-                📹 Video Consultation
+                ðŸ“¹ Video Consultation
                 {activeVideoCall && ` - ${activeVideoCall}`}
               </Typography>
               {activeVideoCall && (
                 <Chip 
                   size="small" 
-                  label="🟢 Live" 
+                  label="ðŸŸ¢ Live" 
                   sx={{ 
                     bgcolor: '#4caf50', 
                     color: 'white',
@@ -1421,10 +1421,10 @@ const CommunityNetwork: React.FC = () => {
                   }}>
                     {/* Group Participants */}
                     {[
-                      { name: 'राहुल शर्मा', role: 'Organic Expert', color: '#4caf50' },
-                      { name: 'प्रिया पटेल', role: 'Crop Rotation', color: '#2196f3' },
-                      { name: 'अमित कुमार', role: 'Equipment', color: '#ff9800' },
-                      { name: 'आप', role: 'Farmer', color: '#9c27b0' }
+                      { name: 'à¤°à¤¾à¤¹à¥à¤² à¤¶à¤°à¥à¤®à¤¾', role: 'Organic Expert', color: '#4caf50' },
+                      { name: 'à¤ªà¥à¤°à¤¿à¤¯à¤¾ à¤ªà¤Ÿà¥‡à¤²', role: 'Crop Rotation', color: '#2196f3' },
+                      { name: 'à¤…à¤®à¤¿à¤¤ à¤•à¥à¤®à¤¾à¤°', role: 'Equipment', color: '#ff9800' },
+                      { name: 'à¤†à¤ª', role: 'Farmer', color: '#9c27b0' }
                     ].map((participant, index) => (
                       <Paper key={index} sx={{ 
                         bgcolor: 'rgba(255,255,255,0.1)', 
@@ -1482,7 +1482,7 @@ const CommunityNetwork: React.FC = () => {
                       {activeVideoCall}
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                      Agricultural Expert • Online
+                      Agricultural Expert â€¢ Online
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
                       <Circle sx={{ fontSize: 8, color: '#4caf50' }} />
@@ -1532,7 +1532,7 @@ const CommunityNetwork: React.FC = () => {
                   Connect with agricultural experts for live consultation
                 </Typography>
                 <Typography variant="caption" sx={{ opacity: 0.5 }}>
-                  Powered by WebRTC • End-to-end encrypted
+                  Powered by WebRTC â€¢ End-to-end encrypted
                 </Typography>
               </Box>
             )}
@@ -1613,7 +1613,7 @@ const CommunityNetwork: React.FC = () => {
               onClick={() => {
                 setActiveVideoCall(null);
                 setShowVideoCall(false);
-                setShowSuccessToast('📞 Video call ended');
+                setShowSuccessToast('ðŸ“ž Video call ended');
                 setTimeout(() => setShowSuccessToast(''), 2000);
               }}
               title="End Call"
@@ -1646,7 +1646,7 @@ const CommunityNetwork: React.FC = () => {
         {!activeVideoCall && (
           <Box sx={{ p: 3, bgcolor: '#1a1a1a' }}>
             <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold', color: 'white' }}>
-              🌟 Available Agricultural Experts:
+              ðŸŒŸ Available Agricultural Experts:
             </Typography>
             
             {/* Expert Cards */}
@@ -1681,16 +1681,16 @@ const CommunityNetwork: React.FC = () => {
                             </Typography>
                           </Box>
                           <Typography variant="body2" sx={{ color: '#aaa', mb: 1 }}>
-                            🎯 {farmer.specialization}
+                            ðŸŽ¯ {farmer.specialization}
                           </Typography>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Star sx={{ color: '#ffc107', fontSize: 16 }} />
                             <Typography variant="caption" sx={{ color: '#ffc107' }}>
-                              {farmer.rating} ⭐ ({farmer.experience} years exp.)
+                              {farmer.rating} â­ ({farmer.experience} years exp.)
                             </Typography>
                           </Box>
                           <Typography variant="caption" sx={{ color: '#aaa' }}>
-                            📍 {farmer.location}
+                            ðŸ“ {farmer.location}
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -1734,15 +1734,15 @@ const CommunityNetwork: React.FC = () => {
             {/* Quick Expert Categories */}
             <Box sx={{ mt: 3 }}>
               <Typography variant="body2" sx={{ mb: 2, color: '#aaa' }}>
-                🔍 Quick Categories:
+                ðŸ” Quick Categories:
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {[
-                  { label: '🌾 Crop Diseases', experts: 3 },
-                  { label: '🚜 Equipment', experts: 2 },
-                  { label: '🌱 Organic Farming', experts: 4 },
-                  { label: '💧 Irrigation', experts: 2 },
-                  { label: '🌿 Soil Health', experts: 3 }
+                  { label: 'ðŸŒ¾ Crop Diseases', experts: 3 },
+                  { label: 'ðŸšœ Equipment', experts: 2 },
+                  { label: 'ðŸŒ± Organic Farming', experts: 4 },
+                  { label: 'ðŸ’§ Irrigation', experts: 2 },
+                  { label: 'ðŸŒ¿ Soil Health', experts: 3 }
                 ].map((category) => (
                   <Chip
                     key={category.label}
@@ -1760,7 +1760,7 @@ const CommunityNetwork: React.FC = () => {
             
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 3 }}>
               <Typography variant="body2" sx={{ color: '#aaa' }}>
-                👥 Connect with expert farmers for live consultation
+                ðŸ‘¥ Connect with expert farmers for live consultation
               </Typography>
               <Button onClick={() => setShowVideoCall(false)} sx={{ color: 'white' }}>
                 Cancel
@@ -1777,7 +1777,7 @@ const CommunityNetwork: React.FC = () => {
               onClick={() => {
                 setActiveVideoCall(null);
                 setShowVideoCall(false);
-                setShowSuccessToast('📞 Call ended');
+                setShowSuccessToast('ðŸ“ž Call ended');
                 setTimeout(() => setShowSuccessToast(''), 2000);
               }}
             >
@@ -1798,7 +1798,7 @@ const CommunityNetwork: React.FC = () => {
         <DialogTitle sx={{ textAlign: 'center', pb: 1 }}>
           <Schedule sx={{ fontSize: 40, color: '#4caf50', mb: 1 }} />
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            📅 Schedule Video Consultation
+            ðŸ“… Schedule Video Consultation
           </Typography>
           {selectedExpert && (
             <Typography variant="body2" color="text.secondary">
@@ -1820,12 +1820,12 @@ const CommunityNetwork: React.FC = () => {
                     {selectedExpert.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    🎯 {selectedExpert.specialization}
+                    ðŸŽ¯ {selectedExpert.specialization}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Star sx={{ color: '#ffc107', fontSize: 16 }} />
                     <Typography variant="caption">
-                      {selectedExpert.rating} ⭐ ({selectedExpert.experience} years)
+                      {selectedExpert.rating} â­ ({selectedExpert.experience} years)
                     </Typography>
                   </Box>
                 </Box>
@@ -1877,7 +1877,7 @@ const CommunityNetwork: React.FC = () => {
           {/* Available Time Slots */}
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
-              ⌚ Suggested Time Slots (Today):
+              âŒš Suggested Time Slots (Today):
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {['10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM'].map((time) => (
@@ -1898,16 +1898,16 @@ const CommunityNetwork: React.FC = () => {
           {/* Consultation Types */}
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
-              📝 Quick Topics:
+              ðŸ“ Quick Topics:
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {[
-                '🌾 Crop Disease Diagnosis',
-                '🚜 Equipment Selection', 
-                '🌱 Organic Methods',
-                '💧 Irrigation Planning',
-                '🌿 Soil Testing',
-                '💰 Market Strategy'
+                'ðŸŒ¾ Crop Disease Diagnosis',
+                'ðŸšœ Equipment Selection', 
+                'ðŸŒ± Organic Methods',
+                'ðŸ’§ Irrigation Planning',
+                'ðŸŒ¿ Soil Testing',
+                'ðŸ’° Market Strategy'
               ].map((topic) => (
                 <Chip
                   key={topic}
@@ -1927,7 +1927,7 @@ const CommunityNetwork: React.FC = () => {
           {scheduledCalls.length > 0 && (
             <Box sx={{ mt: 3 }}>
               <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
-                📅 Your Upcoming Calls:
+                ðŸ“… Your Upcoming Calls:
               </Typography>
               {scheduledCalls.slice(0, 2).map((call) => (
                 <Paper key={call.id} sx={{ p: 2, mb: 1, bgcolor: 'rgba(33,150,243,0.05)' }}>

@@ -385,7 +385,10 @@ class MarketPriceService {
     const nearbyMandis = mandiDatabase
       .map(mandi => ({
         ...mandi,
-        distance: this.calculateDistance(userLocation, mandi.location)
+        distance: this.calculateDistance(
+          userLocation,
+          { lat: mandi.location.latitude, lng: mandi.location.longitude }
+        )
       }))
       .filter(mandi => mandi.distance! <= radius)
       .sort((a, b) => a.distance! - b.distance!);
@@ -702,7 +705,7 @@ class MarketPriceService {
 
   private generateHistoricalData(cropName: string, period: string): Array<{ date: string; price: number; volume: number }> {
     const days = period === 'daily' ? 30 : period === 'weekly' ? 12 : 6;
-    const data = [];
+    const data: Array<{ date: string; price: number; volume: number }> = [];
     const basePrice = mockPriceData[cropName.toLowerCase()]?.[0]?.currentPrice || 2000;
     
     for (let i = days - 1; i >= 0; i--) {
@@ -724,7 +727,7 @@ class MarketPriceService {
   }
 
   private generatePriceForecast(cropName: string, historicalData: any[]): Array<{ date: string; predictedPrice: number; confidence: number }> {
-    const forecast = [];
+    const forecast: Array<{ date: string; predictedPrice: number; confidence: number }> = [];
     const lastPrice = historicalData[historicalData.length - 1]?.price || 2000;
     
     for (let i = 1; i <= 7; i++) {
@@ -745,7 +748,7 @@ class MarketPriceService {
     return forecast;
   }
 
-  private analyzeMarketTrends(data: any[]) {
+  private analyzeMarketTrends(data: any[]): { volatility: number; seasonality: 'high' | 'medium' | 'low'; marketSentiment: 'bullish' | 'bearish' | 'neutral'; priceStability: number } {
     const prices = data.map(d => d.price);
     const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
     const variance = prices.reduce((a, price) => a + Math.pow(price - avgPrice, 2), 0) / prices.length;
@@ -753,8 +756,8 @@ class MarketPriceService {
     
     return {
       volatility: Math.min(100, volatility),
-      seasonality: volatility > 15 ? 'high' : volatility > 8 ? 'medium' : 'low',
-      marketSentiment: prices[prices.length - 1] > avgPrice ? 'bullish' : prices[prices.length - 1] < avgPrice ? 'bearish' : 'neutral',
+      seasonality: volatility > 15 ? 'high' as const : volatility > 8 ? 'medium' as const : 'low' as const,
+      marketSentiment: prices[prices.length - 1] > avgPrice ? 'bullish' as const : prices[prices.length - 1] < avgPrice ? 'bearish' as const : 'neutral' as const,
       priceStability: Math.max(0, 100 - volatility)
     };
   }

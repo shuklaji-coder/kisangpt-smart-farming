@@ -1,111 +1,91 @@
-/* KisanGPT - Mobile-First Responsive Design */
+/* KisanGPT - Premium Mobile-First Design System */
 .App {
-  background-color: #f1f8e9;
+  background-color: #f6fbf3;
   min-height: 100vh;
-  font-family: 'Roboto', 'Arial', sans-serif;
+  font-family: 'Inter', 'Noto Sans Devanagari', 'Roboto', 'Arial', sans-serif;
   overflow-x: hidden;
+  color: #2e3a2f;
 }
 
-/* Base styles for all elements */
+/* Base reset without global transition on everything (perf) */
 * {
   box-sizing: border-box;
-  transition: all 0.3s ease-in-out;
 }
 
-/* Mobile-first root font size */
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
 }
 
-/* Custom scrollbar - Mobile optimized */
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-@media (min-width: 768px) {
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #4caf50;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #2e7d32;
-}
-
-/* Mobile-first farmer button */
+/* ------- Premium farmer button ------- */
 .farmer-button {
-  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  background: linear-gradient(135deg, #4caf50 0%, #1b5e20 100%);
   border: none;
-  border-radius: 25px;
-  padding: 14px 20px;
+  border-radius: 14px;
+  padding: 14px 22px;
   color: white;
-  font-weight: bold;
+  font-weight: 700;
+  font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
+  font-size: 0.92rem;
   cursor: pointer;
-  font-size: 0.9rem;
-  min-height: 44px; /* Touch target size */
+  min-height: 48px;
   min-width: 44px;
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  box-shadow: 0 10px 24px rgba(27, 94, 32, 0.35);
   touch-action: manipulation;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, filter 0.25s ease;
 }
 
 @media (min-width: 768px) {
   .farmer-button {
-    padding: 12px 24px;
+    padding: 13px 26px;
     font-size: 1rem;
   }
 }
 
 .farmer-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 32px rgba(27, 94, 32, 0.45);
+  filter: brightness(1.05);
 }
 
 .farmer-button:active {
-  transform: translateY(0px);
-  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
 }
 
-/* Mobile-optimized cards */
+.farmer-button:focus-visible {
+  outline: 3px solid rgba(102, 187, 106, 0.6);
+  outline-offset: 2px;
+}
+
+/* ------- Premium cards ------- */
 .farmer-card {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border-radius: 18px;
+  border: 1px solid rgba(46, 125, 50, 0.08);
+  box-shadow: 0 8px 30px rgba(31, 82, 38, 0.08);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
   margin-bottom: 16px;
 }
 
 .farmer-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(31, 82, 38, 0.16);
 }
 
-@media (min-width: 768px) {
-  .farmer-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  }
-}
-
-/* Mobile Navigation Styles */
+/* ------- Mobile Navigation ------- */
 .mobile-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 1100;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-top: 1px solid rgba(46, 125, 50, 0.12);
   padding: 8px 0;
+  box-shadow: 0 -8px 30px rgba(31, 82, 38, 0.1);
 }
 
 @media (min-width: 768px) {
@@ -114,52 +94,51 @@ html {
   }
 }
 
-/* Touch-friendly icon buttons */
+/* ------- Touch-friendly icon buttons ------- */
 .touch-icon-button {
   min-height: 48px;
   min-width: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 14px;
   touch-action: manipulation;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
+.touch-icon-button:hover { transform: scale(1.06); }
 
-/* Mobile Typography Scale */
+/* ------- Mobile Typography ------- */
 .mobile-heading-1 {
   font-size: 1.75rem;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
   line-height: 1.2;
   margin-bottom: 16px;
 }
 
 .mobile-heading-2 {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
   line-height: 1.3;
   margin-bottom: 12px;
 }
 
 .mobile-heading-3 {
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
   line-height: 1.4;
   margin-bottom: 8px;
 }
 
 @media (min-width: 768px) {
-  .mobile-heading-1 {
-    font-size: 2.2rem;
-  }
-  .mobile-heading-2 {
-    font-size: 1.8rem;
-  }
-  .mobile-heading-3 {
-    font-size: 1.5rem;
-  }
+  .mobile-heading-1 { font-size: 2.2rem; }
+  .mobile-heading-2 { font-size: 1.8rem; }
+  .mobile-heading-3 { font-size: 1.5rem; }
 }
 
-/* Mobile Container */
+/* ------- Mobile Container ------- */
 .mobile-container {
   padding: 12px 16px;
   margin-bottom: 80px; /* Space for bottom nav */
@@ -167,12 +146,12 @@ html {
 
 @media (min-width: 768px) {
   .mobile-container {
-    padding: 16px 24px;
+    padding: 20px 28px;
     margin-bottom: 0;
   }
 }
 
-/* Responsive Grid */
+/* ------- Responsive Grid ------- */
 .responsive-grid {
   display: grid;
   gap: 16px;
@@ -193,69 +172,27 @@ html {
   }
 }
 
-/* Mobile responsive breakpoints */
-/* Extra small devices (phones, 600px and down) */
+/* ------- Responsive helpers ------- */
 @media (max-width: 600px) {
-  .App {
-    padding: 0;
-  }
-  
-  .hide-mobile {
-    display: none !important;
-  }
-  
-  .full-width-mobile {
-    width: 100% !important;
-    margin: 0 !important;
-  }
+  .App { padding: 0; }
+  .hide-mobile { display: none !important; }
+  .full-width-mobile { width: 100% !important; margin: 0 !important; }
 }
 
-/* Small devices (portrait tablets and large phones, 600px and up) */
 @media (min-width: 600px) {
-  .show-mobile-only {
-    display: none !important;
-  }
+  .show-mobile-only { display: none !important; }
 }
 
-/* Medium devices (landscape tablets, 768px and up) */
 @media (min-width: 768px) {
-  html {
-    font-size: 17px;
-  }
+  html { font-size: 16.5px; }
 }
 
-/* Large devices (laptops/desktops, 992px and up) */
 @media (min-width: 992px) {
-  html {
-    font-size: 18px;
-  }
+  html { font-size: 17px; }
 }
 
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-@media (min-width: 1200px) {
-  .container-xl {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-}
-
-/* High contrast mode for accessibility */
+/* ------- High contrast ------- */
 @media (prefers-contrast: high) {
-  .App {
-    background-color: #ffffff;
-  }
-  
-  .farmer-button {
-    background: #000000;
-    border: 2px solid #ffffff;
-  }
-}
-
-/* Reduced motion for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+  .App { background-color: #ffffff; }
+  .farmer-button { background: #0a2e10; border: 2px solid #ffffff; }
 }

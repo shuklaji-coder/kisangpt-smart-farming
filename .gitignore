@@ -14,6 +14,7 @@ backend/dist/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 
 # Logs
 npm-debug.log*
@@ -103,3 +104,7 @@ venv.bak/
 *.db
 *.sqlite
 *.sqlite3
+
+# Stray npm cache directories accidentally created inside the repo
+backend/%USERPROFILE%/
+frontend/%USERPROFILE%/

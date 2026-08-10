@@ -162,7 +162,7 @@ class SatelliteService {
       // Process and normalize the data
       return {
         ph: soilData.phh2o ? soilData.phh2o.mean / 10 : 6.5, // Convert from pH*10
-        moisture: this.estimateSoilMoisture(coordinates), // Estimated from weather data
+        moisture: await this.estimateSoilMoisture(coordinates), // Estimated from weather data
         temperature: await this.getSoilTemperature(coordinates),
         nitrogen: soilData.nitrogen ? soilData.nitrogen.mean / 100 : 120,
         phosphorus: this.estimatePhosphorus(soilData),

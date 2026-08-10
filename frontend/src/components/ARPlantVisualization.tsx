@@ -77,7 +77,7 @@ interface ARSession {
 const mockPlants: PlantModel[] = [
   {
     id: 'wheat',
-    name: 'Wheat (गेहूं)',
+    name: 'Wheat (à¤—à¥‡à¤¹à¥‚à¤‚)',
     category: 'crop',
     growth_stages: ['Seed', 'Germination', 'Tillering', 'Jointing', 'Heading', 'Maturity'],
     current_stage: 3,
@@ -85,12 +85,12 @@ const mockPlants: PlantModel[] = [
     health: 85,
     diseases: [],
     nutrients: { nitrogen: 80, phosphorus: 70, potassium: 85 },
-    icon: '🌾',
+    icon: 'ðŸŒ¾',
     color: '#d4a574'
   },
   {
     id: 'rice',
-    name: 'Rice (चावल)',
+    name: 'Rice (à¤šà¤¾à¤µà¤²)',
     category: 'crop',
     growth_stages: ['Seed', 'Germination', 'Seedling', 'Tillering', 'Flowering', 'Ripening'],
     current_stage: 2,
@@ -98,12 +98,12 @@ const mockPlants: PlantModel[] = [
     health: 92,
     diseases: [],
     nutrients: { nitrogen: 85, phosphorus: 75, potassium: 80 },
-    icon: '🌾',
+    icon: 'ðŸŒ¾',
     color: '#8bc34a'
   },
   {
     id: 'tomato',
-    name: 'Tomato (टमाटर)',
+    name: 'Tomato (à¤Ÿà¤®à¤¾à¤Ÿà¤°)',
     category: 'vegetable',
     growth_stages: ['Seed', 'Germination', 'Seedling', 'Flowering', 'Fruiting', 'Ripening'],
     current_stage: 4,
@@ -111,12 +111,12 @@ const mockPlants: PlantModel[] = [
     health: 78,
     diseases: ['Leaf curl'],
     nutrients: { nitrogen: 70, phosphorus: 85, potassium: 90 },
-    icon: '🍅',
+    icon: 'ðŸ…',
     color: '#f44336'
   },
   {
     id: 'corn',
-    name: 'Corn (मक्का)',
+    name: 'Corn (à¤®à¤•à¥à¤•à¤¾)',
     category: 'crop',
     growth_stages: ['Seed', 'Emergence', 'V6 Stage', 'Tasseling', 'Silking', 'Maturity'],
     current_stage: 3,
@@ -124,14 +124,14 @@ const mockPlants: PlantModel[] = [
     health: 88,
     diseases: [],
     nutrients: { nitrogen: 90, phosphorus: 80, potassium: 75 },
-    icon: '🌽',
+    icon: 'ðŸŒ½',
     color: '#ffeb3b'
   }
 ];
 
 const ARPlantVisualization: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isARActive, setIsARActive] = useState(false);
@@ -360,7 +360,7 @@ const ARPlantVisualization: React.FC = () => {
       // Return a safe default plant when data is loading
       return {
         id: 'wheat',
-        name: 'Wheat (गेहूं)',
+        name: 'Wheat (à¤—à¥‡à¤¹à¥‚à¤‚)',
         category: 'crop' as const,
         growth_stages: ['Seed', 'Germination', 'Tillering', 'Jointing', 'Heading', 'Maturity'],
         current_stage: 3,
@@ -368,7 +368,7 @@ const ARPlantVisualization: React.FC = () => {
         health: 85,
         diseases: [],
         nutrients: { nitrogen: 80, phosphorus: 70, potassium: 85 },
-        icon: '🌾',
+        icon: 'ðŸŒ¾',
         color: '#d4a574'
       };
     }
@@ -859,54 +859,54 @@ const ARPlantVisualization: React.FC = () => {
       console.log('Voice command:', command);
       
       // Process voice commands
-      if (command.includes('wheat') || command.includes('गेहूं')) {
+      if (command.includes('wheat') || command.includes('à¤—à¥‡à¤¹à¥‚à¤‚')) {
         setSelectedPlant('wheat');
-      } else if (command.includes('rice') || command.includes('चावल')) {
+      } else if (command.includes('rice') || command.includes('à¤šà¤¾à¤µà¤²')) {
         setSelectedPlant('rice');
-      } else if (command.includes('tomato') || command.includes('टमाटर')) {
+      } else if (command.includes('tomato') || command.includes('à¤Ÿà¤®à¤¾à¤Ÿà¤°')) {
         setSelectedPlant('tomato');
-      } else if (command.includes('corn') || command.includes('मक्का')) {
+      } else if (command.includes('corn') || command.includes('à¤®à¤•à¥à¤•à¤¾')) {
         setSelectedPlant('corn');
-      } else if (command.includes('zoom in') || command.includes('बड़ा करो')) {
+      } else if (command.includes('zoom in') || command.includes('à¤¬à¤¡à¤¼à¤¾ à¤•à¤°à¥‹')) {
         setPlantScale(prev => Math.min(prev + 0.5, 3));
-      } else if (command.includes('zoom out') || command.includes('छोटा करो')) {
+      } else if (command.includes('zoom out') || command.includes('à¤›à¥‹à¤Ÿà¤¾ à¤•à¤°à¥‹')) {
         setPlantScale(prev => Math.max(prev - 0.5, 0.5));
-      } else if (command.includes('rotate') || command.includes('घुमाओ')) {
+      } else if (command.includes('rotate') || command.includes('à¤˜à¥à¤®à¤¾à¤“')) {
         setPlantRotation(prev => prev + 90);
-      } else if (command.includes('reset') || command.includes('रीसेट')) {
+      } else if (command.includes('reset') || command.includes('à¤°à¥€à¤¸à¥‡à¤Ÿ')) {
         setPlantScale(1);
         setPlantRotation(0);
-      } else if (command.includes('start camera') || command.includes('कैमरा चालू')) {
+      } else if (command.includes('start camera') || command.includes('à¤•à¥ˆà¤®à¤°à¤¾ à¤šà¤¾à¤²à¥‚')) {
         startARSession();
-      } else if (command.includes('stop camera') || command.includes('कैमरा बंद')) {
+      } else if (command.includes('stop camera') || command.includes('à¤•à¥ˆà¤®à¤°à¤¾ à¤¬à¤‚à¤¦')) {
         stopARSession();
-      } else if (command.includes('wind') || command.includes('हवा')) {
-        if (command.includes('high') || command.includes('तेज')) {
+      } else if (command.includes('wind') || command.includes('à¤¹à¤µà¤¾')) {
+        if (command.includes('high') || command.includes('à¤¤à¥‡à¤œ')) {
           setWindStrength(5);
-        } else if (command.includes('low') || command.includes('धीमी')) {
+        } else if (command.includes('low') || command.includes('à¤§à¥€à¤®à¥€')) {
           setWindStrength(1);
-        } else if (command.includes('medium') || command.includes('मध्यम')) {
+        } else if (command.includes('medium') || command.includes('à¤®à¤§à¥à¤¯à¤®')) {
           setWindStrength(3);
         }
-      } else if (command.includes('rain') || command.includes('बारिश')) {
-        if (command.includes('start') || command.includes('शुरू')) {
+      } else if (command.includes('rain') || command.includes('à¤¬à¤¾à¤°à¤¿à¤¶')) {
+        if (command.includes('start') || command.includes('à¤¶à¥à¤°à¥‚')) {
           setIsRaining(true);
-        } else if (command.includes('stop') || command.includes('बंद')) {
+        } else if (command.includes('stop') || command.includes('à¤¬à¤‚à¤¦')) {
           setIsRaining(false);
         } else {
           setIsRaining(!isRaining);
         }
-      } else if (command.includes('spring') || command.includes('बसंत')) {
+      } else if (command.includes('spring') || command.includes('à¤¬à¤¸à¤‚à¤¤')) {
         setSeason('spring');
-      } else if (command.includes('summer') || command.includes('गर्मी')) {
+      } else if (command.includes('summer') || command.includes('à¤—à¤°à¥à¤®à¥€')) {
         setSeason('summer');
-      } else if (command.includes('autumn') || command.includes('fall') || command.includes('पतझड़')) {
+      } else if (command.includes('autumn') || command.includes('fall') || command.includes('à¤ªà¤¤à¤à¤¡à¤¼')) {
         setSeason('autumn');
-      } else if (command.includes('winter') || command.includes('सर्दी')) {
+      } else if (command.includes('winter') || command.includes('à¤¸à¤°à¥à¤¦à¥€')) {
         setSeason('winter');
-      } else if (command.includes('particles') || command.includes('effects') || command.includes('प्रभाव')) {
+      } else if (command.includes('particles') || command.includes('effects') || command.includes('à¤ªà¥à¤°à¤­à¤¾à¤µ')) {
         setShowParticleEffects(!showParticleEffects);
-      } else if (command.includes('animate growth') || command.includes('वृद्धि दिखाओ')) {
+      } else if (command.includes('animate growth') || command.includes('à¤µà¥ƒà¤¦à¥à¤§à¤¿ à¤¦à¤¿à¤–à¤¾à¤“')) {
         animateGrowth();
       } else {
         setError(`Voice command "${command}" not recognized. Try: "show wheat", "zoom in", "start rain", "high wind", etc.`);
@@ -971,10 +971,10 @@ const ARPlantVisualization: React.FC = () => {
         >
           <ViewInAr sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            🌱 AR/VR Plant Visualization
+            ðŸŒ± AR/VR Plant Visualization
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
-            Camera चालू करके plants को 3D में देखें और समझें!
+            Camera à¤šà¤¾à¤²à¥‚ à¤•à¤°à¤•à¥‡ plants à¤•à¥‹ 3D à¤®à¥‡à¤‚ à¤¦à¥‡à¤–à¥‡à¤‚ à¤”à¤° à¤¸à¤®à¤à¥‡à¤‚!
           </Typography>
         </Paper>
       </motion.div>
@@ -992,7 +992,7 @@ const ARPlantVisualization: React.FC = () => {
           <CardContent sx={{ py: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
               <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-                🎤 Voice: "{isListening ? 'Listening...' : 'Say "show wheat" or "zoom in"'}"
+                ðŸŽ¤ Voice: "{isListening ? 'Listening...' : 'Say "show wheat" or "zoom in"'}"
               </Typography>
               {voiceSupported && (
                 <Button
@@ -1046,7 +1046,7 @@ const ARPlantVisualization: React.FC = () => {
             <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid rgba(0,0,0,0.1)' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="caption" color="text.secondary">
-                  🌬️ Wind: Level {windStrength}
+                  ðŸŒ¬ï¸ Wind: Level {windStrength}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 0.5 }}>
                   {[1,2,3,4,5].map(level => (
@@ -1070,10 +1070,10 @@ const ARPlantVisualization: React.FC = () => {
                   onClick={() => setIsRaining(!isRaining)}
                   sx={{ minWidth: 'auto', bgcolor: isRaining ? '#2196F3' : 'transparent' }}
                 >
-                  {isRaining ? '🌧️' : '☁️'}
+                  {isRaining ? 'ðŸŒ§ï¸' : 'â˜ï¸'}
                 </Button>
                 
-                {['🌸', '☀️', '🍂', '❄️'].map((emoji, idx) => {
+                {['ðŸŒ¸', 'â˜€ï¸', 'ðŸ‚', 'â„ï¸'].map((emoji, idx) => {
                   const seasons = ['spring', 'summer', 'autumn', 'winter'];
                   return (
                     <Button
@@ -1094,7 +1094,7 @@ const ARPlantVisualization: React.FC = () => {
                   onClick={() => setShowParticleEffects(!showParticleEffects)}
                   sx={{ minWidth: 'auto' }}
                 >
-                  ✨
+                  âœ¨
                 </Button>
               </Box>
             </Box>
@@ -1195,7 +1195,7 @@ const ARPlantVisualization: React.FC = () => {
                       }}
                     >
                       <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                        📹 Demo Mode - Camera Not Available
+                        ðŸ“¹ Demo Mode - Camera Not Available
                       </Typography>
                     </Box>
                   </Box>
@@ -1221,7 +1221,7 @@ const ARPlantVisualization: React.FC = () => {
                       AR Plant Visualization
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 3, opacity: 0.8 }}>
-                      Camera चालू करके अपने plants को 3D में देखें
+                      Camera à¤šà¤¾à¤²à¥‚ à¤•à¤°à¤•à¥‡ à¤…à¤ªà¤¨à¥‡ plants à¤•à¥‹ 3D à¤®à¥‡à¤‚ à¤¦à¥‡à¤–à¥‡à¤‚
                     </Typography>
                     
                     <Button
@@ -1374,10 +1374,10 @@ const ARPlantVisualization: React.FC = () => {
                         }}
                       >
                         <Typography variant="caption" sx={{ fontWeight: 'bold', display: 'block' }}>
-                          👆 Touch Gestures:
+                          ðŸ‘† Touch Gestures:
                         </Typography>
                         <Typography variant="caption" sx={{ fontSize: '10px' }}>
-                          Swipe up/down: Zoom • Swipe left/right: Rotate • Double tap: Reset
+                          Swipe up/down: Zoom â€¢ Swipe left/right: Rotate â€¢ Double tap: Reset
                         </Typography>
                       </Box>
                     )}
@@ -1524,7 +1524,7 @@ const ARPlantVisualization: React.FC = () => {
             <Card elevation={3} sx={{ borderRadius: 3, mb: 3 }}>
               <CardContent>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                  🌱 Select Plant
+                  ðŸŒ± Select Plant
                 </Typography>
                 
                 <FormControl fullWidth size="small">
@@ -1548,7 +1548,7 @@ const ARPlantVisualization: React.FC = () => {
                 {/* Growth Stage Simulation */}
                 <Box sx={{ mt: 3 }}>
                   <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    🚀 Growth Simulation
+                    ðŸš€ Growth Simulation
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                     <Button
@@ -1565,7 +1565,7 @@ const ARPlantVisualization: React.FC = () => {
                       }}
                       disabled={getCurrentPlant().current_stage <= 0}
                     >
-                      ⏪ Earlier
+                      âª Earlier
                     </Button>
                     <Button
                       size="small"
@@ -1581,14 +1581,14 @@ const ARPlantVisualization: React.FC = () => {
                       }}
                       disabled={getCurrentPlant().current_stage >= getCurrentPlant().growth_stages.length - 1}
                     >
-                      Later ⏩
+                      Later â©
                     </Button>
                   </Box>
                   
                   {/* Growth Animation Controls */}
                   <Box sx={{ mt: 2 }}>
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                      🎥 Time-lapse Animation
+                      ðŸŽ¥ Time-lapse Animation
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <Button
@@ -1624,13 +1624,13 @@ const ARPlantVisualization: React.FC = () => {
                 {/* 3D Animation Controls */}
                 <Box sx={{ mt: 3 }}>
                   <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    🍃 3D Plant Animations
+                    ðŸƒ 3D Plant Animations
                   </Typography>
                   
                   {/* Wind Strength */}
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                      🌬️ Wind Strength: Level {windStrength}
+                      ðŸŒ¬ï¸ Wind Strength: Level {windStrength}
                     </Typography>
                     <Slider
                       value={windStrength}
@@ -1648,7 +1648,7 @@ const ARPlantVisualization: React.FC = () => {
                   {/* Season Selection */}
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                      🌳 Season Effects
+                      ðŸŒ³ Season Effects
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                       {['spring', 'summer', 'autumn', 'winter'].map((seasonOption) => (
@@ -1668,10 +1668,10 @@ const ARPlantVisualization: React.FC = () => {
                           }}
                         >
                           {{
-                            spring: '🌸',
-                            summer: '☀️', 
-                            autumn: '🍂',
-                            winter: '❄️'
+                            spring: 'ðŸŒ¸',
+                            summer: 'â˜€ï¸', 
+                            autumn: 'ðŸ‚',
+                            winter: 'â„ï¸'
                           }[seasonOption]}
                         </Button>
                       ))}
@@ -1681,14 +1681,14 @@ const ARPlantVisualization: React.FC = () => {
                   {/* Weather Effects */}
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                      🌧️ Weather Effects
+                      ðŸŒ§ï¸ Weather Effects
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <Button
                         size="small"
                         variant={isRaining ? 'contained' : 'outlined'}
                         onClick={() => setIsRaining(!isRaining)}
-                        startIcon={isRaining ? '🌧️' : '☁️'}
+                        startIcon={isRaining ? 'ðŸŒ§ï¸' : 'â˜ï¸'}
                         sx={{ bgcolor: isRaining ? '#2196F3' : 'transparent' }}
                       >
                         {isRaining ? 'Stop Rain' : 'Start Rain'}
@@ -1697,7 +1697,7 @@ const ARPlantVisualization: React.FC = () => {
                         size="small"
                         variant={showParticleEffects ? 'contained' : 'outlined'}
                         onClick={() => setShowParticleEffects(!showParticleEffects)}
-                        startIcon={'✨'}
+                        startIcon={'âœ¨'}
                         sx={{ bgcolor: showParticleEffects ? '#FF9800' : 'transparent' }}
                       >
                         Particles
@@ -1709,7 +1709,7 @@ const ARPlantVisualization: React.FC = () => {
                 {/* Environmental Simulation */}
                 <Box sx={{ mt: 3 }}>
                   <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    🌦️ Environmental Conditions
+                    ðŸŒ¦ï¸ Environmental Conditions
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                     <Button
@@ -1758,7 +1758,7 @@ const ARPlantVisualization: React.FC = () => {
             <Card elevation={3} sx={{ borderRadius: 3, mb: 3 }}>
               <CardContent>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                  📊 Plant Health
+                  ðŸ“Š Plant Health
                 </Typography>
                 
                 <List dense>
@@ -1834,7 +1834,7 @@ const ARPlantVisualization: React.FC = () => {
               <Card elevation={3} sx={{ borderRadius: 3 }}>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                    📱 AR Session Info
+                    ðŸ“± AR Session Info
                   </Typography>
                   
                   <List dense>
@@ -1881,7 +1881,7 @@ const ARPlantVisualization: React.FC = () => {
 
                   <Box sx={{ mt: 2 }}>
                     <Typography variant="caption" color="text.secondary">
-                      💡 Point your camera at a flat surface for better tracking
+                      ðŸ’¡ Point your camera at a flat surface for better tracking
                     </Typography>
                   </Box>
                 </CardContent>
@@ -1917,7 +1917,7 @@ const ARPlantVisualization: React.FC = () => {
           <Card elevation={3} sx={{ borderRadius: 3 }}>
             <CardContent>
               <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
-                🌱 Growth Stages Timeline
+                ðŸŒ± Growth Stages Timeline
               </Typography>
 
               <Box sx={{ position: 'relative', pl: 4 }}>
@@ -1943,7 +1943,7 @@ const ARPlantVisualization: React.FC = () => {
                         boxShadow: 2,
                       }}
                     >
-                      {index <= getCurrentPlant().current_stage ? '✓' : index + 1}
+                      {index <= getCurrentPlant().current_stage ? 'âœ“' : index + 1}
                     </Avatar>
                     
                     <Box sx={{ ml: 3 }}>

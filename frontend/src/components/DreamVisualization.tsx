@@ -53,7 +53,7 @@ async function exportSectionAsPng(node: HTMLElement, filename: string) {
 }
 
 const DreamVisualization: React.FC = () => {
-const { t } = useTranslation();
+const { t } = (useTranslation as any)();
   const theme = useTheme();
 
   // Advanced Builder state
@@ -93,12 +93,12 @@ const { t } = useTranslation();
   const generateTimeline = () => {
     const start = new Date();
     const steps = [
-      { label: 'Soil Test & Prep', emoji: '🧪', offset: 0 },
-      { label: 'Seed Purchase', emoji: '🌱', offset: 0.25 },
-      { label: 'Sowing', emoji: '🚜', offset: 0.5 },
-      { label: 'Irrigation & Fertilizers', emoji: '💧', offset: 0.7 },
-      { label: 'Weed/Pest Mgmt', emoji: '🪲', offset: 0.8 },
-      { label: 'Harvest & Market', emoji: '📦', offset: 1.0 },
+      { label: 'Soil Test & Prep', emoji: 'ðŸ§ª', offset: 0 },
+      { label: 'Seed Purchase', emoji: 'ðŸŒ±', offset: 0.25 },
+      { label: 'Sowing', emoji: 'ðŸšœ', offset: 0.5 },
+      { label: 'Irrigation & Fertilizers', emoji: 'ðŸ’§', offset: 0.7 },
+      { label: 'Weed/Pest Mgmt', emoji: 'ðŸª²', offset: 0.8 },
+      { label: 'Harvest & Market', emoji: 'ðŸ“¦', offset: 1.0 },
     ];
     const items = steps.map(s => {
       const d = new Date(start);
@@ -156,7 +156,7 @@ const { t } = useTranslation();
       task: t('dreamVisualization.todayTask'),
       icon: <Today />,
       color: '#4caf50',
-      emoji: '😊',
+      emoji: 'ðŸ˜Š',
       progress: 100,
       status: 'active',
     },
@@ -165,7 +165,7 @@ const { t } = useTranslation();
       task: t('dreamVisualization.next30Task'),
       icon: <DateRange />,
       color: '#2196f3',
-      emoji: '🚀',
+      emoji: 'ðŸš€',
       progress: 60,
       status: 'inProgress',
     },
@@ -174,17 +174,17 @@ const { t } = useTranslation();
       task: t('dreamVisualization.yearGoal'),
       icon: <Event />,
       color: '#ff9800',
-      emoji: '🏆',
+      emoji: 'ðŸ†',
       progress: 25,
       status: 'future',
     },
   ];
 
   const achievements = [
-    { icon: '🌾', label: 'Crop Yield', value: '+15%' },
-    { icon: '💰', label: 'Income', value: '+25%' },
-    { icon: '🏆', label: 'Success Rate', value: '85%' },
-    { icon: '❤️', label: 'Happiness', value: '90%' },
+    { icon: 'ðŸŒ¾', label: 'Crop Yield', value: '+15%' },
+    { icon: 'ðŸ’°', label: 'Income', value: '+25%' },
+    { icon: 'ðŸ†', label: 'Success Rate', value: '85%' },
+    { icon: 'â¤ï¸', label: 'Happiness', value: '90%' },
   ];
 
   return (
@@ -210,7 +210,7 @@ const { t } = useTranslation();
         >
           <AutoAwesome sx={{ fontSize: 48, mb: 1 }} />
           <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, letterSpacing: 0.5, textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
-            ⭐ {t('dreamVisualization.title')} ⭐
+            â­ {t('dreamVisualization.title')} â­
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 820, mx: 'auto' }}>
             {t('dreamVisualization.subtitle')}
@@ -221,7 +221,7 @@ const { t } = useTranslation();
       {/* Advanced Plan Builder */}
       <Paper elevation={3} sx={{ p:3, mb:4, borderRadius:3, background: 'linear-gradient(135deg, #fff 0%, #fafafa 100%)' }}>
         <Typography variant="h5" sx={{ fontWeight:'bold', mb:2, display:'flex', alignItems:'center', gap:1 }}>
-          <AutoAwesome fontSize="small" /> 🚀 Advanced Dream Builder
+          <AutoAwesome fontSize="small" /> ðŸš€ Advanced Dream Builder
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={3}>
@@ -235,10 +235,10 @@ const { t } = useTranslation();
             <TextField fullWidth type="number" label="Farm Size (ha)" value={farmSize} onChange={(e)=>setFarmSize(+e.target.value || 0)} />
           </Grid>
           <Grid item xs={6} md={3}>
-            <TextField fullWidth type="number" label="Investment (₹)" value={investment} onChange={(e)=>setInvestment(+e.target.value || 0)} />
+            <TextField fullWidth type="number" label="Investment (â‚¹)" value={investment} onChange={(e)=>setInvestment(+e.target.value || 0)} />
           </Grid>
           <Grid item xs={12} md={3}>
-            <TextField fullWidth type="number" label="Target Income (₹)" value={targetIncome} onChange={(e)=>setTargetIncome(+e.target.value || 0)} />
+            <TextField fullWidth type="number" label="Target Income (â‚¹)" value={targetIncome} onChange={(e)=>setTargetIncome(+e.target.value || 0)} />
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="body2" sx={{ mb:0.5 }}>Timeline (months): {months}</Typography>
@@ -260,13 +260,13 @@ const { t } = useTranslation();
         <Grid container spacing={2} sx={{ mt:2 }}>
           <Grid item xs={12} md={6}>
             <Card elevation={1} sx={{ p:2, borderRadius:3, background: 'linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)' }}>
-              <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>💸 Cost Breakdown</Typography>
+              <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>ðŸ’¸ Cost Breakdown</Typography>
               <Grid container spacing={1}>
                 {Object.entries(costBreakdown).map(([k,v]) => (
                   <Grid key={k} item xs={6}>
                     <Box sx={{ display:'flex', justifyContent:'space-between', bgcolor:'rgba(0,0,0,0.04)', p:1, borderRadius:1 }}>
                       <Typography variant="body2">{k.toUpperCase()}</Typography>
-                      <Typography variant="body2" sx={{ fontWeight:700 }}>₹{v.toLocaleString()}</Typography>
+                      <Typography variant="body2" sx={{ fontWeight:700 }}>â‚¹{v.toLocaleString()}</Typography>
                     </Box>
                   </Grid>
                 ))}
@@ -275,7 +275,7 @@ const { t } = useTranslation();
           </Grid>
           <Grid item xs={12} md={6}>
             <Card elevation={1} sx={{ p:2, borderRadius:3, background: 'linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)' }}>
-              <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>📈 ROI Projection</Typography>
+              <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>ðŸ“ˆ ROI Projection</Typography>
               <Typography variant="h4" sx={{ fontWeight:800, color: expectedROI>0.5 ? 'success.main':'warning.main' }}>{Math.round(expectedROI*100)}%</Typography>
               <Typography variant="body2" color="text.secondary">Projected ROI in {months} months for {focusCrop.toUpperCase()} on {farmSize} ha.</Typography>
             </Card>
@@ -284,15 +284,15 @@ const { t } = useTranslation();
 
         {plan && (
           <Box ref={exportRef} sx={{ mt:2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>🗓️ Timeline</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>ðŸ—“ï¸ Timeline</Typography>
             <Box sx={{ display:'flex', flexWrap:'wrap', gap:1.5 }}>
               {plan.items.map((it:any,idx:number)=> (
-                <Chip key={idx} label={`${it.emoji} ${it.label} • ${it.date}`} sx={{ bgcolor:'#e8f5e9', border:'1px solid #c8e6c9' }} />
+                <Chip key={idx} label={`${it.emoji} ${it.label} â€¢ ${it.date}`} sx={{ bgcolor:'#e8f5e9', border:'1px solid #c8e6c9' }} />
               ))}
             </Box>
             {/* Tasks Checklist */}
             <Box sx={{ mt:2 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>✅ Tasks</Typography>
+              <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>âœ… Tasks</Typography>
               <Grid container spacing={1}>
                 {tasks.map((t,i)=> (
                   <Grid key={i} item xs={12} md={6}>
@@ -321,14 +321,14 @@ const { t } = useTranslation();
       {/* Scenario Compare */}
       <Accordion sx={{ mb:3, borderRadius:2, overflow:'hidden' }}>
         <AccordionSummary expandIcon={<ExpandMore />} sx={{ background: 'linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%)' }}>
-          <Typography variant="h6" sx={{ fontWeight:700 }}>🔄 Compare Scenario (Alternate Plan)</Typography>
+          <Typography variant="h6" sx={{ fontWeight:700 }}>ðŸ”„ Compare Scenario (Alternate Plan)</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <Card elevation={1} sx={{ p:2, borderRadius:3 }}>
                 <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>Current Plan</Typography>
-                <Typography variant="body2">Crop: {focusCrop.toUpperCase()} • Size: {farmSize} ha • Inv: ₹{investment.toLocaleString()} • Target: ₹{targetIncome.toLocaleString()} • Months: {months}</Typography>
+                <Typography variant="body2">Crop: {focusCrop.toUpperCase()} â€¢ Size: {farmSize} ha â€¢ Inv: â‚¹{investment.toLocaleString()} â€¢ Target: â‚¹{targetIncome.toLocaleString()} â€¢ Months: {months}</Typography>
                 <Typography variant="h5" sx={{ mt:1, color: expectedROI>0.5?'success.main':'warning.main', fontWeight:800 }}>{Math.round(expectedROI*100)}% ROI</Typography>
               </Card>
             </Grid>
@@ -501,7 +501,7 @@ const { t } = useTranslation();
             color: theme.palette.primary.main,
           }}
         >
-          🎯 Your Journey Achievements
+          ðŸŽ¯ Your Journey Achievements
         </Typography>
         
         <Grid container spacing={2}>
@@ -561,7 +561,7 @@ const { t } = useTranslation();
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
-            {['🌱 Plant', '🌾 Grow', '📈 Prosper', '🏆 Succeed', '❤️ Happy'].map((step, index) => (
+            {['ðŸŒ± Plant', 'ðŸŒ¾ Grow', 'ðŸ“ˆ Prosper', 'ðŸ† Succeed', 'â¤ï¸ Happy'].map((step, index) => (
               <Chip
                 key={index}
                 label={step}

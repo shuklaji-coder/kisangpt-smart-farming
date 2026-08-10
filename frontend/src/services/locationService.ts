@@ -133,6 +133,26 @@ class LocationService {
     };
   }
 
+  // Indian postal-aware reverse geocoding (delegates to OSM with Hindi bias for Indian addresses)
+  private async getIndianPostalData(lat: number, lng: number): Promise<any> {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=hi&addressdetails=1&countrycodes=in`
+    );
+
+    if (!response.ok) throw new Error('India Postal API failed');
+
+    const data = await response.json();
+
+    return {
+      city: data.address?.city || data.address?.town || data.address?.village || data.address?.hamlet,
+      state: data.address?.state,
+      country: data.address?.country || 'India',
+      district: data.address?.county || data.address?.district || data.address?.state_district,
+      pincode: data.address?.postcode,
+      tehsil: data.address?.municipality || data.address?.suburb || data.address?.township
+    };
+  }
+
   // Enhanced Indian agricultural region mapping
   private getRegionFromCoordinates(lat: number, lng: number): any {
     const agriculturalRegions = [
@@ -323,7 +343,7 @@ class LocationService {
     if (!loc) return 'Location not available';
 
     if (loc.address) {
-      const parts = [];
+      const parts: string[] = [];
       if (loc.address.city) parts.push(loc.address.city);
       if (loc.address.district && loc.address.district !== loc.address.city) {
         parts.push(loc.address.district);

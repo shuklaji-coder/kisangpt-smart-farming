@@ -40,7 +40,7 @@ interface SignUpFormProps {
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -60,8 +60,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
 
   // Create floating farming elements
   useEffect(() => {
-    const elements = [];
-    const icons = ['🌾', '🚜', '🌱', '🌽', '🍅', '🥕', '🌻', '🐄', '🐔', '🍀', '☀️', '🌧️', '🏡', '🌳'];
+    const elements: Array<{ id: number; x: number; y: number; icon: string; delay: number }> = [];
+    const icons = ['Ã°Å¸Å’Â¾', 'Ã°Å¸Å¡Å“', 'Ã°Å¸Å’Â±', 'Ã°Å¸Å’Â½', 'Ã°Å¸Ââ€¦', 'Ã°Å¸Â¥â€¢', 'Ã°Å¸Å’Â»', 'Ã°Å¸Ââ€ž', 'Ã°Å¸Ââ€', 'Ã°Å¸Ââ‚¬', 'Ã¢Ëœâ‚¬Ã¯Â¸Â', 'Ã°Å¸Å’Â§Ã¯Â¸Â', 'Ã°Å¸ÂÂ¡', 'Ã°Å¸Å’Â³'];
     
     for (let i = 0; i < 15; i++) {
       elements.push({
@@ -151,7 +151,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
         farmSize: formData.farmSize || '1-2 acres',
         cropType: formData.cropType || 'Mixed Crops',
         role: 'farmer',
-        avatar: '🧑‍🌾',
+        avatar: 'Ã°Å¸Â§â€˜Ã¢â‚¬ÂÃ°Å¸Å’Â¾',
         joinDate: new Date().toISOString().split('T')[0],
         verified: true
       };
@@ -179,16 +179,16 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
   };
 
   const cropTypes = [
-    'गेहूं / Wheat',
-    'चावल / Rice', 
-    'मक्का / Corn',
-    'टमाटर / Tomato',
-    'आलू / Potato',
-    'प्याज / Onion',
-    'गन्ना / Sugarcane',
-    'कपास / Cotton',
-    'सोयाबीन / Soybean',
-    'अन्य / Other'
+    'Ã Â¤â€”Ã Â¥â€¡Ã Â¤Â¹Ã Â¥â€šÃ Â¤â€š / Wheat',
+    'Ã Â¤Å¡Ã Â¤Â¾Ã Â¤ÂµÃ Â¤Â² / Rice', 
+    'Ã Â¤Â®Ã Â¤â€¢Ã Â¥ÂÃ Â¤â€¢Ã Â¤Â¾ / Corn',
+    'Ã Â¤Å¸Ã Â¤Â®Ã Â¤Â¾Ã Â¤Å¸Ã Â¤Â° / Tomato',
+    'Ã Â¤â€ Ã Â¤Â²Ã Â¥â€š / Potato',
+    'Ã Â¤ÂªÃ Â¥ÂÃ Â¤Â¯Ã Â¤Â¾Ã Â¤Å“ / Onion',
+    'Ã Â¤â€”Ã Â¤Â¨Ã Â¥ÂÃ Â¤Â¨Ã Â¤Â¾ / Sugarcane',
+    'Ã Â¤â€¢Ã Â¤ÂªÃ Â¤Â¾Ã Â¤Â¸ / Cotton',
+    'Ã Â¤Â¸Ã Â¥â€¹Ã Â¤Â¯Ã Â¤Â¾Ã Â¤Â¬Ã Â¥â‚¬Ã Â¤Â¨ / Soybean',
+    'Ã Â¤â€¦Ã Â¤Â¨Ã Â¥ÂÃ Â¤Â¯ / Other'
   ];
 
   return (
@@ -206,35 +206,77 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
         justifyContent: 'center',
         overflow: 'hidden',
         py: 4,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(160deg, rgba(11, 43, 21, 0.72) 0%, rgba(27, 94, 32, 0.6) 45%, rgba(8, 32, 16, 0.78) 100%)',
+          zIndex: 1,
+        },
       }}
     >
+      {/* Floating animated particles */}
+      {floatingElements.map((el) => (
+        <Box
+          key={el.id}
+          sx={{
+            position: 'absolute',
+            left: `${el.x}%`,
+            top: `${el.y}%`,
+            fontSize: { xs: '1rem', sm: '1.3rem' },
+            opacity: 0.35,
+            zIndex: 2,
+            pointerEvents: 'none',
+            animation: 'floatY 7s ease-in-out infinite',
+            animationDelay: `${el.delay}s`,
+            filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.4))',
+          }}
+        >
+          {el.icon}
+        </Box>
+      ))}
 
       {/* Main SignUp Form */}
       <motion.div
         initial={{ opacity: 0, y: 50, rotateX: -15 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        style={{ zIndex: 15, perspective: '1000px' }}
+        style={{ zIndex: 15, perspective: '1000px', width: '100%', maxWidth: 520 }}
       >
         <Paper
           elevation={24}
           sx={{
-            p: 4,
-            maxWidth: 500,
-            width: '90vw',
-            maxHeight: '90vh',
+            p: { xs: 3, sm: 4 },
+            maxWidth: 520,
+            width: '100%',
+            maxHeight: '92vh',
             overflowY: 'auto',
-            borderRadius: 4,
+            mx: 'auto',
+            borderRadius: '26px',
             background: 'rgba(255, 255, 255, 0.92)',
-            backdropFilter: 'blur(25px) saturate(180%)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(24px) saturate(1.3)',
+            WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+            border: '1px solid rgba(255, 255, 255, 0.5)',
             boxShadow: `
-              0 12px 40px rgba(0, 0, 0, 0.15),
-              0 0 0 1px rgba(255, 255, 255, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.5),
-              0 4px 20px rgba(76, 175, 80, 0.1)
+              0 24px 70px rgba(0, 0, 0, 0.35),
+              0 4px 20px rgba(27, 94, 32, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.7)
             `,
             transform: 'translateZ(0)',
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '5px',
+              background: 'linear-gradient(90deg, #4CAF50, #8BC34A, #4CAF50, #8BC34A)',
+              backgroundSize: '300% auto',
+              borderRadius: '26px 26px 0 0',
+              animation: 'gradientShift 5s ease infinite',
+              zIndex: 2,
+            },
             '&:hover': {
               transform: 'translateZ(15px) rotateX(1deg) scale(1.01)',
               boxShadow: `
@@ -285,10 +327,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 mb: 1,
               }}
             >
-              🌱 नया अकाउंट बनाएं
+              Ã°Å¸Å’Â± Ã Â¤Â¨Ã Â¤Â¯Ã Â¤Â¾ Ã Â¤â€¦Ã Â¤â€¢Ã Â¤Â¾Ã Â¤â€°Ã Â¤â€šÃ Â¤Å¸ Ã Â¤Â¬Ã Â¤Â¨Ã Â¤Â¾Ã Â¤ÂÃ Â¤â€š
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              KisanGPT में आपका स्वागत है
+              KisanGPT Ã Â¤Â®Ã Â¥â€¡Ã Â¤â€š Ã Â¤â€ Ã Â¤ÂªÃ Â¤â€¢Ã Â¤Â¾ Ã Â¤Â¸Ã Â¥ÂÃ Â¤ÂµÃ Â¤Â¾Ã Â¤â€”Ã Â¤Â¤ Ã Â¤Â¹Ã Â¥Ë†
             </Typography>
           </Box>
 
@@ -316,7 +358,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
             >
               <TextField
                 fullWidth
-                label="पूरा नाम / Full Name *"
+                label="Ã Â¤ÂªÃ Â¥â€šÃ Â¤Â°Ã Â¤Â¾ Ã Â¤Â¨Ã Â¤Â¾Ã Â¤Â® / Full Name *"
                 value={formData.name}
                 onChange={handleInputChange('name')}
                 InputProps={{
@@ -348,7 +390,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
             >
               <TextField
                 fullWidth
-                label="ईमेल / Email *"
+                label="Ã Â¤Ë†Ã Â¤Â®Ã Â¥â€¡Ã Â¤Â² / Email *"
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange('email')}
@@ -383,7 +425,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
               >
                 <TextField
                   fullWidth
-                  label="फोन / Phone"
+                  label="Ã Â¤Â«Ã Â¥â€¹Ã Â¤Â¨ / Phone"
                   value={formData.phone}
                   onChange={handleInputChange('phone')}
                   InputProps={{
@@ -414,7 +456,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
               >
                 <TextField
                   fullWidth
-                  label="स्थान / Location"
+                  label="Ã Â¤Â¸Ã Â¥ÂÃ Â¤Â¥Ã Â¤Â¾Ã Â¤Â¨ / Location"
                   value={formData.location}
                   onChange={handleInputChange('location')}
                   InputProps={{
@@ -448,7 +490,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
               >
                 <TextField
                   fullWidth
-                  label="खेत का आकार / Farm Size (acres)"
+                  label="Ã Â¤â€“Ã Â¥â€¡Ã Â¤Â¤ Ã Â¤â€¢Ã Â¤Â¾ Ã Â¤â€ Ã Â¤â€¢Ã Â¤Â¾Ã Â¤Â° / Farm Size (acres)"
                   value={formData.farmSize}
                   onChange={handleInputChange('farmSize')}
                   sx={{
@@ -471,10 +513,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 style={{ flex: 1 }}
               >
                 <FormControl fullWidth>
-                  <InputLabel>मुख्य फसल / Main Crop</InputLabel>
+                  <InputLabel>Ã Â¤Â®Ã Â¥ÂÃ Â¤â€“Ã Â¥ÂÃ Â¤Â¯ Ã Â¤Â«Ã Â¤Â¸Ã Â¤Â² / Main Crop</InputLabel>
                   <Select
                     value={formData.cropType}
-                    label="मुख्य फसल / Main Crop"
+                    label="Ã Â¤Â®Ã Â¥ÂÃ Â¤â€“Ã Â¥ÂÃ Â¤Â¯ Ã Â¤Â«Ã Â¤Â¸Ã Â¤Â² / Main Crop"
                     onChange={handleInputChange('cropType')}
                     sx={{
                       borderRadius: 2,
@@ -501,7 +543,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
             >
               <TextField
                 fullWidth
-                label="पासवर्ड / Password *"
+                label="Ã Â¤ÂªÃ Â¤Â¾Ã Â¤Â¸Ã Â¤ÂµÃ Â¤Â°Ã Â¥ÂÃ Â¤Â¡ / Password *"
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleInputChange('password')}
@@ -544,7 +586,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
             >
               <TextField
                 fullWidth
-                label="पासवर्ड पुष्टि / Confirm Password *"
+                label="Ã Â¤ÂªÃ Â¤Â¾Ã Â¤Â¸Ã Â¤ÂµÃ Â¤Â°Ã Â¥ÂÃ Â¤Â¡ Ã Â¤ÂªÃ Â¥ÂÃ Â¤Â·Ã Â¥ÂÃ Â¤Å¸Ã Â¤Â¿ / Confirm Password *"
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
                 onChange={handleInputChange('confirmPassword')}
@@ -595,11 +637,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 }
                 label={
                   <Typography variant="body2">
-                    मैं{' '}
+                    Ã Â¤Â®Ã Â¥Ë†Ã Â¤â€š{' '}
                     <Link href="#" sx={{ color: '#4CAF50' }}>
-                      नियम व शर्तों
+                      Ã Â¤Â¨Ã Â¤Â¿Ã Â¤Â¯Ã Â¤Â® Ã Â¤Âµ Ã Â¤Â¶Ã Â¤Â°Ã Â¥ÂÃ Â¤Â¤Ã Â¥â€¹Ã Â¤â€š
                     </Link>
-                    {' '}से सहमत हूं *
+                    {' '}Ã Â¤Â¸Ã Â¥â€¡ Ã Â¤Â¸Ã Â¤Â¹Ã Â¤Â®Ã Â¤Â¤ Ã Â¤Â¹Ã Â¥â€šÃ Â¤â€š *
                   </Typography>
                 }
                 sx={{ mb: 3 }}
@@ -619,19 +661,21 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 fullWidth
                 variant="contained"
                 disabled={loading}
+                className="shine-btn"
                 sx={{
-                  py: 1.5,
+                  py: 1.6,
                   mb: 2,
-                  borderRadius: 2,
-                  background: 'linear-gradient(45deg, #4CAF50, #8BC34A)',
-                  boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)',
+                  borderRadius: '16px',
+                  fontSize: '1rem',
+                  background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                  boxShadow: '0 12px 32px rgba(46, 125, 50, 0.4)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #45a049, #7cb342)',
-                    boxShadow: '0 6px 20px rgba(76, 175, 80, 0.4)',
+                    background: 'linear-gradient(135deg, #43a047, #1b5e20)',
+                    boxShadow: '0 16px 40px rgba(46, 125, 50, 0.5)',
                   },
                 }}
               >
-                {loading ? 'अकाउंट बनाया जा रहा है...' : 'अकाउंट बनाएं / Sign Up'}
+                {loading ? 'Ã Â¤â€¦Ã Â¤â€¢Ã Â¤Â¾Ã Â¤â€°Ã Â¤â€šÃ Â¤Å¸ Ã Â¤Â¬Ã Â¤Â¨Ã Â¤Â¾Ã Â¤Â¯Ã Â¤Â¾ Ã Â¤Å“Ã Â¤Â¾ Ã Â¤Â°Ã Â¤Â¹Ã Â¤Â¾ Ã Â¤Â¹Ã Â¥Ë†...' : 'Ã Â¤â€¦Ã Â¤â€¢Ã Â¤Â¾Ã Â¤â€°Ã Â¤â€šÃ Â¤Å¸ Ã Â¤Â¬Ã Â¤Â¨Ã Â¤Â¾Ã Â¤ÂÃ Â¤â€š / Sign Up'}
               </Button>
             </motion.div>
           </Box>
@@ -644,7 +688,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
           >
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary">
-                पहले से अकाउंट है?{' '}
+                Ã Â¤ÂªÃ Â¤Â¹Ã Â¤Â²Ã Â¥â€¡ Ã Â¤Â¸Ã Â¥â€¡ Ã Â¤â€¦Ã Â¤â€¢Ã Â¤Â¾Ã Â¤â€°Ã Â¤â€šÃ Â¤Å¸ Ã Â¤Â¹Ã Â¥Ë†?{' '}
                 <Link
                   href="#"
                   onClick={(e) => {
@@ -660,7 +704,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                     },
                   }}
                 >
-                  लॉग इन करें
+                  Ã Â¤Â²Ã Â¥â€°Ã Â¤â€” Ã Â¤â€¡Ã Â¤Â¨ Ã Â¤â€¢Ã Â¤Â°Ã Â¥â€¡Ã Â¤â€š
                 </Link>
               </Typography>
             </Box>

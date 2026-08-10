@@ -118,7 +118,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const MarketAnalysis: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
   const [marketPrices, setMarketPrices] = useState<MarketPrice[]>([]);
@@ -171,7 +171,7 @@ const MarketAnalysis: React.FC = () => {
   }, []);
 
   const fetchMarketData = async (loc?: { lat: number; lng: number }) => {
-    console.log('🔄 Starting AI-powered market data fetch...');
+    console.log('ðŸ”„ Starting AI-powered market data fetch...');
     setLoading({ prices: true, trends: true, profits: true });
     setError(null);
     
@@ -179,7 +179,7 @@ const MarketAnalysis: React.FC = () => {
       const crops = ['wheat', 'rice', 'cotton', 'mustard', 'sugarcane'];
       const locToUse = loc || userLocation || { lat: 28.6139, lng: 77.2090 }; // Delhi default
       
-      console.log('📊 Fetching real-time crop prices from market service...');
+      console.log('ðŸ“Š Fetching real-time crop prices from market service...');
       // Fetch real market prices using service
       const pricesPromises = crops.map(crop => 
         marketPriceService.getCropPrices(crop, locToUse)
@@ -203,7 +203,7 @@ const MarketAnalysis: React.FC = () => {
           // Fallback data if AI service fails
           return {
             crop: crop.charAt(0).toUpperCase() + crop.slice(1),
-            crop_hindi: crop === 'wheat' ? 'गेहूं' : crop === 'rice' ? 'चावल' : crop === 'cotton' ? 'कपास' : crop === 'mustard' ? 'सरसों' : 'अन्य',
+            crop_hindi: crop === 'wheat' ? 'à¤—à¥‡à¤¹à¥‚à¤‚' : crop === 'rice' ? 'à¤šà¤¾à¤µà¤²' : crop === 'cotton' ? 'à¤•à¤ªà¤¾à¤¸' : crop === 'mustard' ? 'à¤¸à¤°à¤¸à¥‹à¤‚' : 'à¤…à¤¨à¥à¤¯',
             current_price: 2000,
             previous_price: 1950,
             change_percentage: 2.5,
@@ -230,7 +230,7 @@ const MarketAnalysis: React.FC = () => {
       setMarketPrices(marketData);
       setLoading(prev => ({ ...prev, prices: false }));
       
-      console.log('📈 Fetching market trends and forecasts...');
+      console.log('ðŸ“ˆ Fetching market trends and forecasts...');
       // Fetch market trends for forecasting (may use backend)
       const trendsPromises = crops.slice(0, 3).map(crop => 
         marketPriceService.getMarketTrends(crop, 'weekly')
@@ -257,9 +257,9 @@ const MarketAnalysis: React.FC = () => {
           predicted_price_6_months: predictions[6]?.predictedPrice * 1.12 || currentPrice * 1.12,
           confidence_level: predictions[6]?.confidence || 75,
           factors: [
-            trend.analysis.marketSentiment === 'bullish' ? 'बाजार में तेजी की भावना' : 'बाजार में मंदी की भावना',
-            `मूल्य स्थिरता: ${trend.analysis.priceStability}%`,
-            trend.analysis.seasonality === 'high' ? 'मौसमी मांग अधिक' : 'मौसमी मांग सामान्य'
+            trend.analysis.marketSentiment === 'bullish' ? 'à¤¬à¤¾à¤œà¤¾à¤° à¤®à¥‡à¤‚ à¤¤à¥‡à¤œà¥€ à¤•à¥€ à¤­à¤¾à¤µà¤¨à¤¾' : 'à¤¬à¤¾à¤œà¤¾à¤° à¤®à¥‡à¤‚ à¤®à¤‚à¤¦à¥€ à¤•à¥€ à¤­à¤¾à¤µà¤¨à¤¾',
+            `à¤®à¥‚à¤²à¥à¤¯ à¤¸à¥à¤¥à¤¿à¤°à¤¤à¤¾: ${trend.analysis.priceStability}%`,
+            trend.analysis.seasonality === 'high' ? 'à¤®à¥Œà¤¸à¤®à¥€ à¤®à¤¾à¤‚à¤— à¤…à¤§à¤¿à¤•' : 'à¤®à¥Œà¤¸à¤®à¥€ à¤®à¤¾à¤‚à¤— à¤¸à¤¾à¤®à¤¾à¤¨à¥à¤¯'
           ]
         };
       });
@@ -274,10 +274,10 @@ const MarketAnalysis: React.FC = () => {
         }
       } catch {}
       
-      console.log('💰 Calculating AI-powered profit analysis...');
+      console.log('ðŸ’° Calculating AI-powered profit analysis...');
       // Fetch profit analysis
       const profitPromises = crops.slice(0, 3).map(crop => 
-        marketPriceService.calculateProfit(crop, 2.5, undefined, userLocation) // 2.5 acres farm
+        marketPriceService.calculateProfit(crop, 2.5, undefined, userLocation || undefined) // 2.5 acres farm
           .catch(error => {
             console.warn(`Failed to calculate profit for ${crop}:`, error);
             return null;
@@ -308,10 +308,10 @@ const MarketAnalysis: React.FC = () => {
       setProfitAnalysis(profitAnalysisData);
       setLoading(prev => ({ ...prev, profits: false }));
       
-      console.log('✅ AI market analysis complete! Data refreshed successfully.');
+      console.log('âœ… AI market analysis complete! Data refreshed successfully.');
       
     } catch (error) {
-      console.error('❌ Error in AI market analysis:', error);
+      console.error('âŒ Error in AI market analysis:', error);
       setError('Market data fetch failed. Using cached data.');
       
       // Set loading to false even on error
@@ -384,7 +384,7 @@ const MarketAnalysis: React.FC = () => {
     try {
       setAlertChecking(true);
       const triggered = await marketPriceService.checkPriceAlerts();
-      setTriggeredAlerts(triggered.map(a => `${a.crop} ${a.condition} ₹${a.targetPrice}`));
+      setTriggeredAlerts(triggered.map(a => `${a.crop} ${a.condition} â‚¹${a.targetPrice}`));
     } catch (e) {
       console.error('Check alerts failed', e);
     } finally {
@@ -413,10 +413,10 @@ const MarketAnalysis: React.FC = () => {
         >
           <Assessment sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            📊 {t('market.title', 'Market Analysis')}
+            ðŸ“Š {t('market.title', 'Market Analysis')}
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
-            {t('market.subtitle', 'बाजार का विश्लेषण - मूल्य पूर्वानुमान और लाभ योजना')}
+            {t('market.subtitle', 'à¤¬à¤¾à¤œà¤¾à¤° à¤•à¤¾ à¤µà¤¿à¤¶à¥à¤²à¥‡à¤·à¤£ - à¤®à¥‚à¤²à¥à¤¯ à¤ªà¥‚à¤°à¥à¤µà¤¾à¤¨à¥à¤®à¤¾à¤¨ à¤”à¤° à¤²à¤¾à¤­ à¤¯à¥‹à¤œà¤¨à¤¾')}
           </Typography>
           <Box sx={{ mt: 1, display: 'flex', gap: 1, justifyContent: 'center' }}>
             <Chip size="small" label={isLive ? 'Live prices' : 'Demo prices'} sx={{ bgcolor: isLive ? 'rgba(76,175,80,0.2)' : 'rgba(255,255,255,0.2)', color: 'white' }} />
@@ -476,7 +476,7 @@ const MarketAnalysis: React.FC = () => {
         {loading.prices ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <LinearProgress sx={{ mb: 2 }} />
-            <Typography variant="h6">🤖 AI analyzing real-time market data...</Typography>
+            <Typography variant="h6">ðŸ¤– AI analyzing real-time market data...</Typography>
             <Typography variant="body2" color="text.secondary">
               Processing crop prices from multiple mandis and applying ML algorithms
             </Typography>
@@ -514,7 +514,7 @@ const MarketAnalysis: React.FC = () => {
                     </Box>
 
                     <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                      ₹{price.current_price.toLocaleString()}
+                      â‚¹{price.current_price.toLocaleString()}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                       {price.unit}
@@ -531,7 +531,7 @@ const MarketAnalysis: React.FC = () => {
                         }}
                       />
                       <Typography variant="body2" sx={{ ml: 1 }}>
-                        vs yesterday: ₹{price.previous_price}
+                        vs yesterday: â‚¹{price.previous_price}
                       </Typography>
                     </Box>
 
@@ -554,7 +554,7 @@ const MarketAnalysis: React.FC = () => {
         >
           <Paper elevation={2} sx={{ mt: 4, p: 3, borderRadius: 3 }}>
             <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
-              📈 Market Summary
+              ðŸ“ˆ Market Summary
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
@@ -588,7 +588,7 @@ const MarketAnalysis: React.FC = () => {
         {loading.trends ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <LinearProgress sx={{ mb: 2 }} />
-            <Typography variant="h6">📈 AI generating price forecasts...</Typography>
+            <Typography variant="h6">ðŸ“ˆ AI generating price forecasts...</Typography>
             <Typography variant="body2" color="text.secondary">
               Analyzing market trends, seasonal patterns, and applying predictive models
             </Typography>
@@ -605,7 +605,7 @@ const MarketAnalysis: React.FC = () => {
                 <Card elevation={2} sx={{ borderRadius: 3, height: '100%' }}>
                   <CardContent>
                     <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                      📊 {forecast.crop} Forecast
+                      ðŸ“Š {forecast.crop} Forecast
                     </Typography>
 
                     <Box sx={{ mb: 3 }}>
@@ -634,33 +634,33 @@ const MarketAnalysis: React.FC = () => {
                         <TableHead>
                           <TableRow>
                             <TableCell>Period</TableCell>
-                            <TableCell align="right">Price (₹)</TableCell>
+                            <TableCell align="right">Price (â‚¹)</TableCell>
                             <TableCell align="right">Change</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           <TableRow>
                             <TableCell>Current</TableCell>
-                            <TableCell align="right">₹{forecast.current_price}</TableCell>
+                            <TableCell align="right">â‚¹{forecast.current_price}</TableCell>
                             <TableCell align="right">-</TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell>1 Month</TableCell>
-                            <TableCell align="right">₹{forecast.predicted_price_1_month}</TableCell>
+                            <TableCell align="right">â‚¹{forecast.predicted_price_1_month}</TableCell>
                             <TableCell align="right" sx={{ color: forecast.predicted_price_1_month > forecast.current_price ? '#4caf50' : '#f44336' }}>
                               {((forecast.predicted_price_1_month - forecast.current_price) / forecast.current_price * 100).toFixed(1)}%
                             </TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell>3 Months</TableCell>
-                            <TableCell align="right">₹{forecast.predicted_price_3_months}</TableCell>
+                            <TableCell align="right">â‚¹{forecast.predicted_price_3_months}</TableCell>
                             <TableCell align="right" sx={{ color: forecast.predicted_price_3_months > forecast.current_price ? '#4caf50' : '#f44336' }}>
                               {((forecast.predicted_price_3_months - forecast.current_price) / forecast.current_price * 100).toFixed(1)}%
                             </TableCell>
                           </TableRow>
                           <TableRow>
                             <TableCell>6 Months</TableCell>
-                            <TableCell align="right">₹{forecast.predicted_price_6_months}</TableCell>
+                            <TableCell align="right">â‚¹{forecast.predicted_price_6_months}</TableCell>
                             <TableCell align="right" sx={{ color: forecast.predicted_price_6_months > forecast.current_price ? '#4caf50' : '#f44336' }}>
                               {((forecast.predicted_price_6_months - forecast.current_price) / forecast.current_price * 100).toFixed(1)}%
                             </TableCell>
@@ -696,7 +696,7 @@ const MarketAnalysis: React.FC = () => {
         {loading.profits ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <LinearProgress sx={{ mb: 2 }} />
-            <Typography variant="h6">💰 AI calculating profit scenarios...</Typography>
+            <Typography variant="h6">ðŸ’° AI calculating profit scenarios...</Typography>
             <Typography variant="body2" color="text.secondary">
               Processing investment costs, market prices, and yield predictions
             </Typography>
@@ -746,7 +746,7 @@ const MarketAnalysis: React.FC = () => {
                             <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(255, 152, 0, 0.1)', borderRadius: 2 }}>
                               <Typography variant="body2" color="text.secondary">Investment</Typography>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                ₹{profit.investment_per_hectare.toLocaleString()}
+                                â‚¹{profit.investment_per_hectare.toLocaleString()}
                               </Typography>
                               <Typography variant="caption">per hectare</Typography>
                             </Box>
@@ -755,7 +755,7 @@ const MarketAnalysis: React.FC = () => {
                             <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 2 }}>
                               <Typography variant="body2" color="text.secondary">Revenue</Typography>
                               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                ₹{profit.expected_revenue.toLocaleString()}
+                                â‚¹{profit.expected_revenue.toLocaleString()}
                               </Typography>
                               <Typography variant="caption">expected</Typography>
                             </Box>
@@ -764,7 +764,7 @@ const MarketAnalysis: React.FC = () => {
                             <Box sx={{ textAlign: 'center', p: 2, bgcolor: 'rgba(33, 150, 243, 0.1)', borderRadius: 2 }}>
                               <Typography variant="body2" color="text.secondary">Profit</Typography>
                               <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-                                ₹{profit.profit_margin.toLocaleString()}
+                                â‚¹{profit.profit_margin.toLocaleString()}
                               </Typography>
                               <Typography variant="caption">net profit</Typography>
                             </Box>
@@ -784,7 +784,7 @@ const MarketAnalysis: React.FC = () => {
                       <Grid item xs={12} md={4}>
                         <Paper elevation={1} sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(0,0,0,0.02)' }}>
                           <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                            📊 Key Metrics
+                            ðŸ“Š Key Metrics
                           </Typography>
                           <List dense>
                             <ListItem sx={{ pl: 0 }}>
@@ -793,7 +793,7 @@ const MarketAnalysis: React.FC = () => {
                               </ListItemIcon>
                               <ListItemText
                                 primary="Break-even Price"
-                                secondary={`₹${profit.break_even_price}/quintal`}
+                                secondary={`â‚¹${profit.break_even_price}/quintal`}
                               />
                             </ListItem>
                             <ListItem sx={{ pl: 0 }}>
@@ -874,8 +874,8 @@ const MarketAnalysis: React.FC = () => {
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <Box sx={{ textAlign: { xs: 'left', md: 'right' } }}>
-                      <Typography variant="h6">Price: ₹{comparison.bestOption.price.currentPrice}/quintal</Typography>
-                      <Typography variant="h6" sx={{ color: '#4caf50', fontWeight: 'bold' }}>Estimated Profit: ₹{comparison.bestOption.totalProfit.toLocaleString()}</Typography>
+                      <Typography variant="h6">Price: â‚¹{comparison.bestOption.price.currentPrice}/quintal</Typography>
+                      <Typography variant="h6" sx={{ color: '#4caf50', fontWeight: 'bold' }}>Estimated Profit: â‚¹{comparison.bestOption.totalProfit.toLocaleString()}</Typography>
                       <Typography variant="body2" color="text.secondary">Reason: {comparison.bestOption.reason}</Typography>
                     </Box>
                   </Grid>
@@ -919,11 +919,11 @@ const MarketAnalysis: React.FC = () => {
                     <Grid container spacing={1} sx={{ mt: 1 }}>
                       <Grid item xs={6}>
                         <Typography variant="body2">Price</Typography>
-                        <Typography variant="h6">₹{row.price.currentPrice}</Typography>
+                        <Typography variant="h6">â‚¹{row.price.currentPrice}</Typography>
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body2">Profitability</Typography>
-                        <Typography variant="h6" sx={{ color: '#4caf50' }}>₹{row.profitability.toLocaleString()}</Typography>
+                        <Typography variant="h6" sx={{ color: '#4caf50' }}>â‚¹{row.profitability.toLocaleString()}</Typography>
                       </Grid>
                     </Grid>
                   </Paper>
@@ -975,7 +975,7 @@ const MarketAnalysis: React.FC = () => {
               <TextField
                 type="number"
                 size="small"
-                label="Target Price (₹/quintal)"
+                label="Target Price (â‚¹/quintal)"
                 value={alertTargetPrice}
                 onChange={(e) => setAlertTargetPrice(Math.max(0, Number(e.target.value)))}
                 fullWidth
@@ -1007,7 +1007,7 @@ const MarketAnalysis: React.FC = () => {
               <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{a.crop} — {a.condition.toUpperCase()} ₹{a.targetPrice}</Typography>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{a.crop} â€” {a.condition.toUpperCase()} â‚¹{a.targetPrice}</Typography>
                     <Typography variant="caption" color="text.secondary">Created: {new Date(a.createdAt).toLocaleString()}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', gap: 1 }}>

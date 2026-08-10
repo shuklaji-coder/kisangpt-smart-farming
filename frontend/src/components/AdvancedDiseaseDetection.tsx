@@ -136,10 +136,11 @@ const AdvancedDiseaseDetection: React.FC = () => {
     setLoading(true);
     setError('');
     let currentStage = 0;
+    let stageInterval: ReturnType<typeof setInterval> | null = null;
 
     try {
       // Simulate processing stages
-      const stageInterval = setInterval(() => {
+      stageInterval = setInterval(() => {
         if (currentStage < processingStages.length) {
           setProcessingStage({
             stage: processingStages[currentStage].label,
@@ -172,7 +173,7 @@ const AdvancedDiseaseDetection: React.FC = () => {
         }
       );
 
-      clearInterval(stageInterval);
+      if (stageInterval) clearInterval(stageInterval);
       
       if (response.data.status === 'success') {
         setAnalysis(response.data.analysis);
@@ -186,7 +187,7 @@ const AdvancedDiseaseDetection: React.FC = () => {
       }
 
     } catch (err: any) {
-      clearInterval(stageInterval);
+      if (stageInterval) clearInterval(stageInterval);
       console.error('Disease detection failed:', err);
       setError(
         err.response?.data?.detail || 

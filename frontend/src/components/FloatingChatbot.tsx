@@ -52,7 +52,7 @@ interface ChatMessage {
 }
 
 const FloatingChatbot: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -72,30 +72,30 @@ const FloatingChatbot: React.FC = () => {
 
   // Supported languages
   const languages = [
-    { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'pa', name: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
-    { code: 'ta', name: 'தமிழ்', flag: '🇮🇳' },
+    { code: 'hi', name: 'à¤¹à¤¿à¤‚à¤¦à¥€', flag: 'ðŸ‡®ðŸ‡³' },
+    { code: 'en', name: 'English', flag: 'ðŸ‡ºðŸ‡¸' },
+    { code: 'pa', name: 'à¨ªà©°à¨œà¨¾à¨¬à©€', flag: 'ðŸ‡®ðŸ‡³' },
+    { code: 'ta', name: 'à®¤à®®à®¿à®´à¯', flag: 'ðŸ‡®ðŸ‡³' },
   ];
 
   // Motivational messages for different emotions
   const motivationalMessages = {
     sad: {
       hi: [
-        "भाई, हिम्मत रखिए! खेती में उतार-चढ़ाव आते रहते हैं। आपकी मेहनत कभी बेकार नहीं जाएगी। 🌱",
-        "किसान भारत की आत्मा हैं। आपका काम सबसे महत्वपूर्ण है। आगे बढ़ते रहिए! 💪",
+        "à¤­à¤¾à¤ˆ, à¤¹à¤¿à¤®à¥à¤®à¤¤ à¤°à¤–à¤¿à¤! à¤–à¥‡à¤¤à¥€ à¤®à¥‡à¤‚ à¤‰à¤¤à¤¾à¤°-à¤šà¤¢à¤¼à¤¾à¤µ à¤†à¤¤à¥‡ à¤°à¤¹à¤¤à¥‡ à¤¹à¥ˆà¤‚à¥¤ à¤†à¤ªà¤•à¥€ à¤®à¥‡à¤¹à¤¨à¤¤ à¤•à¤­à¥€ à¤¬à¥‡à¤•à¤¾à¤° à¤¨à¤¹à¥€à¤‚ à¤œà¤¾à¤à¤—à¥€à¥¤ ðŸŒ±",
+        "à¤•à¤¿à¤¸à¤¾à¤¨ à¤­à¤¾à¤°à¤¤ à¤•à¥€ à¤†à¤¤à¥à¤®à¤¾ à¤¹à¥ˆà¤‚à¥¤ à¤†à¤ªà¤•à¤¾ à¤•à¤¾à¤® à¤¸à¤¬à¤¸à¥‡ à¤®à¤¹à¤¤à¥à¤µà¤ªà¥‚à¤°à¥à¤£ à¤¹à¥ˆà¥¤ à¤†à¤—à¥‡ à¤¬à¤¢à¤¼à¤¤à¥‡ à¤°à¤¹à¤¿à¤! ðŸ’ª",
       ],
       en: [
-        "Brother, keep your spirits up! Farming has its ups and downs. Your hard work will never go to waste. 🌱",
-        "Farmers are the soul of India. Your work is the most important. Keep moving forward! 💪",
+        "Brother, keep your spirits up! Farming has its ups and downs. Your hard work will never go to waste. ðŸŒ±",
+        "Farmers are the soul of India. Your work is the most important. Keep moving forward! ðŸ’ª",
       ]
     },
     confused: {
       hi: [
-        "कोई बात नहीं भाई, सवाल पूछिए। हम मिलकर समाधान निकालेंगे! 🤝",
+        "à¤•à¥‹à¤ˆ à¤¬à¤¾à¤¤ à¤¨à¤¹à¥€à¤‚ à¤­à¤¾à¤ˆ, à¤¸à¤µà¤¾à¤² à¤ªà¥‚à¤›à¤¿à¤à¥¤ à¤¹à¤® à¤®à¤¿à¤²à¤•à¤° à¤¸à¤®à¤¾à¤§à¤¾à¤¨ à¤¨à¤¿à¤•à¤¾à¤²à¥‡à¤‚à¤—à¥‡! ðŸ¤",
       ],
       en: [
-        "No worries brother, ask your questions. We'll find solutions together! 🤝",
+        "No worries brother, ask your questions. We'll find solutions together! ðŸ¤",
       ]
     }
   };
@@ -121,7 +121,7 @@ const FloatingChatbot: React.FC = () => {
     // Add welcome message when first opened
     if (isOpen && messages.length === 0) {
       addBotMessage(
-        "🙏 नमस्कार! मैं आपका AI किसान मित्र हूँ। खेती से जुड़ा कोई भी सवाल पूछिए! 🌾",
+        "ðŸ™ à¤¨à¤®à¤¸à¥à¤•à¤¾à¤°! à¤®à¥ˆà¤‚ à¤†à¤ªà¤•à¤¾ AI à¤•à¤¿à¤¸à¤¾à¤¨ à¤®à¤¿à¤¤à¥à¤° à¤¹à¥‚à¤à¥¤ à¤–à¥‡à¤¤à¥€ à¤¸à¥‡ à¤œà¥à¤¡à¤¼à¤¾ à¤•à¥‹à¤ˆ à¤­à¥€ à¤¸à¤µà¤¾à¤² à¤ªà¥‚à¤›à¤¿à¤! ðŸŒ¾",
         'hi'
       );
     }
@@ -169,13 +169,13 @@ const FloatingChatbot: React.FC = () => {
   const handleSpeechError = (event: any) => {
     setIsListening(false);
     
-    let errorMessage = 'आवाज़ पहचानने में समस्या हुई';
+    let errorMessage = 'à¤†à¤µà¤¾à¤œà¤¼ à¤ªà¤¹à¤šà¤¾à¤¨à¤¨à¥‡ à¤®à¥‡à¤‚ à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤¹à¥à¤ˆ';
     switch (event.error) {
       case 'no-speech':
-        errorMessage = 'कोई आवाज़ सुनाई नहीं दी';
+        errorMessage = 'à¤•à¥‹à¤ˆ à¤†à¤µà¤¾à¤œà¤¼ à¤¸à¥à¤¨à¤¾à¤ˆ à¤¨à¤¹à¥€à¤‚ à¤¦à¥€';
         break;
       case 'not-allowed':
-        errorMessage = 'माइक्रोफोन की अनुमति दें';
+        errorMessage = 'à¤®à¤¾à¤‡à¤•à¥à¤°à¥‹à¤«à¥‹à¤¨ à¤•à¥€ à¤…à¤¨à¥à¤®à¤¤à¤¿ à¤¦à¥‡à¤‚';
         break;
     }
     
@@ -185,7 +185,7 @@ const FloatingChatbot: React.FC = () => {
 
   const startListening = () => {
     if (!recognitionRef.current) {
-      setError('आपका ब्राउज़र आवाज़ पहचान को सपोर्ट नहीं करता');
+      setError('à¤†à¤ªà¤•à¤¾ à¤¬à¥à¤°à¤¾à¤‰à¤œà¤¼à¤° à¤†à¤µà¤¾à¤œà¤¼ à¤ªà¤¹à¤šà¤¾à¤¨ à¤•à¥‹ à¤¸à¤ªà¥‹à¤°à¥à¤Ÿ à¤¨à¤¹à¥€à¤‚ à¤•à¤°à¤¤à¤¾');
       return;
     }
 
@@ -232,9 +232,9 @@ const FloatingChatbot: React.FC = () => {
   };
 
   const detectEmotion = (text: string): 'happy' | 'sad' | 'neutral' | 'confused' | 'excited' => {
-    const sadWords = ['दुखी', 'परेशान', 'मुश्किल', 'समस्या', 'नुकसान', 'घाटा', 'बर्बाद', 'sad', 'problem', 'loss', 'worried'];
-    const happyWords = ['खुश', 'अच्छा', 'बढ़िया', 'धन्यवाद', 'शुक्रिया', 'happy', 'good', 'great', 'thanks', 'excellent'];
-    const confusedWords = ['समझ', 'कैसे', 'क्या', 'कौन', 'कहाँ', 'कब', 'how', 'what', 'when', 'where', 'confused', 'help'];
+    const sadWords = ['à¤¦à¥à¤–à¥€', 'à¤ªà¤°à¥‡à¤¶à¤¾à¤¨', 'à¤®à¥à¤¶à¥à¤•à¤¿à¤²', 'à¤¸à¤®à¤¸à¥à¤¯à¤¾', 'à¤¨à¥à¤•à¤¸à¤¾à¤¨', 'à¤˜à¤¾à¤Ÿà¤¾', 'à¤¬à¤°à¥à¤¬à¤¾à¤¦', 'sad', 'problem', 'loss', 'worried'];
+    const happyWords = ['à¤–à¥à¤¶', 'à¤…à¤šà¥à¤›à¤¾', 'à¤¬à¤¢à¤¼à¤¿à¤¯à¤¾', 'à¤§à¤¨à¥à¤¯à¤µà¤¾à¤¦', 'à¤¶à¥à¤•à¥à¤°à¤¿à¤¯à¤¾', 'happy', 'good', 'great', 'thanks', 'excellent'];
+    const confusedWords = ['à¤¸à¤®à¤', 'à¤•à¥ˆà¤¸à¥‡', 'à¤•à¥à¤¯à¤¾', 'à¤•à¥Œà¤¨', 'à¤•à¤¹à¤¾à¤', 'à¤•à¤¬', 'how', 'what', 'when', 'where', 'confused', 'help'];
 
     const lowerText = text.toLowerCase();
     
@@ -287,28 +287,28 @@ const FloatingChatbot: React.FC = () => {
     const lowerMessage = userMessage.toLowerCase();
     
     // Farming-related responses
-    if (lowerMessage.includes('बीज') || lowerMessage.includes('seed')) {
+    if (lowerMessage.includes('à¤¬à¥€à¤œ') || lowerMessage.includes('seed')) {
       return language === 'hi' 
-        ? "अच्छे बीज चुनना बहुत महत्वपूर्ण है। हमेशा प्रमाणित बीज खरीदें और मिट्टी की जांच कराकर बीज चुनें। 🌱"
-        : "Choosing good seeds is very important. Always buy certified seeds and choose seeds after soil testing. 🌱";
+        ? "à¤…à¤šà¥à¤›à¥‡ à¤¬à¥€à¤œ à¤šà¥à¤¨à¤¨à¤¾ à¤¬à¤¹à¥à¤¤ à¤®à¤¹à¤¤à¥à¤µà¤ªà¥‚à¤°à¥à¤£ à¤¹à¥ˆà¥¤ à¤¹à¤®à¥‡à¤¶à¤¾ à¤ªà¥à¤°à¤®à¤¾à¤£à¤¿à¤¤ à¤¬à¥€à¤œ à¤–à¤°à¥€à¤¦à¥‡à¤‚ à¤”à¤° à¤®à¤¿à¤Ÿà¥à¤Ÿà¥€ à¤•à¥€ à¤œà¤¾à¤‚à¤š à¤•à¤°à¤¾à¤•à¤° à¤¬à¥€à¤œ à¤šà¥à¤¨à¥‡à¤‚à¥¤ ðŸŒ±"
+        : "Choosing good seeds is very important. Always buy certified seeds and choose seeds after soil testing. ðŸŒ±";
     }
     
-    if (lowerMessage.includes('पानी') || lowerMessage.includes('सिंचाई') || lowerMessage.includes('water') || lowerMessage.includes('irrigation')) {
+    if (lowerMessage.includes('à¤ªà¤¾à¤¨à¥€') || lowerMessage.includes('à¤¸à¤¿à¤‚à¤šà¤¾à¤ˆ') || lowerMessage.includes('water') || lowerMessage.includes('irrigation')) {
       return language === 'hi'
-        ? "पानी की बचत के लिए ड्रिप इरिगेशन या स्प्रिंकलर का इस्तेमाल करें। सुबह या शाम को सिंचाई करना बेहतर होता है। 💧"
-        : "Use drip irrigation or sprinklers to save water. It's better to irrigate in the morning or evening. 💧";
+        ? "à¤ªà¤¾à¤¨à¥€ à¤•à¥€ à¤¬à¤šà¤¤ à¤•à¥‡ à¤²à¤¿à¤ à¤¡à¥à¤°à¤¿à¤ª à¤‡à¤°à¤¿à¤—à¥‡à¤¶à¤¨ à¤¯à¤¾ à¤¸à¥à¤ªà¥à¤°à¤¿à¤‚à¤•à¤²à¤° à¤•à¤¾ à¤‡à¤¸à¥à¤¤à¥‡à¤®à¤¾à¤² à¤•à¤°à¥‡à¤‚à¥¤ à¤¸à¥à¤¬à¤¹ à¤¯à¤¾ à¤¶à¤¾à¤® à¤•à¥‹ à¤¸à¤¿à¤‚à¤šà¤¾à¤ˆ à¤•à¤°à¤¨à¤¾ à¤¬à¥‡à¤¹à¤¤à¤° à¤¹à¥‹à¤¤à¤¾ à¤¹à¥ˆà¥¤ ðŸ’§"
+        : "Use drip irrigation or sprinklers to save water. It's better to irrigate in the morning or evening. ðŸ’§";
     }
     
-    if (lowerMessage.includes('कीट') || lowerMessage.includes('pest') || lowerMessage.includes('रोग') || lowerMessage.includes('disease')) {
+    if (lowerMessage.includes('à¤•à¥€à¤Ÿ') || lowerMessage.includes('pest') || lowerMessage.includes('à¤°à¥‹à¤—') || lowerMessage.includes('disease')) {
       return language === 'hi'
-        ? "कीट-रोग से बचाव के लिए नीम का तेल, जैविक कीटनाशक का इस्तेमाल करें। फसल चक्र अपनाएं और खेत की सफाई रखें। 🐛"
-        : "To prevent pests and diseases, use neem oil and organic pesticides. Adopt crop rotation and keep the field clean. 🐛";
+        ? "à¤•à¥€à¤Ÿ-à¤°à¥‹à¤— à¤¸à¥‡ à¤¬à¤šà¤¾à¤µ à¤•à¥‡ à¤²à¤¿à¤ à¤¨à¥€à¤® à¤•à¤¾ à¤¤à¥‡à¤², à¤œà¥ˆà¤µà¤¿à¤• à¤•à¥€à¤Ÿà¤¨à¤¾à¤¶à¤• à¤•à¤¾ à¤‡à¤¸à¥à¤¤à¥‡à¤®à¤¾à¤² à¤•à¤°à¥‡à¤‚à¥¤ à¤«à¤¸à¤² à¤šà¤•à¥à¤° à¤…à¤ªà¤¨à¤¾à¤à¤‚ à¤”à¤° à¤–à¥‡à¤¤ à¤•à¥€ à¤¸à¤«à¤¾à¤ˆ à¤°à¤–à¥‡à¤‚à¥¤ ðŸ›"
+        : "To prevent pests and diseases, use neem oil and organic pesticides. Adopt crop rotation and keep the field clean. ðŸ›";
     }
     
     // Default response
     return language === 'hi'
-      ? "आपका सवाल बहुत अच्छा है! मैं इस पर और जानकारी इकट्ठा करके आपको बेहतर जवाब दे सकूंगा। क्या आप थोड़ा और detail में बता सकते हैं? 🤔"
-      : "Your question is very good! I can give you a better answer by gathering more information on this. Can you provide a bit more detail? 🤔";
+      ? "à¤†à¤ªà¤•à¤¾ à¤¸à¤µà¤¾à¤² à¤¬à¤¹à¥à¤¤ à¤…à¤šà¥à¤›à¤¾ à¤¹à¥ˆ! à¤®à¥ˆà¤‚ à¤‡à¤¸ à¤ªà¤° à¤”à¤° à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤‡à¤•à¤Ÿà¥à¤ à¤¾ à¤•à¤°à¤•à¥‡ à¤†à¤ªà¤•à¥‹ à¤¬à¥‡à¤¹à¤¤à¤° à¤œà¤µà¤¾à¤¬ à¤¦à¥‡ à¤¸à¤•à¥‚à¤‚à¤—à¤¾à¥¤ à¤•à¥à¤¯à¤¾ à¤†à¤ª à¤¥à¥‹à¤¡à¤¼à¤¾ à¤”à¤° detail à¤®à¥‡à¤‚ à¤¬à¤¤à¤¾ à¤¸à¤•à¤¤à¥‡ à¤¹à¥ˆà¤‚? ðŸ¤”"
+      : "Your question is very good! I can give you a better answer by gathering more information on this. Can you provide a bit more detail? ðŸ¤”";
   };
 
   const generateAIResponse = async (userMessage: string, userEmotion: string, language: string) => {
@@ -374,11 +374,11 @@ const FloatingChatbot: React.FC = () => {
 
   const getEmotionIcon = (emotion?: string) => {
     switch (emotion) {
-      case 'happy': return '😊';
-      case 'sad': return '😔';
-      case 'excited': return '🤩';
-      case 'confused': return '🤔';
-      default: return '😐';
+      case 'happy': return 'ðŸ˜Š';
+      case 'sad': return 'ðŸ˜”';
+      case 'excited': return 'ðŸ¤©';
+      case 'confused': return 'ðŸ¤”';
+      default: return 'ðŸ˜';
     }
   };
 
@@ -475,10 +475,10 @@ const FloatingChatbot: React.FC = () => {
                   </Avatar>
                   <Box>
                     <Typography variant="subtitle2" sx={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
-                      AI किसान मित्र
+                      AI à¤•à¤¿à¤¸à¤¾à¤¨ à¤®à¤¿à¤¤à¥à¤°
                     </Typography>
                     <Typography variant="caption" sx={{ opacity: 0.9, fontSize: '0.75rem' }}>
-                      {isSpeaking ? 'बोल रहा हूँ...' : isListening ? 'सुन रहा हूँ...' : 'ऑनलाइन'}
+                      {isSpeaking ? 'à¤¬à¥‹à¤² à¤°à¤¹à¤¾ à¤¹à¥‚à¤...' : isListening ? 'à¤¸à¥à¤¨ à¤°à¤¹à¤¾ à¤¹à¥‚à¤...' : 'à¤‘à¤¨à¤²à¤¾à¤‡à¤¨'}
                     </Typography>
                   </Box>
                 </Box>
@@ -608,7 +608,7 @@ const FloatingChatbot: React.FC = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <CircularProgress size={16} />
                           <Typography variant="caption" color="text.secondary">
-                            सोच रहा हूँ...
+                            à¤¸à¥‹à¤š à¤°à¤¹à¤¾ à¤¹à¥‚à¤...
                           </Typography>
                         </Box>
                       </ListItem>
@@ -627,7 +627,7 @@ const FloatingChatbot: React.FC = () => {
                       value={currentMessage}
                       onChange={(e) => setCurrentMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder={selectedLanguage === 'hi' ? "सवाल लिखें..." : "Type question..."}
+                      placeholder={selectedLanguage === 'hi' ? "à¤¸à¤µà¤¾à¤² à¤²à¤¿à¤–à¥‡à¤‚..." : "Type question..."}
                       variant="outlined"
                       size="small"
                       disabled={isListening || isLoading}
@@ -679,9 +679,9 @@ const FloatingChatbot: React.FC = () => {
                   {/* Quick Suggestions */}
                   <Box sx={{ mt: 1, display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                     {[
-                      { hi: "कीट समस्या", en: "Pest problem" },
-                      { hi: "खाद सलाह", en: "Fertilizer advice" },
-                      { hi: "मौसम जानकारी", en: "Weather info" },
+                      { hi: "à¤•à¥€à¤Ÿ à¤¸à¤®à¤¸à¥à¤¯à¤¾", en: "Pest problem" },
+                      { hi: "à¤–à¤¾à¤¦ à¤¸à¤²à¤¾à¤¹", en: "Fertilizer advice" },
+                      { hi: "à¤®à¥Œà¤¸à¤® à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€", en: "Weather info" },
                     ].slice(0, 3).map((suggestion, index) => (
                       <Chip
                         key={index}

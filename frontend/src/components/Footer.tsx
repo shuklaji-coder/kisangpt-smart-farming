@@ -14,25 +14,43 @@ import {
 import { useTranslation } from 'react-i18next';
 
 const Footer: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   
   return (
     <Box
       component="footer"
       sx={{
-        backgroundColor: 'primary.main',
+        background: 'linear-gradient(135deg, #0d2f15 0%, #165a2b 55%, #1b5e20 100%)',
         color: 'white',
-        py: 3,
+        py: 4,
         mt: 6,
-        borderTop: '2px solid',
-        borderColor: 'secondary.main',
+        borderTop: '1px solid rgba(139, 195, 74, 0.35)',
+        position: 'relative',
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: '10%',
+          right: '10%',
+          height: '2px',
+          background: 'linear-gradient(90deg, transparent, #8bc34a, transparent)',
+        },
+        '&::after': {
+          content: '"ðŸŒ¾"',
+          position: 'absolute',
+          right: 30,
+          bottom: -10,
+          fontSize: '64px',
+          opacity: 0.12,
+        },
       }}
     >
       <Container maxWidth="lg">
         {/* Developer Credits */}
         <Box sx={{ textAlign: 'center', mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-            {t('footer.developedWith')} <Favorite sx={{ color: '#ff4444', fontSize: 20 }} /> {t('footer.by')}
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, fontFamily: "'Poppins', 'Noto Sans Devanagari', sans-serif" }}>
+            {t('footer.developedWith')} <Favorite sx={{ color: '#ff5252', fontSize: 22, animation: 'floatY 2s ease-in-out infinite' }} /> {t('footer.by')}
           </Typography>
           
           {/* Developer Names - Compact */}
@@ -50,16 +68,16 @@ const Footer: React.FC = () => {
                   textDecoration: 'none',
                   '&:hover': { 
                     textDecoration: 'underline',
-                    transform: 'scale(1.05)',
+                    color: '#c5e1a5',
                   },
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                  👨‍💻 Rohan Shukla
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, fontFamily: "'Poppins', 'Noto Sans Devanagari', sans-serif" }}>
+                  ðŸ‘¨â€ðŸ’» Rohan Shukla
                 </Typography>
               </Link>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.75 }}>
                 {t('footer.fullStackDeveloper')}
               </Typography>
             </Box>
@@ -73,23 +91,23 @@ const Footer: React.FC = () => {
                   textDecoration: 'none',
                   '&:hover': { 
                     textDecoration: 'underline',
-                    transform: 'scale(1.05)',
+                    color: '#c5e1a5',
                   },
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                  👨‍💻 Abhishek Sharma
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, fontFamily: "'Poppins', 'Noto Sans Devanagari', sans-serif" }}>
+                  ðŸ‘¨â€ðŸ’» Abhishek Sharma
                 </Typography>
               </Link>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.75 }}>
                 {t('footer.fullStackDeveloper')}
               </Typography>
             </Box>
           </Stack>
         </Box>
 
-        {/* Bottom Bar - Compact */}
+        {/* Bottom Bar */}
         <Box 
           sx={{ 
             display: 'flex', 
@@ -98,21 +116,23 @@ const Footer: React.FC = () => {
             flexWrap: 'wrap',
             gap: 2,
             pt: 2,
-            borderTop: '1px solid rgba(255,255,255,0.1)'
+            borderTop: '1px solid rgba(255,255,255,0.12)'
           }}
         >
-          <Box />
+          <Typography variant="caption" sx={{ opacity: 0.7 }}>
+            Â© {new Date().getFullYear()} KisanGPT â€¢ Smart Farming Assistant
+          </Typography>
           <Link 
             href="https://github.com/shuklaji-coder/kisangpt-smart-farming" 
             target="_blank"
             sx={{ 
               color: 'white', 
-              opacity: 0.8, 
-              '&:hover': { opacity: 1, transform: 'scale(1.1)' },
-              transition: 'all 0.2s ease'
+              opacity: 0.85, 
+              '&:hover': { opacity: 1, transform: 'scale(1.15) rotate(8deg)' },
+              transition: 'all 0.25s ease'
             }}
           >
-            <GitHub sx={{ fontSize: 20 }} />
+            <GitHub sx={{ fontSize: 22 }} />
           </Link>
         </Box>
       </Container>

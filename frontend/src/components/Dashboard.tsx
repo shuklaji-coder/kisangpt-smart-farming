@@ -814,15 +814,17 @@ const { t } = (useTranslation as any)();
         <Paper
           elevation={8}
           sx={{
-            background: 'radial-gradient(900px 420px at 15% 10%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 60%), linear-gradient(120deg, #0f6d2b 0%, #1e8f3f 40%, #4caf50 75%, #8bd17c 100%)',
+            background: 'linear-gradient(120deg, #0f6d2b 0%, #1e8f3f 40%, #4caf50 75%, #8bd17c 100%)',
+            backgroundSize: '200% auto',
+            animation: 'gradientShift 10s ease infinite',
             color: 'white',
             p: { xs: 2, md: 4 },
             mb: { xs: 2, md: 4 },
             borderRadius: 4,
             position: 'relative',
             overflow: 'hidden',
-            border: '1px solid rgba(255,255,255,0.15)',
-            boxShadow: '0 18px 40px rgba(20, 87, 45, 0.35)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            boxShadow: '0 24px 60px rgba(20, 87, 45, 0.4)',
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -838,10 +840,11 @@ const { t } = (useTranslation as any)();
               position: 'absolute',
               top: 24,
               right: 36,
-              fontSize: '68px',
-              opacity: 0.24,
+              fontSize: '72px',
+              opacity: 0.22,
               zIndex: 1,
-            }
+              animation: 'floatY 6s ease-in-out infinite',
+            },
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, position: 'relative', zIndex: 2 }}>

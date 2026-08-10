@@ -63,11 +63,11 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { cropRecommendationEngine } from '../services/cropRecommendationEngine';
-
-const API_BASE = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
 import { satelliteService } from '../services/satelliteService';
 import { marketPriceService } from '../services/marketPriceService';
 import { locationService } from '../services/locationService';
+
+const API_BASE = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
 
 interface CropRecommendationData {
   name: string;
@@ -104,7 +104,7 @@ interface FormData {
 }
 
 const CropRecommendation: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const theme = useTheme();
   const [recommendations, setRecommendations] = useState<CropRecommendationData[]>([]);
   const [loading, setLoading] = useState(false);

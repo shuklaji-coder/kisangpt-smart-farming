@@ -83,7 +83,7 @@ interface SubsidyFilter {
 }
 
 const GovernmentSubsidy: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const theme = useTheme();
   
   const [schemes, setSchemes] = useState<GovernmentScheme[]>([]);
@@ -123,17 +123,17 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'pm-kisan',
       name: 'PM-KISAN Samman Nidhi',
-      nameHindi: 'प्रधानमंत्री किसान सम्मान निधि',
+      nameHindi: 'à¤ªà¥à¤°à¤§à¤¾à¤¨à¤®à¤‚à¤¤à¥à¤°à¥€ à¤•à¤¿à¤¸à¤¾à¤¨ à¤¸à¤®à¥à¤®à¤¾à¤¨ à¤¨à¤¿à¤§à¤¿',
       category: 'subsidy',
       department: 'Ministry of Agriculture',
-      subsidy: '₹6,000 per year (₹2,000 in 3 installments)',
+      subsidy: 'â‚¹6,000 per year (â‚¹2,000 in 3 installments)',
       eligibility: [
         'All landholding farmer families',
         'Small and marginal farmers',
         'Land records in farmer\'s name'
       ],
       benefits: [
-        '₹6,000 annual direct cash transfer',
+        'â‚¹6,000 annual direct cash transfer',
         'No paperwork hassle',
         'Direct bank transfer'
       ],
@@ -154,10 +154,10 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'kcc',
       name: 'Kisan Credit Card',
-      nameHindi: 'किसान क्रेडिट कार्ड',
+      nameHindi: 'à¤•à¤¿à¤¸à¤¾à¤¨ à¤•à¥à¤°à¥‡à¤¡à¤¿à¤Ÿ à¤•à¤¾à¤°à¥à¤¡',
       category: 'loan',
       department: 'NABARD',
-      subsidy: 'Low interest agricultural credit up to ₹3 lakh',
+      subsidy: 'Low interest agricultural credit up to â‚¹3 lakh',
       eligibility: [
         'All farmers (Owner/Tenant)',
         'SHG members',
@@ -186,7 +186,7 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'pradhan-mantri-fasal-bima',
       name: 'Pradhan Mantri Fasal Bima Yojana',
-      nameHindi: 'प्रधानमंत्री फसल बीमा योजना',
+      nameHindi: 'à¤ªà¥à¤°à¤§à¤¾à¤¨à¤®à¤‚à¤¤à¥à¤°à¥€ à¤«à¤¸à¤² à¤¬à¥€à¤®à¤¾ à¤¯à¥‹à¤œà¤¨à¤¾',
       category: 'insurance',
       department: 'Ministry of Agriculture',
       subsidy: 'Crop insurance with 2% premium for food crops',
@@ -218,7 +218,7 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'sub-mission-agricultural-mechanization',
       name: 'Sub Mission on Agricultural Mechanization',
-      nameHindi: 'कृषि यंत्रीकरण पर उप मिशन',
+      nameHindi: 'à¤•à¥ƒà¤·à¤¿ à¤¯à¤‚à¤¤à¥à¤°à¥€à¤•à¤°à¤£ à¤ªà¤° à¤‰à¤ª à¤®à¤¿à¤¶à¤¨',
       category: 'equipment',
       department: 'Ministry of Agriculture',
       subsidy: '40-50% subsidy on agricultural machinery',
@@ -250,7 +250,7 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'pm-kisan-mandhan',
       name: 'PM Kisan Maandhan Yojana',
-      nameHindi: 'पीएम किसान मानधन योजना',
+      nameHindi: 'à¤ªà¥€à¤à¤® à¤•à¤¿à¤¸à¤¾à¤¨ à¤®à¤¾à¤¨à¤§à¤¨ à¤¯à¥‹à¤œà¤¨à¤¾',
       category: 'insurance',
       department: 'Ministry of Agriculture',
       subsidy: 'Pension scheme for small & marginal farmers',
@@ -260,7 +260,7 @@ const GovernmentSubsidy: React.FC = () => {
         'Landholding up to 2 hectares'
       ],
       benefits: [
-        '₹3,000 monthly pension after 60',
+        'â‚¹3,000 monthly pension after 60',
         'Government co-contribution',
         'Family pension available',
         'Voluntary and contributory'
@@ -282,7 +282,7 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'kisan-rail',
       name: 'Kisan Rail Scheme',
-      nameHindi: 'किसान रेल योजना',
+      nameHindi: 'à¤•à¤¿à¤¸à¤¾à¤¨ à¤°à¥‡à¤² à¤¯à¥‹à¤œà¤¨à¤¾',
       category: 'marketing',
       department: 'Ministry of Railways',
       subsidy: '50% subsidy on transportation of perishable goods',
@@ -313,10 +313,10 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'organic-farming',
       name: 'National Programme for Organic Production',
-      nameHindi: 'जैविक उत्पादन के लिए राष्ट्रीय कार्यक्रम',
+      nameHindi: 'à¤œà¥ˆà¤µà¤¿à¤• à¤‰à¤¤à¥à¤ªà¤¾à¤¦à¤¨ à¤•à¥‡ à¤²à¤¿à¤ à¤°à¤¾à¤·à¥à¤Ÿà¥à¤°à¥€à¤¯ à¤•à¤¾à¤°à¥à¤¯à¤•à¥à¤°à¤®',
       category: 'subsidy',
       department: 'Ministry of Agriculture',
-      subsidy: '₹50,000 per hectare for 3 years',
+      subsidy: 'â‚¹50,000 per hectare for 3 years',
       eligibility: [
         'Individual farmers',
         'Group of farmers',
@@ -345,7 +345,7 @@ const GovernmentSubsidy: React.FC = () => {
     {
       id: 'micro-irrigation',
       name: 'Pradhan Mantri Krishi Sinchayee Yojana',
-      nameHindi: 'प्रधानमंत्री कृषि सिंचाई योजना',
+      nameHindi: 'à¤ªà¥à¤°à¤§à¤¾à¤¨à¤®à¤‚à¤¤à¥à¤°à¥€ à¤•à¥ƒà¤·à¤¿ à¤¸à¤¿à¤‚à¤šà¤¾à¤ˆ à¤¯à¥‹à¤œà¤¨à¤¾',
       category: 'subsidy',
       department: 'Ministry of Agriculture',
       subsidy: '55% subsidy on drip/sprinkler irrigation',
@@ -395,7 +395,7 @@ const GovernmentSubsidy: React.FC = () => {
       setSchemes(governmentSchemes);
       setFilteredSchemes(governmentSchemes);
       
-      console.log('✅ Government schemes loaded');
+      console.log('âœ… Government schemes loaded');
     } catch (error) {
       console.error('Error loading subsidy data:', error);
       setSchemes(governmentSchemes);
@@ -488,15 +488,15 @@ const GovernmentSubsidy: React.FC = () => {
         >
           <AccountBalance sx={{ fontSize: 48, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            🏛️ Government Subsidies & Schemes
+            ðŸ›ï¸ Government Subsidies & Schemes
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
-            सरकारी योजनाएं और सब्सिडी - किसानों के लिए वित्तीय सहायता
+            à¤¸à¤°à¤•à¤¾à¤°à¥€ à¤¯à¥‹à¤œà¤¨à¤¾à¤à¤‚ à¤”à¤° à¤¸à¤¬à¥à¤¸à¤¿à¤¡à¥€ - à¤•à¤¿à¤¸à¤¾à¤¨à¥‹à¤‚ à¤•à¥‡ à¤²à¤¿à¤ à¤µà¤¿à¤¤à¥à¤¤à¥€à¤¯ à¤¸à¤¹à¤¾à¤¯à¤¤à¤¾
           </Typography>
           
           {userLocation && (
             <Chip
-              label={`📍 ${locationService.formatLocationDisplay(userLocation)}`}
+              label={`ðŸ“ ${locationService.formatLocationDisplay(userLocation)}`}
               sx={{
                 mt: 2,
                 backgroundColor: 'rgba(255,255,255,0.2)',
@@ -512,7 +512,7 @@ const GovernmentSubsidy: React.FC = () => {
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
-            placeholder="Search schemes... (योजना खोजें)"
+            placeholder="Search schemes... (à¤¯à¥‹à¤œà¤¨à¤¾ à¤–à¥‹à¤œà¥‡à¤‚)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
@@ -534,16 +534,16 @@ const GovernmentSubsidy: React.FC = () => {
             onChange={(e) => handleFilterChange('category', e.target.value)}
           >
             <MenuItem value="all">All Categories</MenuItem>
-            <MenuItem value="subsidy">Subsidy (सब्सिडी)</MenuItem>
-            <MenuItem value="loan">Loans (ऋण)</MenuItem>
-            <MenuItem value="insurance">Insurance (बीमा)</MenuItem>
-            <MenuItem value="equipment">Equipment (यंत्र)</MenuItem>
-            <MenuItem value="marketing">Marketing (विपणन)</MenuItem>
+            <MenuItem value="subsidy">Subsidy (à¤¸à¤¬à¥à¤¸à¤¿à¤¡à¥€)</MenuItem>
+            <MenuItem value="loan">Loans (à¤‹à¤£)</MenuItem>
+            <MenuItem value="insurance">Insurance (à¤¬à¥€à¤®à¤¾)</MenuItem>
+            <MenuItem value="equipment">Equipment (à¤¯à¤‚à¤¤à¥à¤°)</MenuItem>
+            <MenuItem value="marketing">Marketing (à¤µà¤¿à¤ªà¤£à¤¨)</MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12} md={3}>
           <Paper elevation={1} sx={{ p:2, borderRadius:2 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight:700, mb:1 }}>👤 Your Profile (Eligibility)</Typography>
+            <Typography variant="subtitle2" sx={{ fontWeight:700, mb:1 }}>ðŸ‘¤ Your Profile (Eligibility)</Typography>
             <Grid container spacing={1}>
               <Grid item xs={6}><TextField size="small" type="number" label="Farm Size (ha)" value={profile.farmSize} onChange={(e)=>setProfile({ ...profile, farmSize:+e.target.value })} fullWidth /></Grid>
               <Grid item xs={6}><TextField size="small" type="number" label="Age" value={profile.age} onChange={(e)=>setProfile({ ...profile, age:+e.target.value })} fullWidth /></Grid>
@@ -567,7 +567,7 @@ const GovernmentSubsidy: React.FC = () => {
         <Grid item xs={12} sm={3}>
           <Card sx={{ textAlign: 'center', p: 2, backgroundColor: 'rgba(33, 150, 243, 0.1)' }}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#2196f3' }}>
-              ₹50L+
+              â‚¹50L+
             </Typography>
             <Typography variant="body2">Max Subsidy Amount</Typography>
           </Card>
@@ -636,7 +636,7 @@ const GovernmentSubsidy: React.FC = () => {
                   <Box sx={{ display:'flex', alignItems:'center', gap:1, mb:1 }}>
                     <Alert severity="success" sx={{ flex:1, borderRadius: 2 }}>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        💰 {scheme.subsidy}
+                        ðŸ’° {scheme.subsidy}
                       </Typography>
                     </Alert>
                     <Tooltip title={favorites.includes(scheme.id) ? 'Remove Favorite' : 'Add Favorite'}>
@@ -651,7 +651,7 @@ const GovernmentSubsidy: React.FC = () => {
 
                   {/* Key Benefits */}
                   <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    🎯 Key Benefits:
+                    ðŸŽ¯ Key Benefits:
                   </Typography>
                   <List dense sx={{ mb: 2 }}>
                     {scheme.benefits.slice(0, 3).map((benefit, idx) => (
@@ -671,7 +671,7 @@ const GovernmentSubsidy: React.FC = () => {
                   <Accordion sx={{ boxShadow: 'none', border: '1px solid rgba(0,0,0,0.1)' }}>
                     <AccordionSummary expandIcon={<ExpandMore />}>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        📋 Complete Details
+                        ðŸ“‹ Complete Details
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -684,7 +684,7 @@ const GovernmentSubsidy: React.FC = () => {
                             {scheme.eligibility.map((criteria, idx) => (
                               <ListItem key={idx} sx={{ py: 0.25, px: 0 }}>
                                 <ListItemText 
-                                  primary={`• ${criteria}`}
+                                  primary={`â€¢ ${criteria}`}
                                   primaryTypographyProps={{ variant: 'body2' }}
                                 />
                               </ListItem>
@@ -700,7 +700,7 @@ const GovernmentSubsidy: React.FC = () => {
                             {scheme.documents.map((doc, idx) => (
                               <ListItem key={idx} sx={{ py: 0.25, px: 0 }}>
                                 <ListItemText 
-                                  primary={`• ${doc}`}
+                                  primary={`â€¢ ${doc}`}
                                   primaryTypographyProps={{ variant: 'body2' }}
                                 />
                               </ListItem>
@@ -711,7 +711,7 @@ const GovernmentSubsidy: React.FC = () => {
 
                       <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(33, 150, 243, 0.1)', borderRadius: 2 }}>
                         <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
-                          📞 Contact & Application:
+                          ðŸ“ž Contact & Application:
                         </Typography>
                         <Typography variant="body2" sx={{ mb: 0.5 }}>
                           <strong>Process:</strong> {scheme.applicationProcess}
@@ -780,28 +780,28 @@ const GovernmentSubsidy: React.FC = () => {
       {/* Footer Info */}
       <Paper elevation={2} sx={{ mt: 4, p: 3, borderRadius: 3, bgcolor: 'rgba(76, 175, 80, 0.05)' }}>
         <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-          📢 Important Information:
+          ðŸ“¢ Important Information:
         </Typography>
         <List>
           <ListItem>
             <ListItemIcon><Info color="primary" /></ListItemIcon>
             <ListItemText 
               primary="All schemes are subject to government terms and conditions"
-              secondary="सभी योजनाएं सरकारी नियम और शर्तों के अधीन हैं"
+              secondary="à¤¸à¤­à¥€ à¤¯à¥‹à¤œà¤¨à¤¾à¤à¤‚ à¤¸à¤°à¤•à¤¾à¤°à¥€ à¤¨à¤¿à¤¯à¤® à¤”à¤° à¤¶à¤°à¥à¤¤à¥‹à¤‚ à¤•à¥‡ à¤…à¤§à¥€à¤¨ à¤¹à¥ˆà¤‚"
             />
           </ListItem>
           <ListItem>
             <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
             <ListItemText 
               primary="Apply through official channels only to avoid fraud"
-              secondary="धोखाधड़ी से बचने के लिए केवल आधिकारिक माध्यमों से आवेदन करें"
+              secondary="à¤§à¥‹à¤–à¤¾à¤§à¤¡à¤¼à¥€ à¤¸à¥‡ à¤¬à¤šà¤¨à¥‡ à¤•à¥‡ à¤²à¤¿à¤ à¤•à¥‡à¤µà¤² à¤†à¤§à¤¿à¤•à¤¾à¤°à¤¿à¤• à¤®à¤¾à¤§à¥à¤¯à¤®à¥‹à¤‚ à¤¸à¥‡ à¤†à¤µà¥‡à¤¦à¤¨ à¤•à¤°à¥‡à¤‚"
             />
           </ListItem>
           <ListItem>
             <ListItemIcon><Phone color="secondary" /></ListItemIcon>
             <ListItemText 
               primary="Contact local agriculture officer for detailed guidance"
-              secondary="विस्तृत मार्गदर्शन के लिए स्थानीय कृषि अधिकारी से संपर्क करें"
+              secondary="à¤µà¤¿à¤¸à¥à¤¤à¥ƒà¤¤ à¤®à¤¾à¤°à¥à¤—à¤¦à¤°à¥à¤¶à¤¨ à¤•à¥‡ à¤²à¤¿à¤ à¤¸à¥à¤¥à¤¾à¤¨à¥€à¤¯ à¤•à¥ƒà¤·à¤¿ à¤…à¤§à¤¿à¤•à¤¾à¤°à¥€ à¤¸à¥‡ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤‚"
             />
           </ListItem>
         </List>

@@ -62,7 +62,7 @@ interface DiseaseInfo {
 }
 
 const DiseaseDetection: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -103,10 +103,10 @@ const DiseaseDetection: React.FC = () => {
           name: `Detected: ${onnx.label}`,
           severity: onnx.confidence > 0.8 ? 'High' : onnx.confidence > 0.6 ? 'Medium' : 'Low',
           confidence: onnx.confidence,
-          symptoms: ['मॉडल द्वारा पहचाना गया पैटर्न'],
-          treatments: ['स्थानीय कृषि विशेषज्ञ से सलाह लें', 'लक्षण-आधारित उपचार अपनाएँ'],
-          prevention: ['स्वच्छ खेती', 'उचित पोषण', 'समय पर स्प्रे'],
-          economic_impact: 'मॉडल अनुमान (on-device)'
+          symptoms: ['à¤®à¥‰à¤¡à¤² à¤¦à¥à¤µà¤¾à¤°à¤¾ à¤ªà¤¹à¤šà¤¾à¤¨à¤¾ à¤—à¤¯à¤¾ à¤ªà¥ˆà¤Ÿà¤°à¥à¤¨'],
+          treatments: ['à¤¸à¥à¤¥à¤¾à¤¨à¥€à¤¯ à¤•à¥ƒà¤·à¤¿ à¤µà¤¿à¤¶à¥‡à¤·à¤œà¥à¤ž à¤¸à¥‡ à¤¸à¤²à¤¾à¤¹ à¤²à¥‡à¤‚', 'à¤²à¤•à¥à¤·à¤£-à¤†à¤§à¤¾à¤°à¤¿à¤¤ à¤‰à¤ªà¤šà¤¾à¤° à¤…à¤ªà¤¨à¤¾à¤à¤'],
+          prevention: ['à¤¸à¥à¤µà¤šà¥à¤› à¤–à¥‡à¤¤à¥€', 'à¤‰à¤šà¤¿à¤¤ à¤ªà¥‹à¤·à¤£', 'à¤¸à¤®à¤¯ à¤ªà¤° à¤¸à¥à¤ªà¥à¤°à¥‡'],
+          economic_impact: 'à¤®à¥‰à¤¡à¤² à¤…à¤¨à¥à¤®à¤¾à¤¨ (on-device)'
         };
         setDiseaseResult(diseaseInfo);
         setOpenDialog(true);
@@ -130,10 +130,10 @@ const DiseaseDetection: React.FC = () => {
             ...primaryDisease.chemicalTreatments.slice(0, 2)
           ],
           prevention: primaryDisease.preventions || [
-            'नियमित निगरानी करें',
-            'प्रतिरोधी किस्मों का उपयोग करें'
+            'à¤¨à¤¿à¤¯à¤®à¤¿à¤¤ à¤¨à¤¿à¤—à¤°à¤¾à¤¨à¥€ à¤•à¤°à¥‡à¤‚',
+            'à¤ªà¥à¤°à¤¤à¤¿à¤°à¥‹à¤§à¥€ à¤•à¤¿à¤¸à¥à¤®à¥‹à¤‚ à¤•à¤¾ à¤‰à¤ªà¤¯à¥‹à¤— à¤•à¤°à¥‡à¤‚'
           ],
-          economic_impact: `संभावित नुकसान: ${primaryDisease.economicImpact.yieldLoss}% उत्पादन कमी | इलाज की लागत: ₹${primaryDisease.economicImpact.treatmentCost}`,
+          economic_impact: `à¤¸à¤‚à¤­à¤¾à¤µà¤¿à¤¤ à¤¨à¥à¤•à¤¸à¤¾à¤¨: ${primaryDisease.economicImpact.yieldLoss}% à¤‰à¤¤à¥à¤ªà¤¾à¤¦à¤¨ à¤•à¤®à¥€ | à¤‡à¤²à¤¾à¤œ à¤•à¥€ à¤²à¤¾à¤—à¤¤: â‚¹${primaryDisease.economicImpact.treatmentCost}`,
           healthScore: healthAnalysis.overallHealth,
           recommendations: healthAnalysis.recommendations,
           urgentActions: healthAnalysis.urgentActions,
@@ -145,13 +145,13 @@ const DiseaseDetection: React.FC = () => {
       } else {
         // Healthy crop detected
         setDiseaseResult({
-          name: 'स्वस्थ फसल (Healthy Crop)',
+          name: 'à¤¸à¥à¤µà¤¸à¥à¤¥ à¤«à¤¸à¤² (Healthy Crop)',
           severity: 'None',
           confidence: healthAnalysis.overallHealth / 100,
-          symptoms: ['कोई बीमारी के लक्षण नहीं मिले'],
-          treatments: ['कोई इलाज की जरूरत नहीं'],
+          symptoms: ['à¤•à¥‹à¤ˆ à¤¬à¥€à¤®à¤¾à¤°à¥€ à¤•à¥‡ à¤²à¤•à¥à¤·à¤£ à¤¨à¤¹à¥€à¤‚ à¤®à¤¿à¤²à¥‡'],
+          treatments: ['à¤•à¥‹à¤ˆ à¤‡à¤²à¤¾à¤œ à¤•à¥€ à¤œà¤°à¥‚à¤°à¤¤ à¤¨à¤¹à¥€à¤‚'],
           prevention: healthAnalysis.recommendations,
-          economic_impact: 'कोई आर्थिक नुकसान नहीं',
+          economic_impact: 'à¤•à¥‹à¤ˆ à¤†à¤°à¥à¤¥à¤¿à¤• à¤¨à¥à¤•à¤¸à¤¾à¤¨ à¤¨à¤¹à¥€à¤‚',
           healthScore: healthAnalysis.overallHealth,
           imageQuality: healthAnalysis.imageMetadata.quality
         });
@@ -164,13 +164,13 @@ const DiseaseDetection: React.FC = () => {
       
       // Enhanced fallback response
       setDiseaseResult({
-        name: 'विश्लेषण असफल (Analysis Failed)',
+        name: 'à¤µà¤¿à¤¶à¥à¤²à¥‡à¤·à¤£ à¤…à¤¸à¤«à¤² (Analysis Failed)',
         severity: 'Unknown',
         confidence: 0.5,
-        symptoms: ['इमेज की गुणवत्ता बेहतर करके फिर कोशिश करें'],
-        treatments: ['अच्छी रोशनी में फोटो लें', 'पत्तियों को पास से दिखाएं'],
-        prevention: ['नियमित मानिटरिंग करें'],
-        economic_impact: 'विश्लेषण असफल'
+        symptoms: ['à¤‡à¤®à¥‡à¤œ à¤•à¥€ à¤—à¥à¤£à¤µà¤¤à¥à¤¤à¤¾ à¤¬à¥‡à¤¹à¤¤à¤° à¤•à¤°à¤•à¥‡ à¤«à¤¿à¤° à¤•à¥‹à¤¶à¤¿à¤¶ à¤•à¤°à¥‡à¤‚'],
+        treatments: ['à¤…à¤šà¥à¤›à¥€ à¤°à¥‹à¤¶à¤¨à¥€ à¤®à¥‡à¤‚ à¤«à¥‹à¤Ÿà¥‹ à¤²à¥‡à¤‚', 'à¤ªà¤¤à¥à¤¤à¤¿à¤¯à¥‹à¤‚ à¤•à¥‹ à¤ªà¤¾à¤¸ à¤¸à¥‡ à¤¦à¤¿à¤–à¤¾à¤à¤‚'],
+        prevention: ['à¤¨à¤¿à¤¯à¤®à¤¿à¤¤ à¤®à¤¾à¤¨à¤¿à¤Ÿà¤°à¤¿à¤‚à¤— à¤•à¤°à¥‡à¤‚'],
+        economic_impact: 'à¤µà¤¿à¤¶à¥à¤²à¥‡à¤·à¤£ à¤…à¤¸à¤«à¤²'
       });
       setOpenDialog(true);
     } finally {
@@ -179,18 +179,18 @@ const DiseaseDetection: React.FC = () => {
   };
 
   const quickDiseaseChecks = [
-    { disease: 'Wheat Rust', crops: ['Wheat', 'Barley'], icon: '🌾', severity: 'High' },
-    { disease: 'Powdery Mildew', crops: ['Rice', 'Wheat'], icon: '🍃', severity: 'Medium' },
-    { disease: 'Blight', crops: ['Tomato', 'Potato'], icon: '🍅', severity: 'High' },
-    { disease: 'Mosaic Virus', crops: ['Cucumber', 'Pepper'], icon: '🥒', severity: 'Medium' },
+    { disease: 'Wheat Rust', crops: ['Wheat', 'Barley'], icon: 'ðŸŒ¾', severity: 'High' },
+    { disease: 'Powdery Mildew', crops: ['Rice', 'Wheat'], icon: 'ðŸƒ', severity: 'Medium' },
+    { disease: 'Blight', crops: ['Tomato', 'Potato'], icon: 'ðŸ…', severity: 'High' },
+    { disease: 'Mosaic Virus', crops: ['Cucumber', 'Pepper'], icon: 'ðŸ¥’', severity: 'Medium' },
   ];
 
   const cropOptions = [
-    { value: 'wheat', label: 'Wheat (गेहूं)' },
-    { value: 'rice', label: 'Rice (चावल)' },
-    { value: 'tomato', label: 'Tomato (टमाटर)' },
-    { value: 'potato', label: 'Potato (आलू)' },
-    { value: 'sugarcane', label: 'Sugarcane (गन्ना)' },
+    { value: 'wheat', label: 'Wheat (à¤—à¥‡à¤¹à¥‚à¤‚)' },
+    { value: 'rice', label: 'Rice (à¤šà¤¾à¤µà¤²)' },
+    { value: 'tomato', label: 'Tomato (à¤Ÿà¤®à¤¾à¤Ÿà¤°)' },
+    { value: 'potato', label: 'Potato (à¤†à¤²à¥‚)' },
+    { value: 'sugarcane', label: 'Sugarcane (à¤—à¤¨à¥à¤¨à¤¾)' },
   ];
 
   const getSeverityColor = (severity: string) => {
@@ -223,10 +223,10 @@ const DiseaseDetection: React.FC = () => {
         >
           <BugReport sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            🔍 {t('diseaseDetection.title', 'Disease Detection')}
+            ðŸ” {t('diseaseDetection.title', 'Disease Detection')}
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
-            {t('diseaseDetection.subtitle', 'फसल की बीमारी की पहचान करें और तुरंत इलाज पाएं')}
+            {t('diseaseDetection.subtitle', 'à¤«à¤¸à¤² à¤•à¥€ à¤¬à¥€à¤®à¤¾à¤°à¥€ à¤•à¥€ à¤ªà¤¹à¤šà¤¾à¤¨ à¤•à¤°à¥‡à¤‚ à¤”à¤° à¤¤à¥à¤°à¤‚à¤¤ à¤‡à¤²à¤¾à¤œ à¤ªà¤¾à¤à¤‚')}
           </Typography>
         </Paper>
       </motion.div>
@@ -242,14 +242,14 @@ const DiseaseDetection: React.FC = () => {
             <Card elevation={3} sx={{ borderRadius: 3, height: '100%' }}>
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                  📸 Leaf Photo (फसल की पत्ती की फोटो)
+                  ðŸ“¸ Leaf Photo (à¤«à¤¸à¤² à¤•à¥€ à¤ªà¤¤à¥à¤¤à¥€ à¤•à¥€ à¤«à¥‹à¤Ÿà¥‹)
                 </Typography>
 
                 {/* Friendly steps */}
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                  <Chip label="1️⃣ फसल चुनें / Choose crop" color="default" variant="outlined" />
-                  <Chip label="2️⃣ फोटो लें / Take photo" color="default" variant="outlined" />
-                  <Chip label="3️⃣ निदान / Analyze" color="default" variant="outlined" />
+                  <Chip label="1ï¸âƒ£ à¤«à¤¸à¤² à¤šà¥à¤¨à¥‡à¤‚ / Choose crop" color="default" variant="outlined" />
+                  <Chip label="2ï¸âƒ£ à¤«à¥‹à¤Ÿà¥‹ à¤²à¥‡à¤‚ / Take photo" color="default" variant="outlined" />
+                  <Chip label="3ï¸âƒ£ à¤¨à¤¿à¤¦à¤¾à¤¨ / Analyze" color="default" variant="outlined" />
                 </Box>
                 
                 {/* Crop and Location Selection */}
@@ -322,7 +322,7 @@ const DiseaseDetection: React.FC = () => {
                             size="large"
                             sx={{ borderRadius: 3, minWidth: 220 }}
                           >
-                            कैमरा से फोटो लें
+                            à¤•à¥ˆà¤®à¤°à¤¾ à¤¸à¥‡ à¤«à¥‹à¤Ÿà¥‹ à¤²à¥‡à¤‚
                           </Button>
                         </label>
                         <label htmlFor="image-upload">
@@ -333,12 +333,12 @@ const DiseaseDetection: React.FC = () => {
                             size="large"
                             sx={{ borderRadius: 3, minWidth: 220 }}
                           >
-                            गैलरी से चुनें
+                            à¤—à¥ˆà¤²à¤°à¥€ à¤¸à¥‡ à¤šà¥à¤¨à¥‡à¤‚
                           </Button>
                         </label>
                       </Box>
                       <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                        या फोटो यहाँ ड्रैग और ड्रॉप करें • Or, drag & drop here
+                        à¤¯à¤¾ à¤«à¥‹à¤Ÿà¥‹ à¤¯à¤¹à¤¾à¤ à¤¡à¥à¤°à¥ˆà¤— à¤”à¤° à¤¡à¥à¤°à¥‰à¤ª à¤•à¤°à¥‡à¤‚ â€¢ Or, drag & drop here
                       </Typography>
                     </>
                   )}
@@ -387,7 +387,7 @@ const DiseaseDetection: React.FC = () => {
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Chip label="JPG/PNG • up to ~10MB" size="small" sx={{ opacity: 0.7 }} />
+                  <Chip label="JPG/PNG â€¢ up to ~10MB" size="small" sx={{ opacity: 0.7 }} />
                   <Button
                     variant="contained"
                     color="secondary"
@@ -397,7 +397,7 @@ const DiseaseDetection: React.FC = () => {
                     sx={{ borderRadius: 3, background: 'linear-gradient(45deg, #ef5350, #ff7043)', px: 4 }}
                     fullWidth
                   >
-                    {loading ? 'जांच हो रही है...' : 'Analyze Now / अभी जाँच करें'}
+                    {loading ? 'à¤œà¤¾à¤‚à¤š à¤¹à¥‹ à¤°à¤¹à¥€ à¤¹à¥ˆ...' : 'Analyze Now / à¤…à¤­à¥€ à¤œà¤¾à¤à¤š à¤•à¤°à¥‡à¤‚'}
                   </Button>
                 </Box>
               </CardContent>
@@ -414,7 +414,7 @@ const DiseaseDetection: React.FC = () => {
             <Card elevation={3} sx={{ borderRadius: 3, height: '100%' }}>
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
-                  🚨 Common Diseases
+                  ðŸš¨ Common Diseases
                 </Typography>
                 
                 <List>
@@ -546,7 +546,7 @@ const DiseaseDetection: React.FC = () => {
                 <Grid item xs={12}>
                   <Alert severity="info" sx={{ borderRadius: 2 }}>
                     <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                      💰 Economic Impact
+                      ðŸ’° Economic Impact
                     </Typography>
                     <Typography variant="body2">
                       {diseaseResult.economic_impact}

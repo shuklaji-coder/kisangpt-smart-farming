@@ -93,7 +93,7 @@ interface ProcessingState {
 }
 
 const EnhancedCropRecommendation: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = (useTranslation as any)();
   const theme = useTheme();
   
   const [recommendations, setRecommendations] = useState<EnhancedCropRecommendation[]>([]);
@@ -112,7 +112,7 @@ const EnhancedCropRecommendation: React.FC = () => {
   }, []);
 
   const initializeEnhancedRecommendations = async () => {
-    console.log('🚀 Initializing enhanced crop recommendations with satellite data...');
+    console.log('ðŸš€ Initializing enhanced crop recommendations with satellite data...');
     setError(null);
     
     try {
@@ -120,18 +120,18 @@ const EnhancedCropRecommendation: React.FC = () => {
       setProcessing({
         stage: 'Location',
         progress: 10,
-        message: '📍 Getting precise location for satellite analysis...'
+        message: 'ðŸ“ Getting precise location for satellite analysis...'
       });
       
       const location = await locationService.getCurrentLocation();
       setLocationData(location);
-      console.log('✅ Location obtained:', locationService.formatLocationDisplay(location));
+      console.log('âœ… Location obtained:', locationService.formatLocationDisplay(location));
       
       // Step 2: Fetch comprehensive satellite analysis
       setProcessing({
         stage: 'Satellite Data',
         progress: 30,
-        message: '🛰️ Analyzing satellite data (NDVI, soil properties, weather)...'
+        message: 'ðŸ›°ï¸ Analyzing satellite data (NDVI, soil properties, weather)...'
       });
       
       const satellite = await enhancedSatelliteService.getEnhancedSatelliteAnalysis({
@@ -139,13 +139,13 @@ const EnhancedCropRecommendation: React.FC = () => {
         longitude: location.longitude
       });
       setSatelliteAnalysis(satellite);
-      console.log('✅ Satellite analysis completed');
+      console.log('âœ… Satellite analysis completed');
       
       // Step 3: Generate AI-powered recommendations
       setProcessing({
         stage: 'AI Analysis',
         progress: 60,
-        message: '🤖 Generating intelligent crop recommendations...'
+        message: 'ðŸ¤– Generating intelligent crop recommendations...'
       });
       
       const enhancedRecs = await generateEnhancedRecommendations(location, satellite);
@@ -155,13 +155,13 @@ const EnhancedCropRecommendation: React.FC = () => {
       setProcessing({
         stage: 'Complete',
         progress: 100,
-        message: '✅ Enhanced recommendations ready!'
+        message: 'âœ… Enhanced recommendations ready!'
       });
       
       setTimeout(() => setLoading(false), 1000);
       
     } catch (error) {
-      console.error('❌ Error in enhanced recommendations:', error);
+      console.error('âŒ Error in enhanced recommendations:', error);
       setError('Failed to generate enhanced recommendations. Using fallback data.');
       
       // Generate fallback recommendations
@@ -172,14 +172,14 @@ const EnhancedCropRecommendation: React.FC = () => {
   };
 
   const mapHindi = (name: string) => ({
-    'Wheat': 'गेहूं', 'Rice': 'धान', 'Maize': 'मक्का', 'Mustard': 'सरसों', 'Cotton': 'कपास', 'Sugarcane': 'गन्ना'
+    'Wheat': 'à¤—à¥‡à¤¹à¥‚à¤‚', 'Rice': 'à¤§à¤¾à¤¨', 'Maize': 'à¤®à¤•à¥à¤•à¤¾', 'Mustard': 'à¤¸à¤°à¤¸à¥‹à¤‚', 'Cotton': 'à¤•à¤ªà¤¾à¤¸', 'Sugarcane': 'à¤—à¤¨à¥à¤¨à¤¾'
   }[name] || name);
 
   const generateEnhancedRecommendations = async (
     location: LocationData,
     satellite: SatelliteAnalysis
   ): Promise<EnhancedCropRecommendation[]> => {
-    console.log('🌾 Generating location-specific recommendations...');
+    console.log('ðŸŒ¾ Generating location-specific recommendations...');
 
     // 1) Try backend advanced recommender first (district + pH + NDVI + weather fusion)
     try {
@@ -202,14 +202,14 @@ const EnhancedCropRecommendation: React.FC = () => {
             name: en,
             hindiName: hi,
             suitabilityScore: Math.round((r.success_probability || 0.6) * 100),
-            expectedYield: `${yieldQ} क्विंटल/हेक्टेयर`,
-            marketPrice: '—',
+            expectedYield: `${yieldQ} à¤•à¥à¤µà¤¿à¤‚à¤Ÿà¤²/à¤¹à¥‡à¤•à¥à¤Ÿà¥‡à¤¯à¤°`,
+            marketPrice: 'â€”',
             profitPotential: Math.round(40000 + (sust * 500)),
-            growthDuration: '—',
+            growthDuration: 'â€”',
             waterRequirement: water,
             riskLevel: water === 'high' ? 'high' : water === 'low' ? 'low' as const : 'medium' as const,
             season: (res.data?.context?.season || getCurrentSeason()),
-            plantingTime: 'मौसम के अनुसार',
+            plantingTime: 'à¤®à¥Œà¤¸à¤® à¤•à¥‡ à¤…à¤¨à¥à¤¸à¤¾à¤°',
             benefits: r.recommended_practices || [],
             requirements: [
               `pH: ${(res.data?.context?.ph ?? satellite.soilData.ph).toFixed ? (res.data?.context?.ph ?? satellite.soilData.ph).toFixed(1) : (res.data?.context?.ph ?? satellite.soilData.ph)}`,
@@ -244,8 +244,8 @@ const EnhancedCropRecommendation: React.FC = () => {
         name: crop.name,
         hindiName: crop.hindiName,
         suitabilityScore: calculateSuitability(cropName, satellite),
-        expectedYield: `${crop.expectedYield} क्विंटल/हेक्टेयर`,
-        marketPrice: `₹${crop.marketPrice}/क्विंटल`,
+        expectedYield: `${crop.expectedYield} à¤•à¥à¤µà¤¿à¤‚à¤Ÿà¤²/à¤¹à¥‡à¤•à¥à¤Ÿà¥‡à¤¯à¤°`,
+        marketPrice: `â‚¹${crop.marketPrice}/à¤•à¥à¤µà¤¿à¤‚à¤Ÿà¤²`,
         profitPotential: crop.profitPotential,
         growthDuration: crop.growthDuration,
         waterRequirement: crop.waterRequirement,
@@ -275,65 +275,65 @@ const EnhancedCropRecommendation: React.FC = () => {
     const cropDatabase: any = {
       'Wheat': {
         name: 'Wheat',
-        hindiName: 'गेहूं',
+        hindiName: 'à¤—à¥‡à¤¹à¥‚à¤‚',
         expectedYield: 40 + Math.round(satellite.ndviData.ndvi * 20),
         marketPrice: 2150 + Math.round(Math.random() * 200),
         profitPotential: 45000 + Math.round(satellite.analysis.soilFertilityIndex * 300),
-        growthDuration: '120-140 दिन',
-        waterRequirement: satellite.analysis.waterStressLevel === 'low' ? 'कम' : 'मध्यम',
+        growthDuration: '120-140 à¤¦à¤¿à¤¨',
+        waterRequirement: satellite.analysis.waterStressLevel === 'low' ? 'à¤•à¤®' : 'à¤®à¤§à¥à¤¯à¤®',
         riskLevel: 'low' as const,
-        plantingTime: 'नवंबर-दिसंबर',
+        plantingTime: 'à¤¨à¤µà¤‚à¤¬à¤°-à¤¦à¤¿à¤¸à¤‚à¤¬à¤°',
         benefits: [
-          'स्थिर बाजार मूल्य',
-          'न्यूनतम समर्थन मूल्य की गारंटी',
-          'अच्छी भंडारण क्षमता'
+          'à¤¸à¥à¤¥à¤¿à¤° à¤¬à¤¾à¤œà¤¾à¤° à¤®à¥‚à¤²à¥à¤¯',
+          'à¤¨à¥à¤¯à¥‚à¤¨à¤¤à¤® à¤¸à¤®à¤°à¥à¤¥à¤¨ à¤®à¥‚à¤²à¥à¤¯ à¤•à¥€ à¤—à¤¾à¤°à¤‚à¤Ÿà¥€',
+          'à¤…à¤šà¥à¤›à¥€ à¤­à¤‚à¤¡à¤¾à¤°à¤£ à¤•à¥à¤·à¤®à¤¤à¤¾'
         ],
         requirements: [
-          `pH: ${satellite.soilData.ph.toFixed(1)} (आदर्श: 6.0-7.5)`,
-          `नाइट्रोजन: ${(satellite.soilData.nitrogen * 100).toFixed(1)}%`,
-          'समय पर सिंचाई आवश्यक'
+          `pH: ${satellite.soilData.ph.toFixed(1)} (à¤†à¤¦à¤°à¥à¤¶: 6.0-7.5)`,
+          `à¤¨à¤¾à¤‡à¤Ÿà¥à¤°à¥‹à¤œà¤¨: ${(satellite.soilData.nitrogen * 100).toFixed(1)}%`,
+          'à¤¸à¤®à¤¯ à¤ªà¤° à¤¸à¤¿à¤‚à¤šà¤¾à¤ˆ à¤†à¤µà¤¶à¥à¤¯à¤•'
         ]
       },
       'Rice': {
         name: 'Rice',
-        hindiName: 'धान',
+        hindiName: 'à¤§à¤¾à¤¨',
         expectedYield: 50 + Math.round(satellite.ndviData.ndvi * 25),
         marketPrice: 2800 + Math.round(Math.random() * 300),
         profitPotential: 60000 + Math.round(satellite.analysis.soilFertilityIndex * 400),
-        growthDuration: '115-125 दिन',
-        waterRequirement: 'अधिक',
+        growthDuration: '115-125 à¤¦à¤¿à¤¨',
+        waterRequirement: 'à¤…à¤§à¤¿à¤•',
         riskLevel: satellite.analysis.waterStressLevel === 'high' ? 'high' as const : 'medium' as const,
-        plantingTime: 'जून-जुलाई',
+        plantingTime: 'à¤œà¥‚à¤¨-à¤œà¥à¤²à¤¾à¤ˆ',
         benefits: [
-          'उच्च उत्पादकता',
-          'निर्यात की संभावना',
-          'मुख्य भोजन फसल'
+          'à¤‰à¤šà¥à¤š à¤‰à¤¤à¥à¤ªà¤¾à¤¦à¤•à¤¤à¤¾',
+          'à¤¨à¤¿à¤°à¥à¤¯à¤¾à¤¤ à¤•à¥€ à¤¸à¤‚à¤­à¤¾à¤µà¤¨à¤¾',
+          'à¤®à¥à¤–à¥à¤¯ à¤­à¥‹à¤œà¤¨ à¤«à¤¸à¤²'
         ],
         requirements: [
-          'पर्याप्त पानी की आवश्यकता',
-          `फॉस्फोरस: ${satellite.soilData.phosphorus.toFixed(0)} ppm`,
-          'उर्वर मिट्टी चाहिए'
+          'à¤ªà¤°à¥à¤¯à¤¾à¤ªà¥à¤¤ à¤ªà¤¾à¤¨à¥€ à¤•à¥€ à¤†à¤µà¤¶à¥à¤¯à¤•à¤¤à¤¾',
+          `à¤«à¥‰à¤¸à¥à¤«à¥‹à¤°à¤¸: ${satellite.soilData.phosphorus.toFixed(0)} ppm`,
+          'à¤‰à¤°à¥à¤µà¤° à¤®à¤¿à¤Ÿà¥à¤Ÿà¥€ à¤šà¤¾à¤¹à¤¿à¤'
         ]
       },
       'Cotton': {
         name: 'Cotton',
-        hindiName: 'कपास',
+        hindiName: 'à¤•à¤ªà¤¾à¤¸',
         expectedYield: 15 + Math.round(satellite.ndviData.ndvi * 10),
         marketPrice: 6200 + Math.round(Math.random() * 500),
         profitPotential: 80000 + Math.round(satellite.analysis.soilFertilityIndex * 500),
-        growthDuration: '180-200 दिन',
-        waterRequirement: 'मध्यम से अधिक',
+        growthDuration: '180-200 à¤¦à¤¿à¤¨',
+        waterRequirement: 'à¤®à¤§à¥à¤¯à¤® à¤¸à¥‡ à¤…à¤§à¤¿à¤•',
         riskLevel: 'medium' as const,
-        plantingTime: 'अप्रैल-मई',
+        plantingTime: 'à¤…à¤ªà¥à¤°à¥ˆà¤²-à¤®à¤ˆ',
         benefits: [
-          'उच्च मार्जिन',
-          'निर्यात मूल्य',
-          'औद्योगिक मांग'
+          'à¤‰à¤šà¥à¤š à¤®à¤¾à¤°à¥à¤œà¤¿à¤¨',
+          'à¤¨à¤¿à¤°à¥à¤¯à¤¾à¤¤ à¤®à¥‚à¤²à¥à¤¯',
+          'à¤”à¤¦à¥à¤¯à¥‹à¤—à¤¿à¤• à¤®à¤¾à¤‚à¤—'
         ],
         requirements: [
-          'काली मिट्टी उत्तम',
-          'कीट प्रबंधन आवश्यक',
-          'गर्म जलवायु'
+          'à¤•à¤¾à¤²à¥€ à¤®à¤¿à¤Ÿà¥à¤Ÿà¥€ à¤‰à¤¤à¥à¤¤à¤®',
+          'à¤•à¥€à¤Ÿ à¤ªà¥à¤°à¤¬à¤‚à¤§à¤¨ à¤†à¤µà¤¶à¥à¤¯à¤•',
+          'à¤—à¤°à¥à¤® à¤œà¤²à¤µà¤¾à¤¯à¥'
         ]
       }
     };
@@ -367,18 +367,18 @@ const EnhancedCropRecommendation: React.FC = () => {
     return fallbackCrops.map((cropName, index) => ({
       id: index + 1,
       name: cropName,
-      hindiName: cropName === 'Wheat' ? 'गेहूं' : cropName === 'Rice' ? 'धान' : 'कपास',
+      hindiName: cropName === 'Wheat' ? 'à¤—à¥‡à¤¹à¥‚à¤‚' : cropName === 'Rice' ? 'à¤§à¤¾à¤¨' : 'à¤•à¤ªà¤¾à¤¸',
       suitabilityScore: 75 - (index * 5),
-      expectedYield: '35-45 क्विंटल/हेक्टेयर',
-      marketPrice: '₹2000-2500/क्विंटल',
+      expectedYield: '35-45 à¤•à¥à¤µà¤¿à¤‚à¤Ÿà¤²/à¤¹à¥‡à¤•à¥à¤Ÿà¥‡à¤¯à¤°',
+      marketPrice: 'â‚¹2000-2500/à¤•à¥à¤µà¤¿à¤‚à¤Ÿà¤²',
       profitPotential: 50000,
-      growthDuration: '120-140 दिन',
-      waterRequirement: 'मध्यम',
+      growthDuration: '120-140 à¤¦à¤¿à¤¨',
+      waterRequirement: 'à¤®à¤§à¥à¤¯à¤®',
       riskLevel: 'medium' as const,
       season: getCurrentSeason(),
-      plantingTime: 'मौसम के अनुसार',
-      benefits: ['स्थिर आय', 'अच्छी मांग'],
-      requirements: ['उचित सिंचाई', 'समय पर बुआई'],
+      plantingTime: 'à¤®à¥Œà¤¸à¤® à¤•à¥‡ à¤…à¤¨à¥à¤¸à¤¾à¤°',
+      benefits: ['à¤¸à¥à¤¥à¤¿à¤° à¤†à¤¯', 'à¤…à¤šà¥à¤›à¥€ à¤®à¤¾à¤‚à¤—'],
+      requirements: ['à¤‰à¤šà¤¿à¤¤ à¤¸à¤¿à¤‚à¤šà¤¾à¤ˆ', 'à¤¸à¤®à¤¯ à¤ªà¤° à¤¬à¥à¤†à¤ˆ'],
       satelliteInsights: {
         ndviScore: 65,
         soilHealth: 70,
@@ -396,9 +396,9 @@ const EnhancedCropRecommendation: React.FC = () => {
 
   const getCurrentSeason = (): string => {
     const month = new Date().getMonth() + 1;
-    if (month >= 11 || month <= 3) return 'रबी';
-    if (month >= 4 && month <= 6) return 'जायद';
-    return 'खरीफ';
+    if (month >= 11 || month <= 3) return 'à¤°à¤¬à¥€';
+    if (month >= 4 && month <= 6) return 'à¤œà¤¾à¤¯à¤¦';
+    return 'à¤–à¤°à¥€à¤«';
   };
 
   const getRiskColor = (risk: string) => {
@@ -437,10 +437,10 @@ const EnhancedCropRecommendation: React.FC = () => {
           >
             <Satellite sx={{ fontSize: 48, mb: 2 }} />
             <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-              🛰️ AI-Powered Crop Analysis
+              ðŸ›°ï¸ AI-Powered Crop Analysis
             </Typography>
             <Typography variant="h6" sx={{ opacity: 0.9 }}>
-              उन्नत उपग्रह डेटा के साथ फसल की सिफारिश
+              à¤‰à¤¨à¥à¤¨à¤¤ à¤‰à¤ªà¤—à¥à¤°à¤¹ à¤¡à¥‡à¤Ÿà¤¾ à¤•à¥‡ à¤¸à¤¾à¤¥ à¤«à¤¸à¤² à¤•à¥€ à¤¸à¤¿à¤«à¤¾à¤°à¤¿à¤¶
             </Typography>
           </Paper>
         </motion.div>
@@ -482,7 +482,7 @@ const EnhancedCropRecommendation: React.FC = () => {
 
                 <Box sx={{ mt: 3 }}>
                   <Typography variant="body2" color="text.secondary">
-                    🔄 Processing: {processing.progress}% complete
+                    ðŸ”„ Processing: {processing.progress}% complete
                   </Typography>
                 </Box>
               </CardContent>
@@ -496,7 +496,7 @@ const EnhancedCropRecommendation: React.FC = () => {
             <Grid item xs={12}>
               <Alert severity="success" sx={{ borderRadius: 2 }}>
                 <Typography variant="body1">
-                  📍 <strong>Location:</strong> {locationService.formatLocationDisplay(locationData)}
+                  ðŸ“ <strong>Location:</strong> {locationService.formatLocationDisplay(locationData)}
                 </Typography>
               </Alert>
             </Grid>
@@ -527,15 +527,15 @@ const EnhancedCropRecommendation: React.FC = () => {
         >
           <LocalFlorist sx={{ fontSize: 40, mb: 2 }} />
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-            🌾 AI-Enhanced Crop Recommendations
+            ðŸŒ¾ AI-Enhanced Crop Recommendations
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.9 }}>
-            उपग्रह डेटा और AI के साथ व्यक्तिगत फसल सुझाव
+            à¤‰à¤ªà¤—à¥à¤°à¤¹ à¤¡à¥‡à¤Ÿà¤¾ à¤”à¤° AI à¤•à¥‡ à¤¸à¤¾à¤¥ à¤µà¥à¤¯à¤•à¥à¤¤à¤¿à¤—à¤¤ à¤«à¤¸à¤² à¤¸à¥à¤à¤¾à¤µ
           </Typography>
           
           {locationData && (
             <Chip
-              label={`📍 ${locationService.formatLocationDisplay(locationData)}`}
+              label={`ðŸ“ ${locationService.formatLocationDisplay(locationData)}`}
               sx={{
                 mt: 2,
                 backgroundColor: 'rgba(255,255,255,0.2)',
@@ -562,7 +562,7 @@ const EnhancedCropRecommendation: React.FC = () => {
         >
           <Paper elevation={2} sx={{ p: 3, mb: 4, borderRadius: 3 }}>
             <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: theme.palette.primary.main }}>
-              🛰️ Satellite Analysis Summary
+              ðŸ›°ï¸ Satellite Analysis Summary
             </Typography>
             
             <Grid container spacing={2}>
@@ -666,7 +666,7 @@ const EnhancedCropRecommendation: React.FC = () => {
                   <Accordion sx={{ boxShadow: 'none', border: '1px solid rgba(0,0,0,0.1)' }}>
                     <AccordionSummary expandIcon={<ExpandMore />}>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        📊 Detailed Analysis
+                        ðŸ“Š Detailed Analysis
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -675,7 +675,7 @@ const EnhancedCropRecommendation: React.FC = () => {
                           <ListItemIcon><AttachMoney /></ListItemIcon>
                           <ListItemText 
                             primary="Profit Potential"
-                            secondary={`₹${rec.profitPotential.toLocaleString()}/hectare`}
+                            secondary={`â‚¹${rec.profitPotential.toLocaleString()}/hectare`}
                           />
                         </ListItem>
                         <ListItem>
@@ -697,7 +697,7 @@ const EnhancedCropRecommendation: React.FC = () => {
                       {/* Satellite Insights */}
                       <Divider sx={{ my: 2 }} />
                       <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        🛰️ Satellite Insights:
+                        ðŸ›°ï¸ Satellite Insights:
                       </Typography>
                       <List dense>
                         {rec.satelliteInsights.recommendations.slice(0, 3).map((insight, idx) => (

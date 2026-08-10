@@ -351,6 +351,7 @@ class CropRecommendationEngine {
         benefits,
         recommendations: generatedRecommendations,
         expectedProfit: Math.round(expectedProfit),
+        breakEvenPrice: Math.round(totalCost / predictedYield),
         breakEvenPoint: Math.round(totalCost / cropMarketData.currentPrice)
       };
 
