@@ -406,10 +406,10 @@ const FloatingChatbot: React.FC = () => {
                 sx={{
                   width: 60,
                   height: 60,
-                  background: 'linear-gradient(135deg, #4caf50 0%, #66bb6a 50%, #81c784 100%)',
-                  boxShadow: '0 8px 25px rgba(76, 175, 80, 0.4)',
+                  background: 'linear-gradient(135deg, #0d9488 0%, #34d399 50%, #6ee7b7 100%)',
+                  boxShadow: '0 8px 25px rgba(52, 211, 153, 0.4)',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #388e3c 0%, #4caf50 50%, #66bb6a 100%)',
+                    background: 'linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%)',
                     transform: 'scale(1.05)',
                   },
                   animation: unreadCount > 0 ? 'bounce 2s infinite' : 'none',
@@ -454,15 +454,15 @@ const FloatingChatbot: React.FC = () => {
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                background: '#ffffff',
-                border: '2px solid #4caf50',
+                background: '#101a15',
+                border: '2px solid #34d399',
               }}
             >
               {/* Chat Header */}
               <Box
                 sx={{
-                  background: 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)',
-                  color: 'white',
+                  background: 'linear-gradient(135deg, #0d9488 0%, #34d399 100%)',
+                  color: '#052e1b',
                   p: 2,
                   display: 'flex',
                   alignItems: 'center',
@@ -503,7 +503,7 @@ const FloatingChatbot: React.FC = () => {
 
               <Collapse in={!isMinimized}>
                 {/* Language Selector */}
-                <Box sx={{ p: 1, bgcolor: '#f5f5f5', borderBottom: '1px solid #e0e0e0' }}>
+                <Box sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                   <FormControl size="small" fullWidth>
                     <Select
                       value={selectedLanguage}
@@ -548,9 +548,9 @@ const FloatingChatbot: React.FC = () => {
                         }}
                       >
                         <ListItemAvatar sx={{ minWidth: 'auto', ml: message.sender === 'user' ? 0.5 : 0, mr: message.sender === 'user' ? 0 : 0.5 }}>
-                          <Avatar
+                            <Avatar
                             sx={{
-                              bgcolor: message.sender === 'user' ? '#2196f3' : '#4caf50',
+                              bgcolor: message.sender === 'user' ? '#2196f3' : '#34d399',
                               width: 30,
                               height: 30,
                               fontSize: '0.8rem',
@@ -564,7 +564,7 @@ const FloatingChatbot: React.FC = () => {
                           elevation={1}
                           sx={{
                             maxWidth: '75%',
-                            bgcolor: message.sender === 'user' ? '#e3f2fd' : '#f1f8e9',
+                            bgcolor: message.sender === 'user' ? '#1e3a5f' : '#14201a',
                             borderRadius: message.sender === 'user' ? '15px 15px 5px 15px' : '15px 15px 15px 5px',
                           }}
                         >
@@ -575,6 +575,7 @@ const FloatingChatbot: React.FC = () => {
                                 wordBreak: 'break-word',
                                 fontSize: '0.85rem',
                                 lineHeight: 1.4,
+                                color: '#e5f5ec',
                               }}
                             >
                               {message.text}
@@ -601,7 +602,7 @@ const FloatingChatbot: React.FC = () => {
                     {isLoading && (
                       <ListItem sx={{ px: 0 }}>
                         <ListItemAvatar sx={{ minWidth: 'auto', mr: 0.5 }}>
-                          <Avatar sx={{ bgcolor: '#4caf50', width: 30, height: 30 }}>
+                          <Avatar sx={{ bgcolor: '#34d399', width: 30, height: 30 }}>
                             <SmartToy />
                           </Avatar>
                         </ListItemAvatar>
@@ -618,7 +619,7 @@ const FloatingChatbot: React.FC = () => {
                 </Box>
 
                 {/* Input Area */}
-                <Box sx={{ p: 1, borderTop: '1px solid #e0e0e0', bgcolor: '#fafafa' }}>
+                <Box sx={{ p: 1, borderTop: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
                   <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'flex-end' }}>
                     <TextField
                       fullWidth
@@ -645,10 +646,10 @@ const FloatingChatbot: React.FC = () => {
                       disabled={isLoading}
                       size="small"
                       sx={{
-                        bgcolor: isListening ? '#f44336' : '#4caf50',
-                        color: 'white',
+                        bgcolor: isListening ? '#f87171' : '#34d399',
+                        color: '#052e1b',
                         '&:hover': {
-                          bgcolor: isListening ? '#d32f2f' : '#388e3c',
+                          bgcolor: isListening ? '#ef4444' : '#10b981',
                         },
                         animation: isListening ? 'pulse 1s infinite' : 'none',
                         '@keyframes pulse': {
@@ -692,7 +693,7 @@ const FloatingChatbot: React.FC = () => {
                           cursor: 'pointer',
                           fontSize: '0.7rem',
                           height: 24,
-                          '&:hover': { bgcolor: '#e8f5e8' },
+                          '&:hover': { bgcolor: 'rgba(52, 211, 153, 0.14)' },
                         }}
                       />
                     ))}

@@ -617,7 +617,7 @@ const GovernmentSubsidy: React.FC = () => {
                       <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
                         {scheme.name}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: '#8fa39a', mb: 1 }}>
                         {scheme.nameHindi}
                       </Typography>
                       <Chip

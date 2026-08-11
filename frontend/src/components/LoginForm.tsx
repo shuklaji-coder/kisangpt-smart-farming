@@ -257,14 +257,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
             width: '100%',
             mx: 'auto',
             borderRadius: '26px',
-            background: 'rgba(255, 255, 255, 0.92)',
+            background: 'rgba(16, 26, 21, 0.85)',
             backdropFilter: 'blur(24px) saturate(1.3)',
             WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
-            border: '1px solid rgba(255, 255, 255, 0.5)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
             boxShadow: `
-              0 24px 70px rgba(0, 0, 0, 0.35),
-              0 4px 20px rgba(27, 94, 32, 0.25),
-              inset 0 1px 0 rgba(255, 255, 255, 0.7)
+              0 24px 70px rgba(0, 0, 0, 0.55),
+              0 4px 20px rgba(52, 211, 153, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08)
             `,
             position: 'relative',
             '&::before': {
@@ -274,7 +274,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
               left: 0,
               right: 0,
               height: '5px',
-              background: 'linear-gradient(90deg, #4CAF50, #8BC34A, #4CAF50, #8BC34A)',
+              background: 'linear-gradient(90deg, #34d399, #4ade80, #34d399, #4ade80)',
               backgroundSize: '300% auto',
               borderRadius: '26px 26px 0 0',
               animation: 'gradientShift 5s ease infinite',
@@ -302,12 +302,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                   mb: 2,
                   width: 72,
                   height: 72,
-                  background: 'linear-gradient(135deg, #4CAF50, #8BC34A)',
-                  boxShadow: '0 12px 30px rgba(76, 175, 80, 0.45)',
-                  border: '2px solid rgba(255,255,255,0.6)',
-                }}
-              >
-                <Agriculture sx={{ fontSize: 36, color: 'white' }} />
+                background: 'linear-gradient(135deg, #34d399, #0d9488)',
+                boxShadow: '0 12px 30px rgba(52, 211, 153, 0.35)',
+                border: '2px solid rgba(255,255,255,0.25)',
+              }}
+            >
+                <Agriculture sx={{ fontSize: 36, color: '#052e1b' }} />
               </Avatar>
             </motion.div>
 
@@ -316,7 +316,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
               sx={{
                 fontWeight: 800,
                 fontFamily: "'Poppins', 'Noto Sans Devanagari', sans-serif",
-                background: 'linear-gradient(90deg, #2E7D32, #43A047, #4CAF50)',
+                background: 'linear-gradient(90deg, #6ee7b7, #34d399, #2dd4bf)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 color: 'transparent',
@@ -386,7 +386,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Email sx={{ color: '#4CAF50' }} />
+                      <Email sx={{ color: '#34d399' }} />
                     </InputAdornment>
                   ),
                 }}
@@ -408,7 +408,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Lock sx={{ color: '#4CAF50' }} />
+                      <Lock sx={{ color: '#34d399' }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
@@ -437,7 +437,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                     <Checkbox
                       checked={formData.rememberMe}
                       onChange={handleInputChange('rememberMe')}
-                      sx={{ color: '#4CAF50' }}
+                      sx={{ color: '#34d399' }}
                     />
                   }
                   label={<Typography variant="body2">{t('auth.rememberMe')}</Typography>}
@@ -445,7 +445,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                 <Link
                   href="#"
                   variant="body2"
-                  sx={{ color: '#4CAF50', textDecoration: 'none', fontWeight: 600 }}
+                  sx={{ color: '#34d399', textDecoration: 'none', fontWeight: 600 }}
                 >
                   {t('auth.forgotPassword')}
                 </Link>
@@ -470,11 +470,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                   mb: 2,
                   borderRadius: '16px',
                   fontSize: '1rem',
-                  background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                  background: 'linear-gradient(135deg, #34d399, #0d9488)',
                   boxShadow: '0 12px 32px rgba(46, 125, 50, 0.4)',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #43a047, #1b5e20)',
-                    boxShadow: '0 16px 40px rgba(46, 125, 50, 0.5)',
+                    background: 'linear-gradient(135deg, #6ee7b7, #0d9488)',
+                    boxShadow: '0 16px 40px rgba(52, 211, 153, 0.45)',
                   },
                 }}
               >
@@ -483,7 +483,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
             </motion.div>
           </Box>
 
-          <Divider sx={{ my: 2, '&::before, &::after': { borderColor: '#e0e0e0' } }}>
+          <Divider sx={{ my: 2, '&::before, &::after': { borderColor: 'rgba(255,255,255,0.12)' } }}>
             <Typography variant="body2" color="text.secondary">
               या
             </Typography>
@@ -554,7 +554,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSignUp }) => {
                     onSignUp?.();
                   }}
                   sx={{
-                    color: '#4CAF50',
+                    color: '#34d399',
                     textDecoration: 'none',
                     fontWeight: 'bold',
                     '&:hover': {

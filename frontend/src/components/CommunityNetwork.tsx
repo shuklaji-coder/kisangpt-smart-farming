@@ -893,7 +893,7 @@ const CommunityNetwork: React.FC = () => {
                 </Box>
                 
                 {/* Chat Messages */}
-                <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2, p: 1, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+                <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2, p: 1, bgcolor: 'rgba(255,255,255,0.04)', borderRadius: 2 }}>
                   {/* Mock live messages */}
                   {[
                     { user: 'à¤°à¤¾à¤® à¤¸à¤¿à¤‚à¤¹', msg: 'à¤•à¤² à¤¬à¤¾à¤°à¤¿à¤¶ à¤•à¤¾ à¤…à¤¨à¥à¤®à¤¾à¤¨ à¤¹à¥ˆ, à¤•à¥à¤¯à¤¾ à¤§à¤¾à¤¨ à¤•à¥€ à¤¬à¥à¤†à¤ˆ à¤•à¤° à¤¸à¤•à¤¤à¥‡ à¤¹à¥ˆà¤‚?', time: '2 min ago', online: true },

@@ -901,17 +901,17 @@ const { t } = (useTranslation as any)();
                 <CardContent sx={{ p: 3.5, pb: "28px !important" }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
                     <Box sx={{ flex: 1, pr: 2 }}>
-                      <Typography variant="subtitle2" sx={{ color: '#475569', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', mb: 1 }}>
+                      <Typography variant="subtitle2" sx={{ color: '#a7b8ae', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', mb: 1 }}>
                         {stat.title}
                       </Typography>
                       <Typography
                         variant="h3"
                         sx={{
                           fontWeight: 800,
-                          color: '#022c22',
+                          color: '#ecfdf5',
                           whiteSpace: 'nowrap',
                           lineHeight: 1.1,
-                          textShadow: '0 2px 10px rgba(0,0,0,0.03)'
+                          textShadow: '0 2px 10px rgba(0,0,0,0.3)'
                         }}
                       >
                         {stat.value}
@@ -920,30 +920,30 @@ const { t } = (useTranslation as any)();
                     <div className="pulse-ring">
                       <Avatar
                         sx={{
-                          bgcolor: '#ffffff',
+                          bgcolor: 'rgba(255,255,255,0.08)',
                           color: stat.color,
                           width: 56,
                           height: 56,
-                          boxShadow: '0 8px 16px rgba(0,0,0,0.08)',
+                          boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
                         }}
                       >
                         {stat.icon}
                       </Avatar>
                     </div>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid rgba(15,23,42,0.06)' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                     <Chip
                       label={stat.change}
                       size="small"
                       sx={{
-                        bgcolor: `${stat.color}15`,
+                        bgcolor: `${stat.color}22`,
                         color: stat.color,
                         fontWeight: 700,
                         border: 'none',
                         px: 1,
                       }}
                     />
-                    <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 500 }}>
+                    <Typography variant="body2" sx={{ color: '#8fa39a', fontWeight: 500 }}>
                       {stat.description}
                     </Typography>
                   </Box>
@@ -966,11 +966,11 @@ const { t } = (useTranslation as any)();
             p: 4,
             mb: 4,
             borderRadius: 6,
-            background: 'linear-gradient(145deg, #fef7e0 0%, #fff8e1 30%, #f9fbe7 70%, #f3e5f5 100%)',
-            border: '2px solid rgba(255, 193, 7, 0.15)',
+            background: 'linear-gradient(145deg, #121a16 0%, #16211b 30%, #1a2018 70%, #1c1a24 100%)',
+            border: '2px solid rgba(251, 191, 36, 0.14)',
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 16px rgba(255,193,7,0.15)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 2px 16px rgba(251,191,36,0.08)',
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -978,8 +978,8 @@ const { t } = (useTranslation as any)();
               left: 0,
               right: 0,
               height: '6px',
-              background: 'linear-gradient(90deg, #ff6f00, #ff8f00, #ffb300, #ffc107)',
-              boxShadow: '0 2px 8px rgba(255,193,7,0.3)',
+              background: 'linear-gradient(90deg, #f59e0b, #fbbf24, #fcd34d, #fde68a)',
+              boxShadow: '0 2px 8px rgba(251,191,36,0.3)',
             },
             '&::after': {
               content: '""',
@@ -989,7 +989,7 @@ const { t } = (useTranslation as any)();
               width: '60px',
               height: '60px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(255,193,7,0.1) 0%, rgba(255,193,7,0.05) 50%, transparent 100%)',
+              background: 'radial-gradient(circle, rgba(251,191,36,0.12) 0%, rgba(251,191,36,0.05) 50%, transparent 100%)',
               pointerEvents: 'none',
             },
           }}
@@ -1065,18 +1065,18 @@ const { t } = (useTranslation as any)();
               >
                 {weatherLoading ? (
                   <Box sx={{ py: 3 }}>
-                    <Typography variant="h4" sx={{ color: '#757575', mb: 2 }}>...</Typography>
-                    <Typography variant="body2" sx={{ color: '#757575' }}>लोड हो रहा है</Typography>
+                    <Typography variant="h4" sx={{ color: '#a7b8ae', mb: 2 }}>...</Typography>
+                    <Typography variant="body2" sx={{ color: '#a7b8ae' }}>लोड हो रहा है</Typography>
                   </Box>
                 ) : (
                   <>
                     <Typography 
                       variant="h1" 
                       sx={{ 
-                        color: '#2e7d32', 
+                        color: '#4ade80', 
                         fontWeight: 900, 
                         mb: 1.5,
-                        textShadow: '0 2px 8px rgba(46, 125, 50, 0.2)',
+                        textShadow: '0 2px 8px rgba(74, 222, 128, 0.25)',
                         fontSize: { xs: '2.5rem', md: '3.5rem' }
                       }}
                     >
@@ -1085,7 +1085,7 @@ const { t } = (useTranslation as any)();
                     <Typography 
                       variant="h6" 
                       sx={{ 
-                        color: '#388e3c', 
+                        color: '#86efac', 
                         fontWeight: 600, 
                         mb: 1,
                         fontSize: '1.1rem'
@@ -1093,13 +1093,13 @@ const { t } = (useTranslation as any)();
                     >
                       ☀️ आज का तापमान
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#4caf50', opacity: 0.8, display: { xs: 'none', md: 'block' } }}>
+                    <Typography variant="body2" sx={{ color: '#4ade80', opacity: 0.8, display: { xs: 'none', md: 'block' } }}>
                       Your Location
                     </Typography>
                     {location && (
                       <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'center', mt: 1 }}>
-                        <Box sx={{ fontSize: '0.9rem', mr: 0.5, color: '#ff5722' }}>📍</Box>
-                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                        <Box sx={{ fontSize: '0.9rem', mr: 0.5, color: '#fb923c' }}>📍</Box>
+                        <Typography variant="body2" sx={{ color: '#a7b8ae', fontWeight: 500 }}>
                           {location.name}
                         </Typography>
                       </Box>
@@ -1127,10 +1127,10 @@ const { t } = (useTranslation as any)();
                 <Typography 
                   variant="h1" 
                   sx={{ 
-                    color: '#1565c0', 
+                    color: '#60a5fa', 
                     fontWeight: 900, 
                     mb: 1.5,
-                    textShadow: '0 2px 8px rgba(21, 101, 192, 0.2)',
+                    textShadow: '0 2px 8px rgba(96, 165, 250, 0.25)',
                     fontSize: { xs: '2.5rem', md: '3.5rem' }
                   }}
                 >
@@ -1139,7 +1139,7 @@ const { t } = (useTranslation as any)();
                 <Typography 
                   variant="h6" 
                   sx={{ 
-                    color: '#1976d2', 
+                    color: '#93c5fd', 
                     fontWeight: 600, 
                     mb: 1,
                     fontSize: '1.1rem'
@@ -1147,7 +1147,7 @@ const { t } = (useTranslation as any)();
                 >
                   💧 हवा में नमी
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#2196f3', opacity: 0.8, display: { xs: 'none', md: 'block' } }}>
+                <Typography variant="body2" sx={{ color: '#60a5fa', opacity: 0.8, display: { xs: 'none', md: 'block' } }}>
                   Humidity
                 </Typography>
               </Box>
@@ -1171,10 +1171,10 @@ const { t } = (useTranslation as any)();
                 <Typography 
                   variant="h2" 
                   sx={{ 
-                    color: '#c62828', 
+                    color: '#fca5a5', 
                     fontWeight: 800, 
                     mb: 1.5,
-                    textShadow: '0 2px 8px rgba(198, 40, 40, 0.2)',
+                    textShadow: '0 2px 8px rgba(248, 113, 113, 0.25)',
                     fontSize: { xs: '1.8rem', md: '2.2rem' },
                     textTransform: 'capitalize'
                   }}
@@ -1189,7 +1189,7 @@ const { t } = (useTranslation as any)();
                 <Typography 
                   variant="h6" 
                   sx={{ 
-                    color: '#d32f2f', 
+                    color: '#f87171', 
                     fontWeight: 600, 
                     mb: 1,
                     fontSize: '1.1rem'
@@ -1197,7 +1197,7 @@ const { t } = (useTranslation as any)();
                 >
                   🌤️ मौसम स्थिति
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#f44336', opacity: 0.8, textTransform: 'capitalize', display: { xs: 'none', md: 'block' } }}>
+                <Typography variant="body2" sx={{ color: '#f87171', opacity: 0.8, textTransform: 'capitalize', display: { xs: 'none', md: 'block' } }}>
                   {weatherData ? weatherData.weather[0].description : 'clear sky'}
                 </Typography>
               </Box>
@@ -1221,10 +1221,10 @@ const { t } = (useTranslation as any)();
                 <Typography 
                   variant="h1" 
                   sx={{ 
-                    color: '#6a1b9a', 
+                    color: '#c084fc', 
                     fontWeight: 900, 
                     mb: 1.5,
-                    textShadow: '0 2px 8px rgba(106, 27, 154, 0.2)',
+                    textShadow: '0 2px 8px rgba(192, 132, 252, 0.25)',
                     fontSize: { xs: '2.5rem', md: '3.5rem' }
                   }}
                 >
@@ -1233,7 +1233,7 @@ const { t } = (useTranslation as any)();
                 <Typography 
                   variant="h6" 
                   sx={{ 
-                    color: '#7b1fa2', 
+                    color: '#c084fc', 
                     fontWeight: 600, 
                     mb: 1,
                     fontSize: '1.1rem'
@@ -1241,7 +1241,7 @@ const { t } = (useTranslation as any)();
                 >
                   🌬️ हवा की गति
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#9c27b0', opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ color: '#a78bfa', opacity: 0.8 }}>
                   km/h
                 </Typography>
               </Box>
@@ -1325,8 +1325,8 @@ const { t } = (useTranslation as any)();
             p: 4,
             mb: 4,
             borderRadius: 4,
-            background: 'linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 50%, #e0f2f0 100%)',
-            border: '2px solid rgba(76, 175, 80, 0.2)',
+            background: 'linear-gradient(135deg, #101a13 0%, #14201a 50%, #0f1a18 100%)',
+            border: '2px solid rgba(74, 222, 128, 0.16)',
             position: 'relative',
             overflow: 'hidden',
             '&::before': {
@@ -1336,17 +1336,17 @@ const { t } = (useTranslation as any)();
               left: 0,
               right: 0,
               height: '4px',
-              background: 'linear-gradient(90deg, #4caf50, #81c784, #a5d6a7)',
+              background: 'linear-gradient(90deg, #4ade80, #86efac, #a7f3d0)',
             },
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#2e7d32', mb: 3, display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4ade80', mb: 3, display: 'flex', alignItems: 'center' }}>
             🤖 AI सुझाव • AI Insights
           </Typography>
           
           {loading ? (
             <Box sx={{ textAlign: 'center', py: 3 }}>
-              <Typography variant="body1" sx={{ color: '#4caf50', mb: 2 }}>
+              <Typography variant="body1" sx={{ color: '#4ade80', mb: 2 }}>
                 AI विश्लेषण हो रहा है... कृपया प्रतीक्षा करें
               </Typography>
               {[0, 1, 2].map((index) => (
@@ -1375,12 +1375,13 @@ const { t } = (useTranslation as any)();
                     <Alert 
                       severity="info" 
                       sx={{ 
-                        background: 'rgba(255, 255, 255, 0.8)',
-                        border: '1px solid rgba(76, 175, 80, 0.3)',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(74, 222, 128, 0.25)',
                         borderRadius: 2,
                         '& .MuiAlert-icon': {
-                          color: '#4caf50'
-                        }
+                          color: '#4ade80'
+                        },
+                        '& .MuiAlert-message': { color: '#d9e5de' }
                       }}
                     >
                       <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
@@ -1396,7 +1397,7 @@ const { t } = (useTranslation as any)();
           {/* Crop Recommendations Preview */}
           {cropRecommendations.length > 0 && (
             <Box sx={{ mt: 4 }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#2e7d32', mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#4ade80', mb: 2 }}>
                 🌾 सुझाई गई फसलें (AI आधारित)
               </Typography>
               <Grid container spacing={2}>
@@ -1404,13 +1405,13 @@ const { t } = (useTranslation as any)();
                   <Grid item xs={12} md={4} key={index}>
                     <Card 
                       sx={{ 
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        border: `2px solid ${crop.suitabilityScore > 80 ? '#4caf50' : '#ffc107'}`,
+                        background: 'rgba(255, 255, 255, 0.04)',
+                        border: `2px solid ${crop.suitabilityScore > 80 ? '#4ade80' : '#fbbf24'}`,
                         borderRadius: 2
                       }}
                     >
                       <CardContent sx={{ p: 2 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, color: '#ecfdf5' }}>
                           {crop.hindiName}
                         </Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
@@ -1419,7 +1420,7 @@ const { t } = (useTranslation as any)();
                             color={crop.suitabilityScore > 80 ? 'success' : 'warning'}
                             size="small"
                           />
-                          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#4ade80' }}>
                             ₹{Math.round(crop.expectedProfit).toLocaleString()} लाभ
                           </Typography>
                         </Box>
@@ -1429,9 +1430,9 @@ const { t } = (useTranslation as any)();
                           sx={{
                             height: 6,
                             borderRadius: 3,
-                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            backgroundColor: 'rgba(255,255,255,0.12)',
                             '& .MuiLinearProgress-bar': {
-                              backgroundColor: crop.suitabilityScore > 80 ? '#4caf50' : '#ffc107',
+                              backgroundColor: crop.suitabilityScore > 80 ? '#4ade80' : '#fbbf24',
                               borderRadius: 3
                             }
                           }}
@@ -1446,11 +1447,12 @@ const { t } = (useTranslation as any)();
                 onClick={() => navigate('/crop-recommendation')}
                 sx={{ 
                   mt: 2, 
-                  color: '#4caf50', 
-                  borderColor: '#4caf50',
+                  color: '#4ade80', 
+                  borderColor: '#4ade80',
                   '&:hover': {
-                    backgroundColor: '#4caf50',
-                    color: 'white'
+                    backgroundColor: 'rgba(74, 222, 128, 0.12)',
+                    color: '#6ee7b7',
+                    borderColor: '#6ee7b7'
                   }
                 }}
               >
@@ -1525,14 +1527,14 @@ const { t } = (useTranslation as any)();
                   flexDirection: 'column',
                   cursor: 'pointer',
                   position: 'relative',
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 100%)',
+                  background: 'linear-gradient(135deg, rgba(20, 30, 25, 0.9) 0%, rgba(16, 26, 21, 0.85) 100%)',
                   backdropFilter: 'blur(15px)',
-                  border: '1px solid rgba(255,255,255,0.3)',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   overflow: 'hidden',
                   '&:hover': {
                     transform: 'translateY(-10px) scale(1.04)',
-                    boxShadow: `0 25px 50px ${action.color}35, 0 10px 20px rgba(0,0,0,0.1)`,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.97) 50%, rgba(255,255,255,0.95) 100%)',
+                    boxShadow: `0 25px 50px ${action.color}35, 0 10px 20px rgba(0,0,0,0.3)`,
+                    background: 'linear-gradient(135deg, rgba(28, 42, 35, 0.95) 0%, rgba(20, 32, 27, 0.95) 100%)',
                   },
                   '&::before': {
                     content: '""',
@@ -1626,10 +1628,10 @@ const { t } = (useTranslation as any)();
             mt: 5,
             p: 4,
             borderRadius: 4,
-            background: 'linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 50%, #e0f2e0 100%)',
+            background: 'linear-gradient(135deg, #101a13 0%, #14201a 50%, #0f1a16 100%)',
             position: 'relative',
             overflow: 'hidden',
-            border: '2px solid rgba(76, 175, 80, 0.2)',
+            border: '2px solid rgba(74, 222, 128, 0.16)',
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -1637,7 +1639,7 @@ const { t } = (useTranslation as any)();
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'radial-gradient(circle at 20% 80%, rgba(76, 175, 80, 0.1) 0%, transparent 50%)',
+              background: 'radial-gradient(circle at 20% 80%, rgba(74, 222, 128, 0.08) 0%, transparent 50%)',
             },
             '&::after': {
               content: '"🌿"',
@@ -1758,11 +1760,11 @@ const { t } = (useTranslation as any)();
             mt: 4,
             p: 3,
             borderRadius: 4,
-            background: 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
-            border: '1px solid rgba(0,0,0,0.1)',
+            background: 'linear-gradient(135deg, #101813 0%, #0e1512 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
           }}
         >
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', color: '#333', display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', color: '#ecfdf5', display: 'flex', alignItems: 'center' }}>
             ✨ आज के सुझाव
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>

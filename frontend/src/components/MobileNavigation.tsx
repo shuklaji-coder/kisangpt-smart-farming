@@ -107,12 +107,12 @@ const MobileNavigation: React.FC = () => {
           left: 0,
           right: 0,
           zIndex: 1100,
-          background: 'rgba(255, 255, 255, 0.88)',
+          background: 'rgba(13, 20, 17, 0.9)',
           backdropFilter: 'blur(18px) saturate(1.4)',
           WebkitBackdropFilter: 'blur(18px) saturate(1.4)',
-          borderTop: '1px solid rgba(46, 125, 50, 0.12)',
+          borderTop: '1px solid rgba(52, 211, 153, 0.18)',
           borderRadius: '20px 20px 0 0',
-          boxShadow: '0 -10px 40px rgba(31, 82, 38, 0.12)',
+          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.4)',
         }}
         elevation={8}
       >
@@ -185,14 +185,14 @@ const MobileNavigation: React.FC = () => {
           zIndex: 999,
           borderRadius: '16px',
           padding: 1,
-          background: 'rgba(255, 255, 255, 0.9)',
+          background: 'rgba(16, 26, 21, 0.92)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
-          boxShadow: '0 12px 35px rgba(31, 82, 38, 0.18)',
-          border: '1px solid rgba(46, 125, 50, 0.12)',
+          boxShadow: '0 12px 35px rgba(0, 0, 0, 0.4)',
+          border: '1px solid rgba(52, 211, 153, 0.15)',
         }}
         elevation={4}
       >

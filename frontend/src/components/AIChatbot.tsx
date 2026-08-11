@@ -74,7 +74,7 @@ interface VoiceRecognitionResult {
 }
 
 const AIChatbot: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = (useTranslation as any)();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -1057,7 +1057,7 @@ You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, ste
                       elevation={2}
                       sx={{
                         maxWidth: '70%',
-                        bgcolor: message.sender === 'user' ? '#e3f2fd' : '#f1f8e9',
+                        bgcolor: message.sender === 'user' ? '#1e3a5f' : '#14201a',
                         borderRadius: 3,
                         position: 'relative',
                       }}
@@ -1218,7 +1218,7 @@ You are KisanGPT, a helpful and safe agricultural assistant. Answer briefly, ste
                 onClick={() => setCurrentMessage(selectedLanguage === 'hi' ? question.hi : question.en)}
                 sx={{
                   cursor: 'pointer',
-                  '&:hover': { bgcolor: '#e8f5e8' },
+                  '&:hover': { bgcolor: 'rgba(74, 222, 128, 0.16)' },
                 }}
                 icon={question.icon}
               />

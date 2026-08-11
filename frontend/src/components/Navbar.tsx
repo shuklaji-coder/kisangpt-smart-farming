@@ -191,11 +191,11 @@ const Navbar: React.FC = () => {
         margin: '0 auto',
         maxWidth: { xs: 'calc(100% - 32px)', xl: '1240px' },
         borderRadius: '999px',
-        background: 'rgba(255, 255, 255, 0.18)',
+        background: 'rgba(13, 20, 17, 0.78)',
         backdropFilter: 'blur(28px) saturate(180%)',
         WebkitBackdropFilter: 'blur(28px) saturate(180%)',
-        border: '1px solid rgba(255, 255, 255, 0.75)',
-        boxShadow: '0 28px 80px rgba(15, 23, 42, 0.12)',
+        border: '1px solid rgba(255, 255, 255, 0.09)',
+        boxShadow: '0 28px 80px rgba(0, 0, 0, 0.5)',
         py: 0.5,
         px: { xs: 1, md: 2 },
         zIndex: 1200,
@@ -226,17 +226,17 @@ const Navbar: React.FC = () => {
                 noWrap
                 sx={{
                   fontWeight: 800,
-                  color: '#0f172a',
+                  color: '#ecfdf5',
                   letterSpacing: '0.2px',
                   fontSize: { xs: '1rem', md: '1.2rem' },
                 }}
               >
-                <Box component="span" sx={{ color: '#0f766e' }}>Kisan</Box>GPT
+                <Box component="span" sx={{ color: '#34d399' }}>Kisan</Box>GPT
               </Typography>
               <Typography
                 sx={{
                   fontSize: '0.65rem',
-                  color: 'rgba(15, 23, 42, 0.72)',
+                  color: 'rgba(236, 253, 245, 0.55)',
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   letterSpacing: '0.16em',
@@ -257,18 +257,18 @@ const Navbar: React.FC = () => {
                   onClick={() => handleNavigation(item.path)}
                   startIcon={item.icon}
                   sx={{
-                    color: isActive ? '#fff' : 'rgba(15, 23, 42, 0.88)',
-                    background: isActive ? 'linear-gradient(135deg, rgba(22, 163, 74, 0.95), rgba(15, 118, 110, 0.95))' : 'rgba(255,255,255,0.7)',
+                    color: isActive ? '#052e1b' : 'rgba(236, 253, 245, 0.9)',
+                    background: isActive ? 'linear-gradient(135deg, rgba(52, 211, 153, 1), rgba(13, 148, 136, 1))' : 'rgba(255,255,255,0.06)',
                     borderRadius: '999px',
                     px: 2,
                     py: 1.05,
                     textTransform: 'none',
                     fontWeight: 700,
                     fontSize: '0.92rem',
-                    boxShadow: isActive ? '0 18px 28px rgba(22, 163, 74, 0.22)' : '0 10px 24px rgba(15, 23, 42, 0.08)',
+                    boxShadow: isActive ? '0 18px 28px rgba(52, 211, 153, 0.22)' : '0 10px 24px rgba(0, 0, 0, 0.2)',
                     '&:hover': {
-                      color: '#fff',
-                      background: 'linear-gradient(135deg, rgba(22, 163, 74, 1), rgba(15, 118, 110, 1))',
+                      color: '#052e1b',
+                      background: 'linear-gradient(135deg, rgba(110, 231, 183, 1), rgba(13, 148, 136, 1))',
                       transform: 'translateY(-1px)',
                     },
                     transition: 'all 0.25s ease',
@@ -283,15 +283,15 @@ const Navbar: React.FC = () => {
               onClick={handleModulesMenuClick}
               startIcon={<Dashboard />}
               sx={{
-                color: 'rgba(15, 23, 42, 0.88)',
-                background: 'rgba(255,255,255,0.7)',
+                color: 'rgba(236, 253, 245, 0.9)',
+                background: 'rgba(255,255,255,0.06)',
                 borderRadius: '999px',
                 px: 2,
                 py: 1.05,
                 textTransform: 'none',
                 fontWeight: 700,
                 fontSize: '0.92rem',
-                '&:hover': { background: 'rgba(16, 185, 129, 0.14)', transform: 'translateY(-1px)' },
+                '&:hover': { background: 'rgba(52, 211, 153, 0.14)', transform: 'translateY(-1px)' },
               }}
             >
               {t('navbar.modules', 'More')}
@@ -303,34 +303,34 @@ const Navbar: React.FC = () => {
               onClick={handleLanguageClick}
               sx={{
                 textTransform: 'none',
-                color: 'rgba(15, 23, 42, 0.92)',
-                background: 'rgba(255,255,255,0.7)',
-                border: '1px solid rgba(15,23,42,0.08)',
+                color: 'rgba(236, 253, 245, 0.92)',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '999px',
                 px: 2,
                 py: 0.9,
-                boxShadow: '0 10px 24px rgba(15, 23, 42, 0.08)',
-                '&:hover': { background: 'rgba(16, 185, 129, 0.12)' },
+                boxShadow: '0 10px 24px rgba(0, 0, 0, 0.2)',
+                '&:hover': { background: 'rgba(52, 211, 153, 0.12)' },
               }}
-              startIcon={<Language sx={{ color: '#14b8a6' }} />}
+              startIcon={<Language sx={{ color: '#34d399' }} />}
             >
               {currentLang.flag}
             </Button>
             <IconButton
               onClick={handleUserMenuClick}
               sx={{
-                bgcolor: 'rgba(255,255,255,0.88)',
-                border: '1px solid rgba(15, 23, 42, 0.1)',
-                boxShadow: '0 14px 25px rgba(15, 23, 42, 0.08)',
-                '&:hover': { background: 'rgba(16, 185, 129, 0.12)' },
+                bgcolor: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                boxShadow: '0 14px 25px rgba(0, 0, 0, 0.25)',
+                '&:hover': { background: 'rgba(52, 211, 153, 0.12)' },
               }}
             >
-              {user?.name ? <Avatar sx={{ width: 32, height: 32, fontSize: 14 }}>{user.name[0]}</Avatar> : <AccountCircle sx={{ color: '#0f766e' }} />}
+              {user?.name ? <Avatar sx={{ width: 32, height: 32, fontSize: 14 }}>{user.name[0]}</Avatar> : <AccountCircle sx={{ color: '#34d399' }} />}
             </IconButton>
             {isMobile && (
               <IconButton
                 onClick={handleMobileMenuClick}
-                sx={{ color: 'rgba(15, 23, 42, 0.88)' }}
+                sx={{ color: 'rgba(236, 253, 245, 0.9)' }}
               >
                 <MenuIcon />
               </IconButton>

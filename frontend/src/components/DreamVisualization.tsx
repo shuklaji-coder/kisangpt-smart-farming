@@ -219,7 +219,7 @@ const { t } = (useTranslation as any)();
       </motion.div>
 
       {/* Advanced Plan Builder */}
-      <Paper elevation={3} sx={{ p:3, mb:4, borderRadius:3, background: 'linear-gradient(135deg, #fff 0%, #fafafa 100%)' }}>
+      <Paper elevation={3} sx={{ p:3, mb:4, borderRadius:3, background: 'linear-gradient(135deg, #141e19 0%, #101a15 100%)' }}>
         <Typography variant="h5" sx={{ fontWeight:'bold', mb:2, display:'flex', alignItems:'center', gap:1 }}>
           <AutoAwesome fontSize="small" /> ðŸš€ Advanced Dream Builder
         </Typography>
@@ -259,12 +259,12 @@ const { t } = (useTranslation as any)();
         {/* Overview */}
         <Grid container spacing={2} sx={{ mt:2 }}>
           <Grid item xs={12} md={6}>
-            <Card elevation={1} sx={{ p:2, borderRadius:3, background: 'linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)' }}>
+            <Card elevation={1} sx={{ p:2, borderRadius:3, background: 'linear-gradient(180deg, #141e19 0%, #0f1814 100%)' }}>
               <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>ðŸ’¸ Cost Breakdown</Typography>
               <Grid container spacing={1}>
                 {Object.entries(costBreakdown).map(([k,v]) => (
                   <Grid key={k} item xs={6}>
-                    <Box sx={{ display:'flex', justifyContent:'space-between', bgcolor:'rgba(0,0,0,0.04)', p:1, borderRadius:1 }}>
+                    <Box sx={{ display:'flex', justifyContent:'space-between', bgcolor:'rgba(255,255,255,0.06)', p:1, borderRadius:1 }}>
                       <Typography variant="body2">{k.toUpperCase()}</Typography>
                       <Typography variant="body2" sx={{ fontWeight:700 }}>â‚¹{v.toLocaleString()}</Typography>
                     </Box>
@@ -274,7 +274,7 @@ const { t } = (useTranslation as any)();
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card elevation={1} sx={{ p:2, borderRadius:3, background: 'linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)' }}>
+            <Card elevation={1} sx={{ p:2, borderRadius:3, background: 'linear-gradient(180deg, #141e19 0%, #0f1814 100%)' }}>
               <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>ðŸ“ˆ ROI Projection</Typography>
               <Typography variant="h4" sx={{ fontWeight:800, color: expectedROI>0.5 ? 'success.main':'warning.main' }}>{Math.round(expectedROI*100)}%</Typography>
               <Typography variant="body2" color="text.secondary">Projected ROI in {months} months for {focusCrop.toUpperCase()} on {farmSize} ha.</Typography>
@@ -287,7 +287,7 @@ const { t } = (useTranslation as any)();
             <Typography variant="subtitle1" sx={{ fontWeight:700, mb:1 }}>ðŸ—“ï¸ Timeline</Typography>
             <Box sx={{ display:'flex', flexWrap:'wrap', gap:1.5 }}>
               {plan.items.map((it:any,idx:number)=> (
-                <Chip key={idx} label={`${it.emoji} ${it.label} â€¢ ${it.date}`} sx={{ bgcolor:'#e8f5e9', border:'1px solid #c8e6c9' }} />
+                <Chip key={idx} label={`${it.emoji} ${it.label} â€¢ ${it.date}`} sx={{ bgcolor:'rgba(74, 222, 128, 0.14)', border:'1px solid rgba(74, 222, 128, 0.25)' }} />
               ))}
             </Box>
             {/* Tasks Checklist */}
@@ -320,7 +320,7 @@ const { t } = (useTranslation as any)();
 
       {/* Scenario Compare */}
       <Accordion sx={{ mb:3, borderRadius:2, overflow:'hidden' }}>
-        <AccordionSummary expandIcon={<ExpandMore />} sx={{ background: 'linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%)' }}>
+        <AccordionSummary expandIcon={<ExpandMore />} sx={{ background: 'linear-gradient(135deg, rgba(192,132,252,0.12) 0%, rgba(167,139,250,0.1) 100%)' }}>
           <Typography variant="h6" sx={{ fontWeight:700 }}>ðŸ”„ Compare Scenario (Alternate Plan)</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -547,7 +547,7 @@ const { t } = (useTranslation as any)();
             mt: 4,
             p: 3,
             borderRadius: 4,
-            background: 'linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 50%, #e0f2f1 100%)',
+            background: 'linear-gradient(135deg, rgba(74,222,128,0.1) 0%, rgba(110,231,183,0.08) 50%, rgba(45,212,191,0.08) 100%)',
           }}
         >
           <Box sx={{ textAlign: 'center', mb: 3 }}>

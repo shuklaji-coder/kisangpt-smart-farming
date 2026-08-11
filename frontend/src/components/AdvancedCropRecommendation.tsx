@@ -710,7 +710,7 @@ const AdvancedCropRecommendation: React.FC = () => {
                       {/* Quick Stats */}
                       <Grid container spacing={1} sx={{ mb: 2 }}>
                         <Grid item xs={6}>
-                          <Box sx={{ textAlign: 'center', p: 1, bgcolor: '#e8f5e8', borderRadius: 1 }}>
+                          <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(74, 222, 128, 0.14)', borderRadius: 1 }}>
                             <Typography variant="caption" display="block">Climate Match</Typography>
                             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                               {crop.climate_compatibility.overall_score}%
@@ -718,7 +718,7 @@ const AdvancedCropRecommendation: React.FC = () => {
                           </Box>
                         </Grid>
                         <Grid item xs={6}>
-                          <Box sx={{ textAlign: 'center', p: 1, bgcolor: '#e3f2fd', borderRadius: 1 }}>
+                          <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(96, 165, 250, 0.14)', borderRadius: 1 }}>
                             <Typography variant="caption" display="block">Soil Match</Typography>
                             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                               {crop.soil_compatibility.overall_score}%

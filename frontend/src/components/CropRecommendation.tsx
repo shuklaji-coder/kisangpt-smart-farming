@@ -919,7 +919,7 @@ const CropRecommendation: React.FC = () => {
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <Paper elevation={2} sx={{ p: 2, bgcolor: '#e8f5e8', border: '1px solid #4caf50' }}>
+        <Paper elevation={2} sx={{ p: 2, bgcolor: 'rgba(74, 222, 128, 0.1)', border: '1px solid rgba(74, 222, 128, 0.35)' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justify: 'space-between', mb: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <LocationOn sx={{ mr: 1, color: '#4caf50' }} />
@@ -955,7 +955,7 @@ const CropRecommendation: React.FC = () => {
             <Box>
               <Typography sx={{ fontWeight: 'bold', mb: 0.5 }}>📍 {formData.location}</Typography>
               {formData.coordinates && (
-                <Typography variant="caption" sx={{ color: '#666' }}>
+                <Typography variant="caption" sx={{ color: '#8fa39a' }}>
                   🎯 Coordinates: {formData.coordinates.lat.toFixed(4)}°N, {formData.coordinates.lon.toFixed(4)}°E
                 </Typography>
               )}
@@ -1097,7 +1097,7 @@ const CropRecommendation: React.FC = () => {
       
       {formData.weatherData && (
         <Grid item xs={12}>
-          <Paper elevation={2} sx={{ p: 2, bgcolor: '#e3f2fd', border: '1px solid #2196f3' }}>
+          <Paper elevation={2} sx={{ p: 2, bgcolor: 'rgba(96, 165, 250, 0.12)', border: '1px solid rgba(96, 165, 250, 0.4)' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <Cloud sx={{ mr: 1, color: '#2196f3' }} />
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
@@ -1140,7 +1140,7 @@ const CropRecommendation: React.FC = () => {
       {/* Satellite Soil Analysis */}
       {satelliteData && (
         <Grid item xs={12}>
-          <Paper elevation={3} sx={{ p: 3, bgcolor: '#f3e5f5', border: '1px solid #9c27b0' }}>
+          <Paper elevation={3} sx={{ p: 3, bgcolor: 'rgba(192, 132, 252, 0.12)', border: '1px solid rgba(192, 132, 252, 0.4)' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Box sx={{ 
                 width: 40, 
@@ -1166,7 +1166,7 @@ const CropRecommendation: React.FC = () => {
             
             <Grid container spacing={2}>
               <Grid item xs={6} sm={3}>
-                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.7)', borderRadius: 1 }}>
+                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.06)', borderRadius: 1 }}>
                   <Typography variant="h6" sx={{ color: '#d32f2f', fontWeight: 'bold' }}>
                     pH {satelliteData.soil_properties.ph.toFixed(1)}
                   </Typography>
@@ -1179,7 +1179,7 @@ const CropRecommendation: React.FC = () => {
                 </Box>
               </Grid>
               <Grid item xs={6} sm={3}>
-                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.7)', borderRadius: 1 }}>
+                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.06)', borderRadius: 1 }}>
                   <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 'bold' }}>
                     {Math.round(satelliteData.soil_properties.moisture)}%
                   </Typography>
@@ -1192,8 +1192,8 @@ const CropRecommendation: React.FC = () => {
                 </Box>
               </Grid>
               <Grid item xs={6} sm={3}>
-                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.7)', borderRadius: 1 }}>
-                  <Typography variant="h6" sx={{ color: '#388e3c', fontWeight: 'bold' }}>
+                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.06)', borderRadius: 1 }}>
+                  <Typography variant="h6" sx={{ color: '#4ade80', fontWeight: 'bold' }}>
                     {Math.round(satelliteData.soil_properties.nitrogen)}
                   </Typography>
                   <Typography variant="caption">N (kg/ha)</Typography>
@@ -1205,7 +1205,7 @@ const CropRecommendation: React.FC = () => {
                 </Box>
               </Grid>
               <Grid item xs={6} sm={3}>
-                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.7)', borderRadius: 1 }}>
+                <Box sx={{ textAlign: 'center', p: 1, bgcolor: 'rgba(255,255,255,0.06)', borderRadius: 1 }}>
                   <Typography variant="h6" sx={{ color: '#f57c00', fontWeight: 'bold' }}>
                     {satelliteData.vegetation_indices.ndvi.toFixed(2)}
                   </Typography>
@@ -1249,7 +1249,7 @@ const CropRecommendation: React.FC = () => {
         </Paper>
       )}
       {/* Preferences re-ranking */}
-      <Paper elevation={0} sx={{ p: 2, mb: 2, borderRadius: 2, border: '1px solid #e0e0e0' }}>
+      <Paper elevation={0} sx={{ p: 2, mb: 2, borderRadius: 2, border: '1px solid rgba(255,255,255,0.1)' }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>🎛️ Preference Weights</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
@@ -1288,7 +1288,7 @@ const CropRecommendation: React.FC = () => {
             </Box>
           </motion.div>
           
-          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, color: '#2e7d32' }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, color: '#4ade80' }}>
             🧠 AI कृषि विशेषज्ञ काम कर रहा है...
           </Typography>
           
@@ -1310,7 +1310,7 @@ const CropRecommendation: React.FC = () => {
             </Grid>
           </Grid>
           
-          <Typography variant="body1" sx={{ mb: 2, color: '#666' }}>
+          <Typography variant="body1" sx={{ mb: 2, color: '#8fa39a' }}>
             यह विश्लेषण आपकी स्थिति, मिट्टी और मौसम के आधार पर हो रहा है
           </Typography>
           
@@ -1332,7 +1332,7 @@ const CropRecommendation: React.FC = () => {
         </Box>
       ) : (
         <Box>
-          <Alert severity="success" sx={{ mb: 3, bgcolor: '#e8f5e8' }}>
+          <Alert severity="success" sx={{ mb: 3, bgcolor: 'rgba(74, 222, 128, 0.12)' }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
               🎉 AI-प्राप्त {recommendations.length} बेहतरीन फसल सुझाव!
             </Typography>
@@ -1462,7 +1462,7 @@ const CropRecommendation: React.FC = () => {
                           mb: 2,
                           height: 8,
                           borderRadius: 4,
-                          bgcolor: '#e0e0e0',
+                          bgcolor: 'rgba(255,255,255,0.14)',
                           '& .MuiLinearProgress-bar': {
                             bgcolor: getSuitabilityColor(crop.suitability_score),
                             borderRadius: 4,
@@ -1475,7 +1475,7 @@ const CropRecommendation: React.FC = () => {
                         <Box sx={{ 
                           textAlign: 'center', 
                           p: 1, 
-                          bgcolor: '#e8f5e8', 
+                          bgcolor: 'rgba(74, 222, 128, 0.16)', 
                           borderRadius: 2,
                           mb: 1
                         }}>
@@ -1493,7 +1493,7 @@ const CropRecommendation: React.FC = () => {
                         <Box sx={{ 
                           textAlign: 'center', 
                           p: 1, 
-                          bgcolor: '#fff3e0', 
+                          bgcolor: 'rgba(251, 191, 36, 0.16)', 
                           borderRadius: 2
                         }}>
                           <AttachMoney sx={{ color: '#ff9800', mb: 0.5, fontSize: 18 }} />
@@ -1564,7 +1564,7 @@ const CropRecommendation: React.FC = () => {
                       }}>
                         <Typography variant="body2" sx={{ 
                           fontSize: '0.7rem', 
-                          color: '#2e7d32',
+                          color: '#4ade80',
                           textAlign: 'center',
                           fontWeight: 'bold'
                         }}>

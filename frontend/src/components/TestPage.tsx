@@ -11,7 +11,7 @@ const TestPage: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         gap: 2,
-        bgcolor: '#f5f5f5'
+        bgcolor: '#101a15'
       }}
     >
       <Typography variant="h2" color="primary">

@@ -1,10 +1,10 @@
 /* KisanGPT - Premium Mobile-First Design System */
 .App {
-  background-color: #f6fbf3;
+  background-color: #0a0f0d;
   min-height: 100vh;
   font-family: 'Inter', 'Noto Sans Devanagari', 'Roboto', 'Arial', sans-serif;
   overflow-x: hidden;
-  color: #2e3a2f;
+  color: #d9e5de;
 }
 
 /* Base reset without global transition on everything (perf) */
@@ -20,18 +20,18 @@ html {
 
 /* ------- Premium farmer button ------- */
 .farmer-button {
-  background: linear-gradient(135deg, #4caf50 0%, #1b5e20 100%);
+  background: linear-gradient(135deg, #34d399 0%, #0d9488 100%);
   border: none;
   border-radius: 14px;
   padding: 14px 22px;
-  color: white;
+  color: #052e1b;
   font-weight: 700;
   font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
   font-size: 0.92rem;
   cursor: pointer;
   min-height: 48px;
   min-width: 44px;
-  box-shadow: 0 10px 24px rgba(27, 94, 32, 0.35);
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.3);
   touch-action: manipulation;
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, filter 0.25s ease;
 }
@@ -45,32 +45,32 @@ html {
 
 .farmer-button:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 16px 32px rgba(27, 94, 32, 0.45);
+  box-shadow: 0 16px 32px rgba(16, 185, 129, 0.4);
   filter: brightness(1.05);
 }
 
 .farmer-button:active {
   transform: translateY(0) scale(0.98);
-  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .farmer-button:focus-visible {
-  outline: 3px solid rgba(102, 187, 106, 0.6);
+  outline: 3px solid rgba(52, 211, 153, 0.6);
   outline-offset: 2px;
 }
 
 /* ------- Premium cards ------- */
 .farmer-card {
   border-radius: 18px;
-  border: 1px solid rgba(46, 125, 50, 0.08);
-  box-shadow: 0 8px 30px rgba(31, 82, 38, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
   margin-bottom: 16px;
 }
 
 .farmer-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 45px rgba(31, 82, 38, 0.16);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
 }
 
 /* ------- Mobile Navigation ------- */
@@ -80,12 +80,12 @@ html {
   left: 0;
   right: 0;
   z-index: 1100;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(13, 20, 17, 0.85);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  border-top: 1px solid rgba(46, 125, 50, 0.12);
+  border-top: 1px solid rgba(52, 211, 153, 0.18);
   padding: 8px 0;
-  box-shadow: 0 -8px 30px rgba(31, 82, 38, 0.1);
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
 }
 
 @media (min-width: 768px) {
@@ -193,6 +193,6 @@ html {
 
 /* ------- High contrast ------- */
 @media (prefers-contrast: high) {
-  .App { background-color: #ffffff; }
-  .farmer-button { background: #0a2e10; border: 2px solid #ffffff; }
+  .App { background-color: #000000; }
+  .farmer-button { background: #34d399; border: 2px solid #ffffff; color: #000; }
 }

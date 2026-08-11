@@ -34,32 +34,32 @@ const theme = createTheme({
     values: { xs: 0, sm: 600, md: 840, lg: 1024, xl: 1280 },
   },
   palette: {
-    mode: 'light',
+    mode: 'dark',
     primary: {
-      main: '#0f766e',
-      light: '#14b8a6',
-      dark: '#0f5245',
-      contrastText: '#ffffff',
+      main: '#34d399',
+      light: '#6ee7b7',
+      dark: '#10b981',
+      contrastText: '#052e1b',
     },
     secondary: {
-      main: '#16a34a',
-      light: '#4ade80',
-      dark: '#15803d',
-      contrastText: '#ffffff',
+      main: '#2dd4bf',
+      light: '#5eead4',
+      dark: '#0d9488',
+      contrastText: '#042f2e',
     },
-    success: { main: '#22c55e' },
-    warning: { main: '#f59e0b' },
-    error: { main: '#dc2626' },
-    info: { main: '#0ea5e9' },
+    success: { main: '#4ade80' },
+    warning: { main: '#fbbf24' },
+    error: { main: '#f87171' },
+    info: { main: '#38bdf8' },
     background: {
-      default: '#eefcf6',
-      paper: 'rgba(255, 255, 255, 0.78)',
+      default: '#0a0f0d',
+      paper: '#101a15',
     },
     text: {
-      primary: '#0f172a',
-      secondary: '#334155',
+      primary: '#ecfdf5',
+      secondary: '#a7b8ae',
     },
-    divider: 'rgba(15, 23, 42, 0.08)',
+    divider: 'rgba(255, 255, 255, 0.09)',
   },
   typography: {
     fontFamily: "'Inter', sans-serif",
@@ -70,8 +70,8 @@ const theme = createTheme({
     h5: { fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.3 },
     h6: { fontSize: '1.15rem', fontWeight: 700, letterSpacing: '0.02em' },
     subtitle1: { fontFamily: "'Inter', sans-serif", fontWeight: 500 },
-    body1: { fontSize: '1rem', lineHeight: 1.75, color: '#334155' },
-    body2: { fontSize: '0.94rem', lineHeight: 1.7, color: '#475569' },
+    body1: { fontSize: '1rem', lineHeight: 1.75, color: '#a7b8ae' },
+    body2: { fontSize: '0.94rem', lineHeight: 1.7, color: '#8fa39a' },
     button: { fontFamily: "'Outfit', sans-serif", fontSize: '0.98rem', fontWeight: 700, textTransform: 'none', letterSpacing: '0.02em' },
   },
   shape: { borderRadius: 28 },
@@ -80,7 +80,8 @@ const theme = createTheme({
       styleOverrides: {
         body: {
           minHeight: '100vh',
-          backgroundColor: '#eefcf6',
+          backgroundColor: '#0a0f0d',
+          color: '#ecfdf5',
         },
       },
     },
@@ -88,11 +89,11 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: '999px',
-          background: 'rgba(255, 255, 255, 0.24)',
+          background: 'rgba(13, 20, 17, 0.72)',
           backdropFilter: 'blur(24px) saturate(180%)',
           WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          border: '1px solid rgba(255,255,255,0.7)',
-          boxShadow: '0 28px 90px rgba(15, 23, 42, 0.12)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 28px 90px rgba(0, 0, 0, 0.55)',
         },
       },
     },
@@ -109,15 +110,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 28,
-          background: 'rgba(255, 255, 255, 0.62)',
+          background: 'rgba(20, 30, 25, 0.66)',
           backdropFilter: 'blur(24px) saturate(180%)',
           WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-          boxShadow: '0 18px 60px rgba(15, 23, 42, 0.08)',
-          border: '1px solid rgba(255, 255, 255, 0.68)',
+          boxShadow: '0 18px 60px rgba(0, 0, 0, 0.35)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
           transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease',
           '&:hover': {
             transform: 'translateY(-6px)',
-            boxShadow: '0 26px 70px rgba(15, 23, 42, 0.14)',
+            boxShadow: '0 26px 70px rgba(0, 0, 0, 0.5)',
           },
         },
       },
@@ -126,10 +127,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 28,
-          background: 'rgba(255, 255, 255, 0.72)',
+          background: 'rgba(18, 27, 22, 0.78)',
           backdropFilter: 'blur(22px) saturate(160%)',
           WebkitBackdropFilter: 'blur(22px) saturate(160%)',
-          border: '1px solid rgba(255,255,255,0.72)',
+          border: '1px solid rgba(255,255,255,0.08)',
         },
       },
     },
@@ -144,26 +145,26 @@ const theme = createTheme({
           '&:active': { transform: 'scale(0.96)' },
         },
         containedPrimary: {
-          background: 'linear-gradient(135deg, #22c55e 0%, #0f766e 100%)',
-          color: '#fff',
-          boxShadow: '0 14px 26px rgba(34, 197, 94, 0.24)',
-          border: '1px solid rgba(34, 197, 94, 0.35)',
+          background: 'linear-gradient(135deg, #34d399 0%, #0d9488 100%)',
+          color: '#052e1b',
+          boxShadow: '0 14px 26px rgba(52, 211, 153, 0.22)',
+          border: '1px solid rgba(52, 211, 153, 0.4)',
           '&:hover': {
-            background: 'linear-gradient(135deg, #16a34a 0%, #0f766e 100%)',
-            boxShadow: '0 18px 32px rgba(34, 197, 94, 0.3)',
+            background: 'linear-gradient(135deg, #6ee7b7 0%, #0d9488 100%)',
+            boxShadow: '0 18px 32px rgba(52, 211, 153, 0.3)',
           },
         },
         outlined: {
-          borderColor: 'rgba(16, 185, 129, 0.35)',
-          color: '#0f172a',
-          background: 'rgba(255, 255, 255, 0.48)',
+          borderColor: 'rgba(52, 211, 153, 0.35)',
+          color: '#ecfdf5',
+          background: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(8px)',
-          '&:hover': { backgroundColor: 'rgba(16, 185, 129, 0.08)', borderColor: '#14b8a6' },
+          '&:hover': { backgroundColor: 'rgba(52, 211, 153, 0.1)', borderColor: '#34d399' },
         },
         text: {
-          color: '#0f172a',
+          color: '#ecfdf5',
           '&:hover': {
-            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+            backgroundColor: 'rgba(52, 211, 153, 0.1)',
           },
         },
       },
@@ -171,11 +172,11 @@ const theme = createTheme({
     MuiFab: {
       styleOverrides: {
         root: {
-          boxShadow: '0 18px 40px rgba(16, 185, 129, 0.24)',
+          boxShadow: '0 18px 40px rgba(52, 211, 153, 0.25)',
           transition: 'transform 0.24s ease, box-shadow 0.24s ease',
           '&:hover': {
             transform: 'scale(1.07)',
-            boxShadow: '0 24px 52px rgba(16, 185, 129, 0.34)',
+            boxShadow: '0 24px 52px rgba(52, 211, 153, 0.35)',
           },
         },
       },
@@ -184,15 +185,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 18,
-          background: 'rgba(255, 255, 255, 0.55)',
+          background: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(10px)',
           transition: 'all 0.2s ease',
           '&.Mui-focused': {
-            background: 'rgba(255, 255, 255, 0.85)',
-            boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.12)',
+            background: 'rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 0 0 4px rgba(52, 211, 153, 0.14)',
           },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderWidth: 2, borderColor: '#14b8a6' },
-          '&:hover:not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': { borderColor: '#14b8a6' },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderWidth: 2, borderColor: '#34d399' },
+          '&:hover:not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': { borderColor: '#34d399' },
         },
       },
     },
@@ -210,7 +211,8 @@ const theme = createTheme({
       styleOverrides: {
         paper: {
           borderRadius: 20,
-          boxShadow: '0 28px 70px rgba(15, 23, 42, 0.18)',
+          background: 'rgba(16, 26, 21, 0.96)',
+          boxShadow: '0 28px 70px rgba(0, 0, 0, 0.5)',
         },
       },
     },
@@ -219,6 +221,7 @@ const theme = createTheme({
         paper: {
           borderRadius: 28,
           padding: '12px',
+          background: 'rgba(16, 26, 21, 0.98)',
         },
       },
     },
@@ -336,7 +339,7 @@ function App() {
       <div className="app-background" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Box sx={{ textAlign: 'center' }}>
           <Box sx={{ fontSize: 56, animation: 'floatY 2.5s ease-in-out infinite' }}>🌾</Box>
-          <Typography sx={{ mt: 2, fontWeight: 700, color: '#2e7d32' }}>KisanGPT लोड हो रहा है...</Typography>
+          <Typography sx={{ mt: 2, fontWeight: 700, color: '#34d399' }}>KisanGPT लोड हो रहा है...</Typography>
         </Box>
       </div>
     );

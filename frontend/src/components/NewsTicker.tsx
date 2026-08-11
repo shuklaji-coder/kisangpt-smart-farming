@@ -75,9 +75,9 @@ const NewsTicker: React.FC<NewsTickerProps> = ({
   }, [laneWidth, speed]);
 
   const bg = accent === 'urgent'
-    ? 'linear-gradient(90deg, #fff4ef 0%, #ffffff 100%)'
-    : 'linear-gradient(90deg, #f2fff2 0%, #ffffff 100%)';
-  const fg = accent === 'urgent' ? '#bf360c' : '#1b5e20';
+    ? 'linear-gradient(90deg, #1c1412 0%, #141a17 100%)'
+    : 'linear-gradient(90deg, #0e1a14 0%, #101a15 100%)';
+  const fg = accent === 'urgent' ? '#fdba74' : '#a7f3d0';
 
   const laneStyles = {
     display: 'inline-flex',
@@ -90,8 +90,8 @@ const NewsTicker: React.FC<NewsTickerProps> = ({
     <Box sx={{
       overflow: 'hidden',
       borderRadius: 12,
-      border: '1px solid rgba(0,0,0,0.06)',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+      border: '1px solid rgba(255,255,255,0.09)',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
       background: bg,
       color: fg,
       height,
@@ -128,9 +128,9 @@ const NewsTicker: React.FC<NewsTickerProps> = ({
                 sx={{
 height: chipH,
                   borderRadius: 999,
-                  bgcolor: item.urgent ? '#fdecea' : '#eaf7ec',
-                  color: item.urgent ? '#b71c1c' : '#1b5e20',
-                  border: '1px solid rgba(0,0,0,0.08)',
+                  bgcolor: item.urgent ? 'rgba(248, 113, 113, 0.16)' : 'rgba(74, 222, 128, 0.14)',
+                  color: item.urgent ? '#fca5a5' : '#a7f3d0',
+                  border: '1px solid rgba(255,255,255,0.08)',
 '& .MuiChip-label': { fontSize: chipFont, px: 1.2, fontWeight: 600 },
                 }}
               />
@@ -144,9 +144,9 @@ height: chipH,
                 sx={{
 height: chipH,
                   borderRadius: 999,
-                  bgcolor: item.urgent ? '#fdecea' : '#eaf7ec',
-                  color: item.urgent ? '#b71c1c' : '#1b5e20',
-                  border: '1px solid rgba(0,0,0,0.08)',
+                  bgcolor: item.urgent ? 'rgba(248, 113, 113, 0.16)' : 'rgba(74, 222, 128, 0.14)',
+                  color: item.urgent ? '#fca5a5' : '#a7f3d0',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   '& .MuiChip-label': { fontSize: 13, px: 1.2, fontWeight: 600 },
                 }}
               />

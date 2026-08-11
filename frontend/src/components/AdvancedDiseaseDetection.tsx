@@ -363,7 +363,7 @@ const AdvancedDiseaseDetection: React.FC = () => {
 
               {/* Analysis Progress */}
               {loading && (
-                <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: '#f8f9fa' }}>
+                <Paper elevation={2} sx={{ p: 3, mb: 3, backgroundColor: 'rgba(255,255,255,0.05)' }}>
                   <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
                     <CircularProgress size={20} sx={{ mr: 1 }} />
                     {processingStage.stage}
@@ -439,11 +439,11 @@ const AdvancedDiseaseDetection: React.FC = () => {
 
                     {/* Primary Results */}
                     <Box sx={{ mb: 3 }}>
-                      <Paper elevation={1} sx={{ p: 3, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+                      <Paper elevation={1} sx={{ p: 3, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 2 }}>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, mb: 1 }}>
                           {analysis.disease_name_english}
                         </Typography>
-                        <Typography variant="body1" sx={{ color: '#666', mb: 2 }}>
+                        <Typography variant="body1" sx={{ color: '#8fa39a', mb: 2 }}>
                           {analysis.disease_name_hindi}
                         </Typography>
                         
@@ -500,7 +500,7 @@ const AdvancedDiseaseDetection: React.FC = () => {
                       
                       <Grid container spacing={2}>
                         <Grid item xs={6}>
-                          <Paper elevation={1} sx={{ p: 2, textAlign: 'center', backgroundColor: '#e3f2fd' }}>
+                          <Paper elevation={1} sx={{ p: 2, textAlign: 'center', backgroundColor: 'rgba(96, 165, 250, 0.14)' }}>
                             <Visibility sx={{ fontSize: 24, color: '#1976d2', mb: 1 }} />
                             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                               Visual Analysis
@@ -512,7 +512,7 @@ const AdvancedDiseaseDetection: React.FC = () => {
                         </Grid>
                         
                         <Grid item xs={6}>
-                          <Paper elevation={1} sx={{ p: 2, textAlign: 'center', backgroundColor: '#e8f5e8' }}>
+                          <Paper elevation={1} sx={{ p: 2, textAlign: 'center', backgroundColor: 'rgba(74, 222, 128, 0.14)' }}>
                             <WbSunny sx={{ fontSize: 24, color: '#388e3c', mb: 1 }} />
                             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                               Weather Risk

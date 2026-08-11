@@ -253,14 +253,14 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
             overflowY: 'auto',
             mx: 'auto',
             borderRadius: '26px',
-            background: 'rgba(255, 255, 255, 0.92)',
+            background: 'rgba(16, 26, 21, 0.85)',
             backdropFilter: 'blur(24px) saturate(1.3)',
             WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
-            border: '1px solid rgba(255, 255, 255, 0.5)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
             boxShadow: `
-              0 24px 70px rgba(0, 0, 0, 0.35),
-              0 4px 20px rgba(27, 94, 32, 0.25),
-              inset 0 1px 0 rgba(255, 255, 255, 0.7)
+              0 24px 70px rgba(0, 0, 0, 0.55),
+              0 4px 20px rgba(52, 211, 153, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08)
             `,
             transform: 'translateZ(0)',
             position: 'relative',
@@ -271,7 +271,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
               left: 0,
               right: 0,
               height: '5px',
-              background: 'linear-gradient(90deg, #4CAF50, #8BC34A, #4CAF50, #8BC34A)',
+              background: 'linear-gradient(90deg, #34d399, #4ade80, #34d399, #4ade80)',
               backgroundSize: '300% auto',
               borderRadius: '26px 26px 0 0',
               animation: 'gradientShift 5s ease infinite',
@@ -308,7 +308,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   mb: 2,
                   width: 60,
                   height: 60,
-                  background: 'linear-gradient(45deg, #4CAF50, #8BC34A)',
+                  background: 'linear-gradient(45deg, #34d399, #4ade80)',
                   boxShadow: '0 8px 16px rgba(76, 175, 80, 0.3)',
                 }}
               >
@@ -320,7 +320,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
               variant="h4"
               sx={{
                 fontWeight: 'bold',
-                background: 'linear-gradient(45deg, #2E7D32, #388E3C, #4CAF50)',
+                background: 'linear-gradient(45deg, #0d9488, #10b981, #34d399)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 color: 'transparent',
@@ -364,7 +364,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Person sx={{ color: '#4CAF50' }} />
+                      <Person sx={{ color: '#34d399' }} />
                     </InputAdornment>
                   ),
                 }}
@@ -372,9 +372,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   mb: 2,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 2,
-                    '&:hover fieldset': { borderColor: '#4CAF50' },
+                    '&:hover fieldset': { borderColor: '#34d399' },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#4CAF50',
+                      borderColor: '#34d399',
                       boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                     },
                   },
@@ -397,7 +397,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Email sx={{ color: '#4CAF50' }} />
+                      <Email sx={{ color: '#34d399' }} />
                     </InputAdornment>
                   ),
                 }}
@@ -405,9 +405,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   mb: 2,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 2,
-                    '&:hover fieldset': { borderColor: '#4CAF50' },
+                    '&:hover fieldset': { borderColor: '#34d399' },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#4CAF50',
+                      borderColor: '#34d399',
                       boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                     },
                   },
@@ -431,16 +431,16 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Phone sx={{ color: '#4CAF50' }} />
+                        <Phone sx={{ color: '#34d399' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      '&:hover fieldset': { borderColor: '#4CAF50' },
+                      '&:hover fieldset': { borderColor: '#34d399' },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#4CAF50',
+                        borderColor: '#34d399',
                         boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                       },
                     },
@@ -462,16 +462,16 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LocationOn sx={{ color: '#4CAF50' }} />
+                        <LocationOn sx={{ color: '#34d399' }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      '&:hover fieldset': { borderColor: '#4CAF50' },
+                      '&:hover fieldset': { borderColor: '#34d399' },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#4CAF50',
+                        borderColor: '#34d399',
                         boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                       },
                     },
@@ -496,9 +496,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      '&:hover fieldset': { borderColor: '#4CAF50' },
+                      '&:hover fieldset': { borderColor: '#34d399' },
                       '&.Mui-focused fieldset': {
-                        borderColor: '#4CAF50',
+                        borderColor: '#34d399',
                         boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                       },
                     },
@@ -520,9 +520,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                     onChange={handleInputChange('cropType')}
                     sx={{
                       borderRadius: 2,
-                      '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#4CAF50' },
+                      '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#34d399' },
                       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#4CAF50',
+                        borderColor: '#34d399',
                         boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                       },
                     }}
@@ -550,7 +550,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Lock sx={{ color: '#4CAF50' }} />
+                      <Lock sx={{ color: '#34d399' }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
@@ -568,9 +568,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   mb: 2,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 2,
-                    '&:hover fieldset': { borderColor: '#4CAF50' },
+                    '&:hover fieldset': { borderColor: '#34d399' },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#4CAF50',
+                      borderColor: '#34d399',
                       boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                     },
                   },
@@ -593,7 +593,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Lock sx={{ color: '#4CAF50' }} />
+                      <Lock sx={{ color: '#34d399' }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
@@ -611,9 +611,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   mb: 2,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 2,
-                    '&:hover fieldset': { borderColor: '#4CAF50' },
+                    '&:hover fieldset': { borderColor: '#34d399' },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#4CAF50',
+                      borderColor: '#34d399',
                       boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)',
                     },
                   },
@@ -632,13 +632,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   <Checkbox
                     checked={formData.agreeToTerms}
                     onChange={handleInputChange('agreeToTerms')}
-                    sx={{ color: '#4CAF50' }}
+                    sx={{ color: '#34d399' }}
                   />
                 }
                 label={
                   <Typography variant="body2">
                     Ã Â¤Â®Ã Â¥Ë†Ã Â¤â€š{' '}
-                    <Link href="#" sx={{ color: '#4CAF50' }}>
+                    <Link href="#" sx={{ color: '#34d399' }}>
                       Ã Â¤Â¨Ã Â¤Â¿Ã Â¤Â¯Ã Â¤Â® Ã Â¤Âµ Ã Â¤Â¶Ã Â¤Â°Ã Â¥ÂÃ Â¤Â¤Ã Â¥â€¹Ã Â¤â€š
                     </Link>
                     {' '}Ã Â¤Â¸Ã Â¥â€¡ Ã Â¤Â¸Ã Â¤Â¹Ã Â¤Â®Ã Â¤Â¤ Ã Â¤Â¹Ã Â¥â€šÃ Â¤â€š *
@@ -667,10 +667,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                   mb: 2,
                   borderRadius: '16px',
                   fontSize: '1rem',
-                  background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                  background: 'linear-gradient(135deg, #34d399, #0d9488)',
                   boxShadow: '0 12px 32px rgba(46, 125, 50, 0.4)',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #43a047, #1b5e20)',
+                    background: 'linear-gradient(135deg, #43a047, #0f766e)',
                     boxShadow: '0 16px 40px rgba(46, 125, 50, 0.5)',
                   },
                 }}
@@ -696,7 +696,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, onBackToLogin }) => {
                     onBackToLogin?.();
                   }}
                   sx={{
-                    color: '#4CAF50',
+                    color: '#34d399',
                     textDecoration: 'none',
                     fontWeight: 'bold',
                     '&:hover': {

@@ -806,7 +806,7 @@ const SatelliteFieldView: React.FC = () => {
                     <Fab
                       size="small"
                       onClick={() => setZoomLevel(prev => Math.min(prev + 1, 20))}
-                      sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f5f5f5' } }}
+                      sx={{ bgcolor: 'rgba(255,255,255,0.9)', color: '#0a0f0d', '&:hover': { bgcolor: '#e2f5ea' } }}
                     >
                       <ZoomIn />
                     </Fab>
@@ -816,7 +816,7 @@ const SatelliteFieldView: React.FC = () => {
                     <Fab
                       size="small"
                       onClick={() => setZoomLevel(prev => Math.max(prev - 1, 5))}
-                      sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f5f5f5' } }}
+                      sx={{ bgcolor: 'rgba(255,255,255,0.9)', color: '#0a0f0d', '&:hover': { bgcolor: '#e2f5ea' } }}
                     >
                       <ZoomOut />
                     </Fab>
@@ -826,7 +826,7 @@ const SatelliteFieldView: React.FC = () => {
                     <Fab
                       size="small"
                       onClick={getCurrentLocation}
-                      sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f5f5f5' } }}
+                      sx={{ bgcolor: 'rgba(255,255,255,0.9)', color: '#0a0f0d', '&:hover': { bgcolor: '#e2f5ea' } }}
                     >
                       <MyLocation />
                     </Fab>
@@ -836,7 +836,7 @@ const SatelliteFieldView: React.FC = () => {
                     <Fab
                       size="small"
                       onClick={() => setShowAnalysis(!showAnalysis)}
-                      sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f5f5f5' } }}
+                      sx={{ bgcolor: 'rgba(255,255,255,0.9)', color: '#0a0f0d', '&:hover': { bgcolor: '#e2f5ea' } }}
                     >
                       <Layers />
                     </Fab>
@@ -846,7 +846,7 @@ const SatelliteFieldView: React.FC = () => {
                     <Fab
                       size="small"
                       onClick={(e) => setBasemapMenuEl(e.currentTarget as HTMLElement)}
-                      sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f5f5f5' } }}
+                      sx={{ bgcolor: 'rgba(255,255,255,0.9)', color: '#0a0f0d', '&:hover': { bgcolor: '#e2f5ea' } }}
                     >
                       <Satellite />
                     </Fab>
@@ -864,7 +864,7 @@ const SatelliteFieldView: React.FC = () => {
                         const L: any = (window as any).L;
                         if (L) addBaseImageryLayer(L, mapInstanceRef, imageryLayerRef, { type: basemapSource, key: basemapKey, template: basemapTemplate }, (info) => { setBasemapLabel(info.name || 'Basemap'); setBasemapAttribution(info.attribution || ''); });
                       }}
-                      sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f5f5f5' } }}
+                      sx={{ bgcolor: 'rgba(255,255,255,0.9)', color: '#0a0f0d', '&:hover': { bgcolor: '#e2f5ea' } }}
                     >
                       <Refresh />
                     </Fab>
@@ -1258,10 +1258,10 @@ const SatelliteFieldView: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <Card elevation={4} sx={{ borderRadius: 3, mb: 3, border: '1px solid #9c27b0', background: '#f8e5ff' }}>
+              <Card elevation={4} sx={{ borderRadius: 3, mb: 3, border: '1px solid #9c27b0', background: 'rgba(192, 132, 252, 0.1)' }}>
                 <CardContent id="advanced-analysis-panel">
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 'bold', color: '#6a1b9a', display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 'bold', color: '#c084fc', display: 'flex', alignItems: 'center' }}>
                       ðŸ§  Advanced Satellite Analysis {ndviDate ? `(for ${ndviDate})` : ''}
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 1 }}>
@@ -1284,8 +1284,8 @@ const SatelliteFieldView: React.FC = () => {
 
                   {/* NDVI Sparkline */}
                   <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: '#6a1b9a' }}>NDVI Trend (last 8 weeks)</Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 0.5, height: 60, p: 0.5, borderRadius: 1, background: 'rgba(255,255,255,0.7)' }}>
+                    <Typography variant="body2" sx={{ mb: 0.5, color: '#c084fc' }}>NDVI Trend (last 8 weeks)</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 0.5, height: 60, p: 0.5, borderRadius: 1, background: 'rgba(255,255,255,0.06)' }}>
                       {ndviSeries.map((v, i) => (
                         <Box key={i} sx={{ width: 10, height: `${Math.round(v * 100)}%`, bgcolor: v >= 0.6 ? '#4caf50' : v >= 0.4 ? '#ff9800' : '#f44336', borderRadius: '2px 2px 0 0' }} />
                       ))}
@@ -1297,7 +1297,7 @@ const SatelliteFieldView: React.FC = () => {
                     <Grid item xs={12} md={6}>
                       <Typography variant="caption">Crop Health</Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box sx={{ flex: 1, height: 8, bgcolor: '#e0e0e0', borderRadius: 4 }}>
+                        <Box sx={{ flex: 1, height: 8, bgcolor: 'rgba(255,255,255,0.12)', borderRadius: 4 }}>
                           <Box sx={{ width: `${analysis.analysis.cropHealthScore}%`, height: '100%', bgcolor: '#4caf50', borderRadius: 4 }} />
                         </Box>
                         <Typography variant="body2" sx={{ minWidth: 36 }}>{analysis.analysis.cropHealthScore}%</Typography>
@@ -1306,7 +1306,7 @@ const SatelliteFieldView: React.FC = () => {
                     <Grid item xs={12} md={6}>
                       <Typography variant="caption">Soil Fertility</Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box sx={{ flex: 1, height: 8, bgcolor: '#e0e0e0', borderRadius: 4 }}>
+                        <Box sx={{ flex: 1, height: 8, bgcolor: 'rgba(255,255,255,0.12)', borderRadius: 4 }}>
                           <Box sx={{ width: `${analysis.analysis.soilFertilityIndex}%`, height: '100%', bgcolor: '#8bc34a', borderRadius: 4 }} />
                         </Box>
                         <Typography variant="body2" sx={{ minWidth: 36 }}>{analysis.analysis.soilFertilityIndex}%</Typography>
@@ -1316,7 +1316,7 @@ const SatelliteFieldView: React.FC = () => {
                     {/* Weather Forecast & Temperature Trend */}
                     <Grid item xs={12} md={6}>
                       <Typography variant="caption">7-day Precipitation Forecast (mm)</Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 80, p: 0.5, borderRadius: 1, background: 'rgba(255,255,255,0.7)', mt: 0.5 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 80, p: 0.5, borderRadius: 1, background: 'rgba(255,255,255,0.06)', mt: 0.5 }}>
                         {analysis.weatherData.precipitation.forecast7Days.map((mm, i) => (
                           <Box key={i} sx={{ width: 12, height: `${Math.min(100, Math.round(mm * 4))}%`, bgcolor: mm > 5 ? '#2196f3' : '#90caf9', borderRadius: '2px 2px 0 0' }} />
                         ))}
@@ -1324,7 +1324,7 @@ const SatelliteFieldView: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <Typography variant="caption">Temperature Trend (Â°C)</Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 80, p: 0.5, borderRadius: 1, background: 'rgba(255,255,255,0.7)', mt: 0.5 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, height: 80, p: 0.5, borderRadius: 1, background: 'rgba(255,255,255,0.06)', mt: 0.5 }}>
                         {Array.from({ length: 7 }, (_, i) => {
                           const base = (analysis.weatherData.temperature.min + analysis.weatherData.temperature.max) / 2;
                           const variation = Math.sin((i / 6) * Math.PI) * 4;

@@ -108,3 +108,5 @@ venv.bak/
 # Stray npm cache directories accidentally created inside the repo
 backend/%USERPROFILE%/
 frontend/%USERPROFILE%/
+# Local Netlify folder
+.netlify

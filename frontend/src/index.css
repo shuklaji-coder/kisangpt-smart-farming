@@ -12,11 +12,11 @@ html, body, #root {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  color: #0f172a;
+  color: #ecfdf5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
-  background-color: #f0fdf4; /* Light mint base */
+  background-color: #0a0f0d; /* Deep dark green base */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -30,7 +30,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
 .app-background {
   position: relative;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: #0a0f0d;
   overflow: hidden;
   isolation: isolate;
 }
@@ -43,7 +43,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
   position: fixed;
   border-radius: 50%;
   filter: blur(120px) saturate(150%);
-  opacity: 0.6;
+  opacity: 0.55;
   z-index: -1;
   pointer-events: none;
 }
@@ -54,7 +54,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
   height: 800px;
   top: -200px;
   left: -200px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, rgba(16, 185, 129, 0) 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.32) 0%, rgba(16, 185, 129, 0) 70%);
   animation: blobFloat 24s ease-in-out infinite alternate;
 }
 
@@ -64,7 +64,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
   height: 900px;
   bottom: -300px;
   right: -200px;
-  background: radial-gradient(circle, rgba(132, 204, 22, 0.3) 0%, rgba(132, 204, 22, 0) 70%);
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0) 70%);
   animation: blobFloat 28s ease-in-out infinite alternate-reverse;
 }
 
@@ -74,7 +74,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
   height: 600px;
   top: 40%;
   left: 30%;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, rgba(14, 165, 233, 0) 70%);
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.16) 0%, rgba(14, 165, 233, 0) 70%);
   animation: centerBlobFloat 32s ease-in-out infinite alternate;
 }
 
@@ -103,7 +103,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
 
 /* ------- Hyper-Vibrant Animated Text ------- */
 .gradient-text {
-  background: linear-gradient(110deg, #047857 0%, #10b981 25%, #059669 50%, #84cc16 75%, #047857 100%);
+  background: linear-gradient(110deg, #34d399 0%, #6ee7b7 25%, #2dd4bf 50%, #a3e635 75%, #34d399 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -130,19 +130,19 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
 
 /* ------- Extreme Glassmorphism card ------- */
 .glass-card {
-  background: rgba(255, 255, 255, 0.5) !important;
+  background: rgba(20, 30, 25, 0.6) !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.7) !important;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.06) !important;
 }
 
 .glass-card-dark {
-  background: rgba(15, 23, 42, 0.7) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
 /* ------- Button shine sweep (Fast & Clean) ------- */
